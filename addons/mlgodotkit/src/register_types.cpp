@@ -1,5 +1,4 @@
 #include "register_types.h"
-#include "gdexample.h"
 #include "neural_network/nnnode.h"
 #include "replay_buffer/replaybuffernode.h"
 #include <gdextension_interface.h>
@@ -13,11 +12,8 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
         return;
     }
 
-    GDREGISTER_CLASS(GDExample);
     GDREGISTER_CLASS(NNNode);
     GDREGISTER_CLASS(ReplayBufferNode);
-//    GDREGISTER_CLASS(DQNAgentNode);
-//    GDREGISTER_CLASS(MemoryBufferNode);
 }
 
 void uninitialize_example_module(ModuleInitializationLevel p_level) {

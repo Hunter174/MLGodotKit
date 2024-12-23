@@ -1,4 +1,5 @@
 #include "replay_buffer/replaybuffernode.h"
+#include <unordered_set>
 
 ReplayBufferNode::ReplayBufferNode() : max_size(1000), current_size(0), random_engine(std::random_device{}()) {}
 
@@ -14,7 +15,7 @@ void ReplayBufferNode::_bind_methods() {
 
 void ReplayBufferNode::add(const PackedFloat32Array &state, int action, float reward,
                            const PackedFloat32Array &next_state, bool done) {
-    if (current_size < max_size) {
+    if (buffer.size() < max_size) {
         buffer.push_back({state, action, reward, next_state, done});
     } else {
         buffer[current_size % max_size] = {state, action, reward, next_state, done};
@@ -22,21 +23,19 @@ void ReplayBufferNode::add(const PackedFloat32Array &state, int action, float re
     current_size++;
 }
 
-#include <unordered_set>
-
 Array ReplayBufferNode::sample(size_t batch_size) {
     Array samples;
 
-    // Ensure the batch size does not exceed current buffer size
-    size_t sample_size = std::min(batch_size, std::min(current_size, max_size));
+    if (current_size == 0) {
+        return samples; // Return an empty array if the buffer is empty
+    }
 
+    size_t sample_size = std::min(batch_size, std::min(current_size, max_size));
     std::unordered_set<size_t> sampled_indices;
-    std::uniform_int_distribution<size_t> distribution(0, current_size - 1);
+    std::uniform_int_distribution<size_t> distribution(0, std::min(current_size, max_size) - 1);
 
     while (sampled_indices.size() < sample_size) {
         size_t index = distribution(random_engine);
-
-        // Only add if index is unique
         if (sampled_indices.insert(index).second) {
             const auto &exp = buffer[index];
 
