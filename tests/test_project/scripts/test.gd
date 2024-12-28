@@ -16,14 +16,16 @@ var xor_targets = [
 ]
 
 func _ready():
-	var layers = [2, 4, 2, 1]  # Input size 2, hidden layer size 3, output size 1
+	var layers = [2, 4, 4, 1]  # Input size 2, hidden layer size 3, output size 1
 	test_nn.initialize(layers, "relu", "sigmoid")
-	test_nn.set_optimizer("SGD", 0.1)  # Reduced learning rate
-	test_nn.set_loss_function("BCE")
+	test_nn.set_optimizer("SGD", 0.01)  # Reduced learning rate
+	test_nn.set_loss_function("MSE")
+	test_nn.set_verbosity(1)
+
 	train_xor()
 
 func train_xor():
-	var epochs = 5  # Reduced to 1000 for quicker debug cycles
+	var epochs = 100  
 	for epoch in range(epochs):
 		var total_loss = 0.0
 		for i in range(xor_inputs.size()):
@@ -32,17 +34,18 @@ func train_xor():
 			test_nn.train(input, target)
 			total_loss += test_nn.get_loss()
 		
-		if epochs % 1 == 0:
+		if epoch % 10 == 0:
 			print("Epoch ", epoch, ": Loss = ", total_loss / xor_inputs.size())
 
-	print("Training complete. Testing network...")
+	#print("Training complete. Testing network...\n\n")
 	test_xor()
+	test_nn.model_summary()
 
 func test_xor():
 	for i in range(xor_inputs.size()):
 		var input = xor_inputs[i]
 		var prediction = test_nn.predict(input)
-		print(typeof(prediction), prediction)  # Debug the prediction type and content
+		print("Q-value is: ", prediction)  # Debug the prediction type and content
 		var result
 		if prediction[0] >= 0.5:
 			result = 1
