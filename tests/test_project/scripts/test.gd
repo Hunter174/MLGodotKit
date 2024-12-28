@@ -19,7 +19,7 @@ func _ready():
 	var layers = [2, 4, 4, 1]  # Input size 2, hidden layer size 3, output size 1
 	test_nn.initialize(layers, "relu", "sigmoid")
 	test_nn.set_optimizer("SGD", 0.01)  # Reduced learning rate
-	test_nn.set_loss_function("MSE")
+	test_nn.set_loss_function("BCE")
 	test_nn.set_verbosity(1)
 
 	train_xor()

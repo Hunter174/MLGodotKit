@@ -137,6 +137,9 @@ void NNNode::backward(const Eigen::VectorXd& target) {
     // Compute initial delta (output layer error)
     Eigen::VectorXd delta = target - activations_values.back();
 
+    // Gradient Clipping threshold
+    const double max_gradient_norm = 1.0;
+
     if (verbosity_level >= 3){
         for (double val: delta) {
           godot::UtilityFunctions::print(("Delta: " + std::to_string(val)).c_str());
@@ -154,6 +157,11 @@ void NNNode::backward(const Eigen::VectorXd& target) {
         // Compute gradients for weights and biases
         Eigen::MatrixXd grad_w = delta * activations_values[layer].transpose();
         Eigen::VectorXd grad_b = delta;
+
+        // Clip gradients by norm
+        Eigen::VectorXd grad_w_flattened = Eigen::Map<Eigen::VectorXd>(grad_w.data(), grad_w.size());
+        grad_w_flattened = clip_gradient(grad_w_flattened, max_gradient_norm);
+        grad_b = clip_gradient(grad_b, max_gradient_norm);
 
         // Update weights and biases
         weights[layer] -= learning_rate * grad_w;
@@ -316,6 +324,14 @@ NNNode::get_activation_function(const godot::String& activation) {
         godot::UtilityFunctions::print("Unsupported activation function: " + activation);
         return {nullptr, nullptr};
     }
+}
+
+Eigen::VectorXd NNNode::clip_gradient(const Eigen::VectorXd& gradient, double max_norm) {
+    double norm = gradient.norm();
+    if (norm > max_norm) {
+        return (gradient / norm) * max_norm; // Scale the gradient to have the norm of max_norm
+    }
+    return gradient;
 }
 
 void NNNode::set_verbosity(int level) {

@@ -88,7 +88,7 @@ public:
     void decay_learning_rate();
     void copy_from(const NNNode* other);
     std::pair<std::function<Eigen::VectorXd(const Eigen::VectorXd&)>, std::function<Eigen::VectorXd(const Eigen::VectorXd&)>> get_activation_function(const godot::String& activation);
-
+    Eigen::VectorXd clip_gradient(const Eigen::VectorXd& gradient, double max_norm);
 };
 
 #endif // NNNODE_H
