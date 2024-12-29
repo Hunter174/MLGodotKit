@@ -182,18 +182,82 @@ void NNNode::backward(const Eigen::VectorXd& target) {
     }
 }
 
-void NNNode::train(godot::Array input, godot::Array target) {
-    Eigen::VectorXd input_vec(input.size());
-    Eigen::VectorXd target_vec(target.size());
+void NNNode::train(godot::Array inputs, godot::Array targets, int batch_size=0) {
+    if (inputs.size() != targets.size()) {
+        godot::UtilityFunctions::print("Error: Inputs and targets size mismatch.");
+        return;
+    }
 
-    // Convert inputs and targets to floats
-    for (int i = 0; i < input.size(); ++i) input_vec[i] = float(input[i]);
-    for (int i = 0; i < target.size(); ++i) target_vec[i] = float(target[i]);
+    if (batch_size <= 0) {
+        batch_size = inputs.size(); // Use the entire dataset as a single batch if batch_size is invalid
+    }
 
-    Eigen::VectorXd output = forward(input_vec);
+    int num_samples = inputs.size();
+    double total_loss = 0.0;
 
-    last_loss = loss_function(output, target_vec);
-    backward(loss_derivative(output, target_vec));
+    // Initialize accumulators for gradients
+    std::vector<Eigen::MatrixXd> grad_w_accum(weights.size());
+    std::vector<Eigen::VectorXd> grad_b_accum(biases.size());
+    for (size_t i = 0; i < weights.size(); ++i) {
+        grad_w_accum[i] = Eigen::MatrixXd::Zero(weights[i].rows(), weights[i].cols());
+        grad_b_accum[i] = Eigen::VectorXd::Zero(biases[i].size());
+    }
+
+    // Iterate through batches
+    for (int start = 0; start < num_samples; start += batch_size) {
+        int end = std::min(start + batch_size, num_samples);
+        int current_batch_size = end - start;
+
+        // Reset accumulators for each batch
+        for (size_t i = 0; i < weights.size(); ++i) {
+            grad_w_accum[i].setZero();
+            grad_b_accum[i].setZero();
+        }
+
+        // Process each sample in the batch
+        for (int idx = start; idx < end; ++idx) {
+            // Cast inputs[idx] and targets[idx] to godot::Array
+            godot::Array input_array = inputs[idx];
+            godot::Array target_array = targets[idx];
+
+            Eigen::VectorXd input_vec(input_array.size());
+            Eigen::VectorXd target_vec(target_array.size());
+
+            // Convert input_array and target_array to Eigen::VectorXd
+            for (int i = 0; i < input_array.size(); ++i) input_vec[i] = float(input_array[i]);
+            for (int i = 0; i < target_array.size(); ++i) target_vec[i] = float(target_array[i]);
+
+            // Perform forward pass
+            Eigen::VectorXd output = forward(input_vec, true);
+
+            // Compute loss and accumulate it
+            double loss = loss_function(output, target_vec);
+            total_loss += loss;
+
+            // Compute gradients
+            Eigen::VectorXd delta = loss_derivative(output, target_vec);
+            for (int layer = weights.size() - 1; layer >= 0; --layer) {
+                Eigen::MatrixXd grad_w = delta * activations_values[layer].transpose();
+                Eigen::VectorXd grad_b = delta;
+
+                grad_w_accum[layer] += grad_w;
+                grad_b_accum[layer] += grad_b;
+
+                if (layer > 0) {
+                    delta = (weights[layer].transpose() * delta).cwiseProduct(activation_derivatives[layer - 1](zs[layer - 1]));
+                }
+            }
+        }
+
+        // Update weights and biases after processing the batch
+        for (size_t layer = 0; layer < weights.size(); ++layer) {
+            weights[layer] -= learning_rate * (grad_w_accum[layer] / current_batch_size);
+            biases[layer] -= learning_rate * (grad_b_accum[layer] / current_batch_size);
+        }
+    }
+
+    // Average the loss over all samples
+    last_loss = total_loss / num_samples;
 
     // Decay the learning rate
     decay_learning_rate();
@@ -212,7 +276,7 @@ double NNNode::get_loss() const {
 }
 
 void NNNode::decay_learning_rate() {
-    learning_rate = std::max(0.0001, learning_rate * 0.99);
+    learning_rate = std::max(0.0001, learning_rate * 0.995);
 }
 
 void NNNode::copy_from(const NNNode* other) {

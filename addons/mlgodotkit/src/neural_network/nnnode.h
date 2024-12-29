@@ -75,7 +75,7 @@ public:
 
     // Core functions
     godot::Array predict(godot::Array input);
-    void train(godot::Array input, godot::Array target);
+    void train(godot::Array input, godot::Array target, int batch_size);
     void backward(const Eigen::VectorXd& target);
     Eigen::VectorXd forward(const Eigen::VectorXd& input, bool store_intermediate = true);
 
