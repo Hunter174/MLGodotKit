@@ -18,7 +18,7 @@ var xor_targets = [
 func _ready():
 	var layers = [2, 4, 1]  # Input size 2, hidden layer size 3, output size 1
 	test_nn.initialize(layers, "relu", "sigmoid")
-	test_nn.set_optimizer("SGD", 0.1)  # Reduced learning rate
+	test_nn.set_optimizer("SGD", 0.-1)  # Reduced learning rate
 	test_nn.set_loss_function("MSE")
 	test_nn.set_verbosity(1)
 
@@ -28,7 +28,7 @@ func train_xor():
 	var epochs = 1000  
 	for epoch in range(epochs):
 		var total_loss = 0.0
-		test_nn.train(xor_inputs, xor_targets, 0)
+		test_nn.train(xor_inputs, xor_targets, 4)
 		total_loss += test_nn.get_loss()
 		
 		if epoch % 100 == 0:

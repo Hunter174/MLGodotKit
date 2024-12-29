@@ -115,72 +115,58 @@ Eigen::VectorXd NNNode::forward(const Eigen::VectorXd& input, bool store_interme
         zs.clear();
     }
 
+    debug_print(1, "Forward Pass:");
+    debug_print(1, "Input: " + vector_to_string(input));
+
     for (size_t i = 0; i < weights.size(); ++i) {
         Eigen::VectorXd z = weights[i] * activation + biases[i];
         if (store_intermediate) zs.push_back(z);
 
-        debug_print(2, "Layer " + std::to_string(i) + " z norm: " + std::to_string(z.norm()));
+        debug_print(2, "Layer " + std::to_string(i) + " z: " + vector_to_string(z));
 
         // Apply activation functions
         activation = activations[i](z);
 
-        debug_print(2, "Layer " + std::to_string(i) + " activation norm: " + std::to_string(activation.norm()));
+        debug_print(2, "Layer " + std::to_string(i) + " activation: " + vector_to_string(activation));
 
         if (store_intermediate) activations_values.push_back(activation);
     }
 
+    debug_print(1, "Output: " + vector_to_string(activation));
     return activation;
 }
 
 void NNNode::backward(const Eigen::VectorXd& target) {
+    debug_print(1, "Backward Pass:");
+    debug_print(1, "Target: " + vector_to_string(target));
+    debug_print(1, "Prediction: " + vector_to_string(activations_values.back()));
 
     // Compute initial delta (output layer error)
     Eigen::VectorXd delta = target - activations_values.back();
+    debug_print(1, "Delta: " + vector_to_string(delta));
 
-    // Gradient Clipping threshold
     const double max_gradient_norm = 1.0;
 
-    if (verbosity_level >= 3){
-        for (double val: delta) {
-          godot::UtilityFunctions::print(("Delta: " + std::to_string(val)).c_str());
-        }
-        for (double val: activations_values.back()) {
-           godot::UtilityFunctions::print(("Prediction: " + std::to_string(val)).c_str());
-        }
-        for (double val: target) {
-           godot::UtilityFunctions::print(("Target: " + std::to_string(val)).c_str());
-        }
-    }
-
-    // Iterate backward through layers
     for (int layer = weights.size() - 1; layer >= 0; --layer) {
-        // Compute gradients for weights and biases
         Eigen::MatrixXd grad_w = delta * activations_values[layer].transpose();
         Eigen::VectorXd grad_b = delta;
 
-        // Clip gradients by norm
-        Eigen::VectorXd grad_w_flattened = Eigen::Map<Eigen::VectorXd>(grad_w.data(), grad_w.size());
-        grad_w_flattened = clip_gradient(grad_w_flattened, max_gradient_norm);
+        grad_w = clip_gradient(grad_w, max_gradient_norm);
         grad_b = clip_gradient(grad_b, max_gradient_norm);
 
-        // Update weights and biases
         weights[layer] -= learning_rate * grad_w;
         biases[layer] -= learning_rate * grad_b;
 
-        // Debugging: Print updated weights and biases (optional, can be removed if verbose)
-		debug_print(2, "Updated weights for layer " + std::to_string(layer) + " grad_b norm: " + std::to_string(weights[layer].sum()));
-		debug_print(2, "Updated biases for layer " + std::to_string(layer) + " grad_b norm: " + std::to_string(biases[layer].sum()));
+        debug_print(2, "Updated weights for layer " + std::to_string(layer));
+        debug_print(2, "Updated biases for layer " + std::to_string(layer));
 
-        // If not the first layer, propagate the error backward
         if (layer > 0) {
-            auto derivative = activation_derivatives[layer - 1];
-            if (derivative) {
-                // Compute the delta for the previous layer
-                delta = (weights[layer].transpose() * delta).cwiseProduct(derivative(zs[layer - 1]));
-            }
+            delta = (weights[layer].transpose() * delta).cwiseProduct(activation_derivatives[layer - 1](zs[layer - 1]));
+            debug_print(2, "Layer " + std::to_string(layer - 1) + " delta: " + vector_to_string(delta));
         }
     }
 }
+
 
 void NNNode::train(godot::Array inputs, godot::Array targets, int batch_size=0) {
     if (inputs.size() != targets.size()) {
@@ -352,11 +338,12 @@ void NNNode::set_loss_function(godot::String loss_function_type) {
 }
 
 double NNNode::mean_squared_error(const Eigen::VectorXd& output, const Eigen::VectorXd& target) {
-    return (output - target).squaredNorm() / target.size();
+    Eigen::VectorXd diff = output - target;  // Element-wise difference
+    return diff.array().square().mean();    // Square each element, then take the mean
 }
 
 Eigen::VectorXd NNNode::mean_squared_error_derivative(const Eigen::VectorXd& output, const Eigen::VectorXd& target) {
-    return 2*(output - target);
+    return (2.0 / target.size()) * (output - target);
 }
 
 double NNNode::binary_cross_entropy(const Eigen::VectorXd& output, const Eigen::VectorXd& target) {
@@ -446,3 +433,15 @@ void NNNode::model_summary(){
     // Output the complete neural network architecture summary
     godot::UtilityFunctions::print(summary.str().c_str());
 }
+
+std::string NNNode::vector_to_string(const Eigen::VectorXd& vec) {
+    std::ostringstream oss;
+    for (int i = 0; i < vec.size(); ++i) {
+        oss << vec[i];
+        if (i < vec.size() - 1) {
+            oss << ", ";
+        }
+    }
+    return oss.str();
+}
+

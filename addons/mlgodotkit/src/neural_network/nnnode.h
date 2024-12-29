@@ -59,6 +59,7 @@ private:
     void set_verbosity(int level);
     void debug_print(int level, const std::string& message);
     void model_summary();
+    std::string vector_to_string(const Eigen::VectorXd& vec);
 
     // Verbosity level for debugging
     int verbosity_level = 0;
