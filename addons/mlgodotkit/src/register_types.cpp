@@ -1,5 +1,6 @@
 #include "register_types.h"
 #include "neural_network/nnnode.h"
+#include "test_network_node/testnnnode.h"
 #include "replay_buffer/replaybuffernode.h"
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
@@ -14,6 +15,8 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
 
     GDREGISTER_CLASS(NNNode);
     GDREGISTER_CLASS(ReplayBufferNode);
+    GDREGISTER_CLASS(TestNNNode);
+
 }
 
 void uninitialize_example_module(ModuleInitializationLevel p_level) {
