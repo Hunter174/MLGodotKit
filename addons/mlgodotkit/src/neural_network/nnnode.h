@@ -27,7 +27,7 @@ private:
     std::vector<std::function<Eigen::VectorXd(const Eigen::VectorXd&)>> activation_derivatives;
     std::vector<Eigen::VectorXd> activations_values;
     godot::String _hidden_activation;
-    godot::String _output_activation
+    godot::String _output_activation;
 
 	// Hyper parameters
     float learning_rate = 0.01;

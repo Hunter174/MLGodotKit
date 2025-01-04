@@ -456,7 +456,6 @@ Eigen::VectorXd array_to_eigenvec(const godot::Array arr){
   return eigen_vec;
 }
 
-
 Eigen::MatrixXd array_to_eigenmat(const godot::Array arr){
 
   // Get the number of rows
@@ -464,9 +463,10 @@ Eigen::MatrixXd array_to_eigenmat(const godot::Array arr){
   if(rows == 0) return Eigen::MatrixXd(0,0);
 
   // Get the number of columns
-  godot::Array first_row = arr[0]
+  godot::Array first_row = arr[0];
   int cols = first_row.size();
 
+  Eigen::MatrixXd eigen_mat;
   eigen_mat = Eigen::MatrixXd::Zero(rows, cols);
 
   for(int i = 0; i < rows; i++){
