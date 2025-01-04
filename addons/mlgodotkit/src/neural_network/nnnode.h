@@ -27,13 +27,14 @@ private:
     std::vector<std::function<Eigen::VectorXd(const Eigen::VectorXd&)>> activation_derivatives;
     std::vector<Eigen::VectorXd> activations_values;
     godot::String _hidden_activation;
-    godot::String _output_activation;
+    godot::String _output_activation
 
+	// Hyper parameters
     float learning_rate = 0.01;
     godot::String loss_function_type = "MSE";
     godot::Array model_architecture;
     double last_loss = 0.0;
-    static constexpr double epsilon = 1e-10; // Prevents numerical instability
+    static constexpr double epsilon = 1e-10; // Small term for numeric stability
 
     // Loss function and its derivative
     std::function<double(const Eigen::VectorXd&, const Eigen::VectorXd&)> loss_function;
@@ -60,6 +61,8 @@ private:
     void debug_print(int level, const std::string& message);
     void model_summary();
     std::string vector_to_string(const Eigen::VectorXd& vec);
+    Eigen::VectorXd array_to_eigenvec(const godot::Array);
+    Eigen::MatrixXd array_to_eigenmat(const godot::Array);
 
     // Verbosity level for debugging
     int verbosity_level = 0;

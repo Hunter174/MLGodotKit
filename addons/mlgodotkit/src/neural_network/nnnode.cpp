@@ -445,5 +445,37 @@ std::string NNNode::vector_to_string(const Eigen::VectorXd& vec) {
     return oss.str();
 }
 
+Eigen::VectorXd array_to_eigenvec(const godot::Array arr){
+  int size = arr.size();
+  Eigen::VectorXd eigen_vec(size);
 
+  for(int i = 0; i < size; i++){
+    eigen_vec(i) = arr[i];
+  }
+
+  return eigen_vec;
+}
+
+
+Eigen::MatrixXd array_to_eigenmat(const godot::Array arr){
+
+  // Get the number of rows
+  int rows = arr.size();
+  if(rows == 0) return Eigen::MatrixXd(0,0);
+
+  // Get the number of columns
+  godot::Array first_row = arr[0]
+  int cols = first_row.size();
+
+  eigen_mat = Eigen::MatrixXd::Zero(rows, cols);
+
+  for(int i = 0; i < rows; i++){
+    godot::Array row = arr[i];
+    for(int j = 0; j < cols; j++){
+      eigen_mat(i, j) = row[i, j];
+    }
+  }
+
+  return eigen_mat;
+}
 
