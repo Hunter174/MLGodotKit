@@ -14,9 +14,6 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
     }
 
     GDREGISTER_CLASS(NNNode);
-    GDREGISTER_CLASS(ReplayBufferNode);
-    GDREGISTER_CLASS(TestNNNode);
-
 }
 
 void uninitialize_example_module(ModuleInitializationLevel p_level) {
