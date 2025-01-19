@@ -16,8 +16,8 @@ env.Append(CPPPATH=["src/", "C:/libs/eigen-3.4.0"])
 # - LINKFLAGS are for linking flags
 
 # Point and link all of the node libraries
-sources = (Glob("src/*.cpp") + Glob("src/neural_network/*.cpp") + Glob("src/replay_buffer/*.cpp")
-           + Glob("src/test_network_node/*.cpp") + Glob("src/layer/*.cpp"))
+sources = (Glob("src/*.cpp") + Glob("src/utility/*.cpp") +Glob("src/neural_network/*.cpp")
+            + Glob("src/replay_buffer/*.cpp") + Glob("src/test_network_node/*.cpp") + Glob("src/layer/*.cpp"))
 
 if env["platform"] == "macos":
     library = env.SharedLibrary(

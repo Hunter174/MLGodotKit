@@ -4,6 +4,7 @@
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <sstream>
 #include <Eigen/Dense>
+#include "utility/utils.h"
 
 class Layer {
 private:
@@ -17,11 +18,6 @@ private:
 
     std::function<Eigen::MatrixXd(const Eigen::MatrixXd&)> activation_func;
     std::function<Eigen::MatrixXd(const Eigen::MatrixXd&)> derivative_func;
-
-    // Helper Functions
-    static Eigen::MatrixXd godot_to_eigen(godot::Array array);
-    static godot::Array eigen_to_godot(Eigen::MatrixXd matrix);
-
 
 public:
     Layer(int input_size, int out_features, float learning_rate, std::string activation_type);

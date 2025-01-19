@@ -1,5 +1,7 @@
 #include "layer/layer.h"
 
+using namespace Utils;
+
 Layer::Layer(int input_size, int out_features, float learning_rate, std::string activation_type) {
     weights = Eigen::MatrixXd::Random(input_size, out_features) * sqrt(2.0 / (input_size + out_features));
     biases = Eigen::MatrixXd::Zero(out_features, 1);
@@ -163,53 +165,4 @@ godot::String Layer::to_string() const {
            << biases.transpose() << "\n";
 
     return godot::String(stream.str().c_str());
-}
-
-// Helper Functions
-Eigen::MatrixXd Layer::godot_to_eigen(godot::Array array) {
-    int rows = array.size();
-    int cols = 0;
-
-    // Handle 2D array case
-    if (rows > 0 && array[0].get_type() == godot::Variant::ARRAY) {
-        godot::Array first_row = array[0];
-        cols = first_row.size();
-
-        // Create an Eigen matrix for 2D arrays
-        Eigen::MatrixXd out(rows, cols);
-        for (int i = 0; i < rows; i++) {
-            godot::Array row = array[i];
-            for (int j = 0; j < cols; j++) {
-                out(i, j) = static_cast<double>(row[j]);
-            }
-        }
-        return out;
-    }
-
-    // Handle 1D array case (e.g., 1x2 or n×1)
-    cols = rows; // A single 1D array will be treated as one row
-    rows = 1;    // Force 1 row for 1D array inputs
-
-    Eigen::MatrixXd out(rows, cols);
-    for (int j = 0; j < cols; j++) {
-        out(0, j) = static_cast<double>(array[j]);
-    }
-
-    return out;
-}
-
-godot::Array Layer::eigen_to_godot(Eigen::MatrixXd matrix){
-    godot::Array out;
-
-    for(int i=0;i<matrix.rows();i++){
-        godot::Array row;
-        for(int j=0;j<matrix.cols();j++){
-            row.push_back(matrix(i,j));
-        }
-        if(matrix.rows() <= 1){
-            return row;
-        }
-        out.push_back(row);
-    }
-    return out;
 }

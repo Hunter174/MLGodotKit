@@ -5,6 +5,7 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 #include "layer/layer.h"
+#include "utility/utils.h"
 
 class NNNode : public godot::Node {
     GDCLASS(NNNode, godot::Node);
@@ -14,10 +15,6 @@ private:
 	float learning_rate = 0.01;
 
     std::vector<Layer> layers;
-
-    // Helper Functions
-    Eigen::MatrixXd godot_to_eigen(godot::Array array);
-    godot::Array eigen_to_godot(Eigen::MatrixXd matrix);
 
 protected:
     static void _bind_methods();
