@@ -12,7 +12,7 @@ class NNNode : public godot::Node {
 
 private:
 	// Hyper parameters
-	float learning_rate = 0.01;
+	double learning_rate = 0.01;
 
     std::vector<Layer> layers;
 
@@ -20,6 +20,10 @@ protected:
     static void _bind_methods();
 
 public:
+
+	//Debug flags
+    int verbosity = 0;
+
     NNNode();
     ~NNNode();
 
@@ -32,7 +36,8 @@ public:
     void model_summary();
 
     //Getters and Setters
-    void set_learning_rate(float lr){learning_rate = lr;}
+    void set_verbosity(int verbosity);
+    void set_learning_rate(double lr);
 
 };
 

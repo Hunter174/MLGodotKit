@@ -1,5 +1,6 @@
 extends Node2D
 
+
 @onready var test_nn_node = $TestNNNode
 
 # Called when the node enters the scene tree for the first time.

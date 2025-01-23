@@ -48,3 +48,35 @@ godot::Array Utils::eigen_to_godot(Eigen::MatrixXd matrix){
     return out;
 }
 
+void Utils::debug_print(int verbosity, int debug_level, godot::Variant msg){
+    if(verbosity == debug_level){
+        godot::UtilityFunctions::print(msg);
+    }
+}
+
+std::string Utils::eigen_to_string(const Eigen::MatrixXd& matrix) {
+    std::ostringstream stream;
+    stream << "[";
+    for (int i = 0; i < matrix.rows(); ++i) {
+        for (int j = 0; j < matrix.cols(); ++j) {
+            stream << matrix(i, j);
+            if (j < matrix.cols() - 1) stream << ", ";
+        }
+        if (i < matrix.rows() - 1) stream << "; ";
+    }
+    stream << "]";
+    return stream.str();
+}
+
+// Function to round the matrix values to a specific precision
+Eigen::MatrixXd Utils::round_matrix(const Eigen::MatrixXd& mat, int precision) {
+    // Compute the scaling factor based on the precision
+    double scale = std::pow(10, precision);
+
+    // Round the matrix elements to the desired precision
+    Eigen::MatrixXd rounded = (mat.array() * scale).round() / scale;
+
+    return rounded;
+}
+
+
