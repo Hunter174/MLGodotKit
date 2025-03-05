@@ -1,9 +1,9 @@
 [gd_scene load_steps=2 format=3 uid="uid://x5q157yqoikp"]
 
-[ext_resource type="Script" path="res://scripts/test_script.gd" id="1_vgx73"]
+[ext_resource type="Script" path="res://scripts/test_LRNode.gd" id="1_0y2kn"]
 
 [node name="Node2D" type="Node2D"]
-script = ExtResource("1_vgx73")
+script = ExtResource("1_0y2kn")
 
 [node name="TestNeuralNetwork" type="NNNode" parent="."]
 
@@ -12,3 +12,5 @@ script = ExtResource("1_vgx73")
 [node name="NewNodeWhoDis" type="Node2D" parent="."]
 
 [node name="TestNNNode" type="Node" parent="NewNodeWhoDis"]
+
+[node name="LRNode" type="LRNode" parent="."]

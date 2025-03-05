@@ -8,6 +8,7 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
     }
 
     GDREGISTER_CLASS(NNNode);
+    GDREGISTER_CLASS(LRNode);
 }
 
 void uninitialize_example_module(ModuleInitializationLevel p_level) {

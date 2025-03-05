@@ -3,6 +3,7 @@
 
 #include "utility/utils.h"
 #include "neural_network/nnnode.h"
+#include "linear_regression/lrnode.h"
 #include "test_network_node/testnnnode.h"
 #include "replay_buffer/replaybuffernode.h"
 #include <gdextension_interface.h>
