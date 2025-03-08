@@ -1,6 +1,6 @@
 #include "utils.h"
 
-Eigen::MatrixXd Utils::godot_to_eigen(godot::Array array) {
+Eigen::MatrixXf Utils::godot_to_eigen(godot::Array array) {
     int rows = array.size();
     int cols = 0;
 
@@ -10,11 +10,11 @@ Eigen::MatrixXd Utils::godot_to_eigen(godot::Array array) {
         cols = first_row.size();
 
         // Create an Eigen matrix for 2D arrays
-        Eigen::MatrixXd out(rows, cols);
+        Eigen::MatrixXf out(rows, cols);
         for (int i = 0; i < rows; i++) {
             godot::Array row = array[i];
             for (int j = 0; j < cols; j++) {
-                out(i, j) = static_cast<double>(row[j]);
+                out(i, j) = static_cast<float>(row[j]);
             }
         }
         return out;
@@ -24,15 +24,27 @@ Eigen::MatrixXd Utils::godot_to_eigen(godot::Array array) {
     cols = rows; // A single 1D array will be treated as one row
     rows = 1;    // Force 1 row for 1D array inputs
 
-    Eigen::MatrixXd out(rows, cols);
-    for (int j = 0; j < cols; j++) {
-        out(0, j) = static_cast<double>(array[j]);
+    // Handle 1D array case (treat as Nx1 column vector)
+    Eigen::MatrixXf out(rows, 1);
+    for (int i = 0; i < rows; i++) {
+        out(i, 0) = static_cast<float>(array[i]);
     }
 
     return out;
 }
 
-godot::Array Utils::eigen_to_godot(Eigen::MatrixXd matrix){
+Eigen::VectorXf Utils::godot_to_eigen_vector(godot::Array array) {
+    int size = array.size();
+    Eigen::VectorXf vec(size);
+
+    for (int i = 0; i < size; i++) {
+        vec(i) = static_cast<float>(array[i]);
+    }
+
+    return vec;
+}
+
+godot::Array Utils::eigen_to_godot(Eigen::MatrixXf matrix){
     godot::Array out;
 
     for(int i=0;i<matrix.rows();i++){
@@ -54,7 +66,7 @@ void Utils::debug_print(int verbosity, int debug_level, godot::Variant msg){
     }
 }
 
-std::string Utils::eigen_to_string(const Eigen::MatrixXd& matrix) {
+std::string Utils::eigen_to_string(const Eigen::MatrixXf& matrix) {
     std::ostringstream stream;
     stream << "[";
     for (int i = 0; i < matrix.rows(); ++i) {
@@ -69,12 +81,12 @@ std::string Utils::eigen_to_string(const Eigen::MatrixXd& matrix) {
 }
 
 // Function to round the matrix values to a specific precision
-Eigen::MatrixXd Utils::round_matrix(const Eigen::MatrixXd& mat, int precision) {
+Eigen::MatrixXf Utils::round_matrix(const Eigen::MatrixXf& mat, int precision) {
     // Compute the scaling factor based on the precision
     double scale = std::pow(10, precision);
 
     // Round the matrix elements to the desired precision
-    Eigen::MatrixXd rounded = (mat.array() * scale).round() / scale;
+    Eigen::MatrixXf rounded = (mat.array() * scale).round() / scale;
 
     return rounded;
 }

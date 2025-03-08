@@ -2,20 +2,20 @@
 
 using namespace Utils;
 
-Layer::Layer(int input_size, int out_features, double learning_rate, std::string activation_type) {
+Layer::Layer(int input_size, int out_features, float learning_rate, std::string activation_type) {
 
     lr = learning_rate;
 
     if (activation_type == "sigmoid") {
 		//Initialize weights and bias
-      	weights = Eigen::MatrixXd::Random(input_size, out_features) * sqrt(1.0 / input_size);
-		biases = Eigen::MatrixXd::Zero(1, out_features);
+      	weights = Eigen::MatrixXf::Random(input_size, out_features) * sqrt(1.0 / input_size);
+		biases = Eigen::MatrixXf::Zero(1, out_features);
 
         activation_func = sigmoid;
         derivative_func = sigmoid_derivative;
     } else if (activation_type == "relu") {
-      	weights = Eigen::MatrixXd::Random(input_size, out_features) * sqrt(2.0 / (input_size + out_features));
-    	biases = Eigen::MatrixXd::Zero(1, out_features);
+      	weights = Eigen::MatrixXf::Random(input_size, out_features) * sqrt(2.0 / (input_size + out_features));
+    	biases = Eigen::MatrixXf::Zero(1, out_features);
 
         activation_func = relu;
         derivative_func = relu_derivative;
@@ -34,7 +34,7 @@ Layer::Layer(int input_size, int out_features, double learning_rate, std::string
 
 Layer::~Layer() {}
 
-Eigen::MatrixXd Layer::forward(const Eigen::MatrixXd& X) {
+Eigen::MatrixXf Layer::forward(const Eigen::MatrixXf& X) {
     input = X;
 
     // Debugging: Print input matrix and its shape
@@ -43,7 +43,7 @@ Eigen::MatrixXd Layer::forward(const Eigen::MatrixXd& X) {
 
 
     // Compute the linear combination: z = X * weights + biases
-    Eigen::MatrixXd z = (input * weights) + biases;
+    Eigen::MatrixXf z = (input * weights) + biases;
 
     // Debugging: Print the linear combination matrix z and its shape
 	debug_print(verbosity, 2, "Linear combination (z) -> Shape: " + godot::String::num(z.rows()) + "x" + godot::String::num(z.cols()) +
@@ -60,9 +60,9 @@ Eigen::MatrixXd Layer::forward(const Eigen::MatrixXd& X) {
     return output;
 }
 
-Eigen::MatrixXd Layer::backward(const Eigen::MatrixXd& error) {
+Eigen::MatrixXf Layer::backward(const Eigen::MatrixXf& error) {
     // Compute the delta (error term)
-    Eigen::MatrixXd delta = error.cwiseProduct(derivative_func(grad_z));
+    Eigen::MatrixXf delta = error.cwiseProduct(derivative_func(grad_z));
     delta = round_matrix(delta, 5);
 
     // Debugging: Print the delta (error term) and its shape
@@ -70,8 +70,8 @@ Eigen::MatrixXd Layer::backward(const Eigen::MatrixXd& error) {
                           ", Values: " + godot::String(eigen_to_string(delta).c_str()));
 
     // Compute gradients for weights and biases
-    Eigen::MatrixXd dW = input.transpose() * delta;
-    Eigen::MatrixXd db = delta.colwise().sum();
+    Eigen::MatrixXf dW = input.transpose() * delta;
+    Eigen::MatrixXf db = delta.colwise().sum();
 
     dW = round_matrix(dW, 5);
     db = round_matrix(db, 5);
@@ -101,8 +101,8 @@ Eigen::MatrixXd Layer::backward(const Eigen::MatrixXd& error) {
 
     // Standardize the weights
 	if (weights.rows() > 1) {
-    	double mean = weights.mean();
-    	double std_dev = std::sqrt((weights.array() - mean).square().mean());
+    	float mean = weights.mean();
+    	float std_dev = std::sqrt((weights.array() - mean).square().mean());
     	if (std_dev > 0) { // Avoid division by zero
         	weights = (weights.array() - mean) / std_dev;
     	}
@@ -110,8 +110,8 @@ Eigen::MatrixXd Layer::backward(const Eigen::MatrixXd& error) {
 
 	// Standardize the biases
 	if (biases.rows() > 1) {
-    	double mean = biases.mean();
-    	double std_dev = std::sqrt((biases.array() - mean).square().mean());
+    	float mean = biases.mean();
+    	float std_dev = std::sqrt((biases.array() - mean).square().mean());
     	if (std_dev > 0) { // Avoid division by zero
         	biases = (biases.array() - mean) / std_dev;
     	}
@@ -124,7 +124,7 @@ Eigen::MatrixXd Layer::backward(const Eigen::MatrixXd& error) {
                           ", Values: " + godot::String(eigen_to_string(biases).c_str()));
 
     // Compute the next error gradient
-    Eigen::MatrixXd grad_input = delta * weights;
+    Eigen::MatrixXf grad_input = delta * weights;
     grad_input = round_matrix(grad_input, 5);
 
     // Debugging: Print the next error gradient and its shape
@@ -137,8 +137,8 @@ Eigen::MatrixXd Layer::backward(const Eigen::MatrixXd& error) {
 // *** Activation Functions ***
 
 // Sigmoid Activation
-Eigen::MatrixXd Layer::sigmoid(const Eigen::MatrixXd& x) {
-    Eigen::MatrixXd result = 1.0 / (1.0 + (-x.array()).exp());
+Eigen::MatrixXf Layer::sigmoid(const Eigen::MatrixXf& x) {
+    Eigen::MatrixXf result = 1.0 / (1.0 + (-x.array()).exp());
 
     // Clip values to prevent overflow in case of extreme values
     result = result.array().min(1.0 - epsilon).max(epsilon);
@@ -146,22 +146,22 @@ Eigen::MatrixXd Layer::sigmoid(const Eigen::MatrixXd& x) {
 }
 
 // Sigmoid Derivative
-Eigen::MatrixXd Layer::sigmoid_derivative(const Eigen::MatrixXd& z) {
-    Eigen::MatrixXd s = sigmoid(z);
+Eigen::MatrixXf Layer::sigmoid_derivative(const Eigen::MatrixXf& z) {
+    Eigen::MatrixXf s = sigmoid(z);
 
     // Ensure that derivative is numerically stable
     return s.array() * (1.0 - s.array()).max(epsilon);
 }
 
 // ReLU Activation
-Eigen::MatrixXd Layer::relu(const Eigen::MatrixXd& x) {
-    Eigen::MatrixXd result = x.cwiseMax(0);
+Eigen::MatrixXf Layer::relu(const Eigen::MatrixXf& x) {
+    Eigen::MatrixXf result = x.cwiseMax(0);
     return result;
 }
 
 // ReLU Derivative
-Eigen::MatrixXd Layer::relu_derivative(const Eigen::MatrixXd& z) {
-    Eigen::MatrixXd result = (z.array() > 0).cast<double>();
+Eigen::MatrixXf Layer::relu_derivative(const Eigen::MatrixXf& z) {
+    Eigen::MatrixXf result = (z.array() > 0).cast<float>();
     return result;
 }
 
