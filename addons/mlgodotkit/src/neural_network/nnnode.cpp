@@ -23,7 +23,7 @@ void NNNode::add_layer(int input_size, int output_size, godot::String activation
 }
 
 godot::Array NNNode::forward(godot::Array input){
-    Eigen::MatrixXd x = godot_to_eigen(input);
+    Eigen::MatrixXf x = godot_to_eigen(input);
 
     for(int i=0;i<layers.size(); i++){
         x = layers[i].forward(x);
@@ -34,7 +34,7 @@ godot::Array NNNode::forward(godot::Array input){
 }
 
 void NNNode::backward(godot::Array error) {
-    Eigen::MatrixXd grad_loss = godot_to_eigen(error);
+    Eigen::MatrixXf grad_loss = godot_to_eigen(error);
 
     // Backward pass through layers
     for (int i = layers.size() - 1; i >= 0; --i) {

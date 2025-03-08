@@ -13,23 +13,23 @@ void LRNode::_bind_methods() {
 
 void LRNode::initialize(int input_size) {
     num_features = input_size;
-    weights = Eigen::VectorXd::Random(input_size);
+    weights = Eigen::VectorXf::Random(input_size);
     bias = 0.0;
 }
 
 godot::Array LRNode::predict(godot::Array input) {
-    Eigen::MatrixXd x = Utils::godot_to_eigen(input);
-    Eigen::VectorXd predictions = (x * weights).array() + bias;
+    Eigen::MatrixXf x = Utils::godot_to_eigen(input);
+    Eigen::VectorXf predictions = (x * weights).array() + bias;
     return Utils::eigen_to_godot(predictions);
 }
 
 void LRNode::train(godot::Array inputs, godot::Array targets, int epochs) {
-    Eigen::MatrixXd X = Utils::godot_to_eigen(inputs);
-    Eigen::VectorXd y = Utils::godot_to_eigen(targets);
+    Eigen::MatrixXf X = Utils::godot_to_eigen(inputs);
+    Eigen::VectorXf y = Utils::godot_to_eigen(targets);
 
     for (int epoch = 0; epoch < epochs; epoch++) {
-        Eigen::VectorXd predictions = (X * weights).array() + bias;
-        Eigen::VectorXd gradients = compute_gradient(predictions, y, X);
+        Eigen::VectorXf predictions = (X * weights).array() + bias;
+        Eigen::VectorXf gradients = compute_gradient(predictions, y, X);
 
         // Gradient descent update
         weights -= learning_rate * gradients;
@@ -43,11 +43,11 @@ void LRNode::train(godot::Array inputs, godot::Array targets, int epochs) {
     }
 }
 
-double LRNode::compute_loss(const Eigen::VectorXd &predictions, const Eigen::VectorXd &targets) {
+double LRNode::compute_loss(const Eigen::VectorXf &predictions, const Eigen::VectorXf &targets) {
     return (predictions - targets).array().square().mean(); // MSE loss
 }
 
-Eigen::VectorXd LRNode::compute_gradient(const Eigen::VectorXd &predictions, const Eigen::VectorXd &targets, const Eigen::MatrixXd &inputs) {
+Eigen::VectorXf LRNode::compute_gradient(const Eigen::VectorXf &predictions, const Eigen::VectorXf &targets, const Eigen::MatrixXf &inputs) {
     int n = inputs.rows();
     return (2.0 / n) * (inputs.transpose() * (predictions - targets));
 }

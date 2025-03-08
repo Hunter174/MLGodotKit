@@ -12,7 +12,7 @@ class LRNode : public godot::Node {
     GDCLASS(LRNode, godot::Node);
 
 private:
-    Eigen::VectorXd weights;
+    Eigen::VectorXf weights;
     double bias;
     double learning_rate;
     int num_features;
@@ -27,8 +27,8 @@ public:
     void initialize(int input_size);
     godot::Array predict(godot::Array input);
     void train(godot::Array inputs, godot::Array targets, int epochs);
-    double compute_loss(const Eigen::VectorXd &predictions, const Eigen::VectorXd &targets);
-    Eigen::VectorXd compute_gradient(const Eigen::VectorXd &predictions, const Eigen::VectorXd &targets, const Eigen::MatrixXd &inputs);
+    double compute_loss(const Eigen::VectorXf &predictions, const Eigen::VectorXf &targets);
+    Eigen::VectorXf compute_gradient(const Eigen::VectorXf &predictions, const Eigen::VectorXf &targets, const Eigen::MatrixXf &inputs);
 
     void set_learning_rate(double lr);
 };
