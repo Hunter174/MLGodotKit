@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://x5q157yqoikp"]
+
+[ext_resource type="Script" uid="uid://brat141r8ve11" path="res://scripts/tests/test_NNNode.gd" id="3_sugp2"]
+
+[node name="main" type="Node2D"]
+
+[node name="test_lrnode" type="Node" parent="."]
+
+[node name="test_dtreenode" type="Node" parent="."]
+
+[node name="test_nnnode" type="Node" parent="."]
+script = ExtResource("3_sugp2")
+
+[node name="test_cleanup" type="Node" parent="."]

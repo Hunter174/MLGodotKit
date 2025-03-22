@@ -1,0 +1,30 @@
+[configuration]
+entry_symbol = "example_library_init"
+compatibility_minimum = "4.1"
+reloadable = true
+
+[libraries]
+macos.debug = "res://addons/mlgodotkit/bin/mlgodotkit.macos.debug.framework"
+macos.release = "res://addons/mlgodotkit/bin/mlgodotkit.macos.release.framework"
+ios.debug = "res://addons/mlgodotkit/bin/mlgodotkit.ios.debug.xcframework"
+ios.release = "res://addons/mlgodotkit/bin/mlgodotkit.ios.release.xcframework"
+windows.debug.x86_64 = "res://addons/mlgodotkit/bin/mlgodotkit.windows.template_debug.x86_64.dll"
+windows.release.x86_64 = "res://addons/mlgodotkit/bin/mlgodotkit.windows.template_debug.x86_64.dll"
+linux.debug.x86_64 = "res://addons/mlgodotkit/bin/mlgodotkit.linux.debug.x86_64.so"
+linux.release.x86_64 = "res://addons/mlgodotkit/bin/mlgodotkit.linux.release.x86_64.so"
+linux.debug.arm64 = "res://addons/mlgodotkit/bin/mlgodotkit.linux.debug.arm64.so"
+linux.release.arm64 = "res://addons/mlgodotkit/bin/mlgodotkit.linux.release.arm64.so"
+linux.debug.rv64 = "res://addons/mlgodotkit/bin/mlgodotkit.linux.debug.rv64.so"
+linux.release.rv64 = "res://addons/mlgodotkit/bin/mlgodotkit.linux.release.rv64.so"
+android.debug.x86_64 = "res://addons/mlgodotkit/bin/mlgodotkit.android.debug.x86_64.so"
+android.release.x86_64 = "res://addons/mlgodotkit/bin/mlgodotkit.android.release.x86_64.so"
+android.debug.arm64 = "res://addons/mlgodotkit/bin/mlgodotkit.android.debug.arm64.so"
+android.release.arm64 = "res://addons/mlgodotkit/bin/mlgodotkit.android.release.arm64.so"
+
+[dependencies]
+ios.debug = {
+    "res://addons/mlgodotkit/bin/libgodot-cpp.ios.debug.xcframework": ""
+}
+ios.release = {
+    "res://addons/mlgodotkit/bin/libgodot-cpp.ios.release.xcframework": ""
+}
