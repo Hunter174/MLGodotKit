@@ -1,3 +1,21 @@
+# -----------------------------------------
+# Godot-specific ignores
+# -----------------------------------------
+# Godot's import cache (auto-generated)
+.import/
+# Godot's export directory (if you use it)
+.export/
+# Export presets can contain local paths or machine-specific data
+export_presets.cfg
+
+# Optional: If you want to ignore compiled scripts or custom build artifacts
+# for Godot 4, you might add:
+bin/
+build/
+
+# -----------------------------------------
+# C/C++ build artifacts
+# -----------------------------------------
 # Prerequisites
 *.d
 
@@ -16,10 +34,6 @@
 *.dylib
 *.dll
 
-# Fortran module files
-*.mod
-*.smod
-
 # Compiled Static libraries
 *.lai
 *.la
@@ -30,3 +44,33 @@
 *.exe
 *.out
 *.app
+
+# -----------------------------------------
+# IDE / Editor / OS-specific
+# -----------------------------------------
+# JetBrains IDEs
+.idea/
+*.iml
+
+# Visual Studio Code
+.vscode/
+
+# MacOS
+.DS_Store
+
+# Windows Thumbnails
+Thumbs.db
+
+# Linux files
+*~
+
+# -----------------------------------------
+# Optional: If you want to ignore certain
+# Godot project files (e.g., .tscn, .tres),
+# you can add them here. But usually you
+# DO want scenes & resources in version control.
+#
+# Example (NOT recommended for typical projects):
+# *.tscn
+# *.tres
+# -----------------------------------------
