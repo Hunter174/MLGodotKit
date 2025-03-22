@@ -95,7 +95,7 @@ Eigen::MatrixXf Layer::backward(const Eigen::MatrixXf& error) {
                           ", Values: " + godot::String(eigen_to_string(biases).c_str()));
 
     // Compute the next error gradient
-    Eigen::MatrixXf grad_input = delta * weights;
+    Eigen::MatrixXf grad_input = delta * weights.transpose();
     grad_input = stable_round(grad_input, precision);
 
     // Debugging: Print the next error gradient and its shape
