@@ -42,7 +42,7 @@ void NNNode::backward(godot::Array error) {
     }
 
     // Decay Learning Rate
-    learning_rate *= 0.995;
+//    learning_rate *= 0.995;
 
     // Clamp the learning rate to be within a specific range [min_lr, max_lr]
     double min_lr = 1e-5;  // Minimum learning rate

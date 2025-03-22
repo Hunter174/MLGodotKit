@@ -8,6 +8,7 @@
 
 class Layer {
 private:
+    int precision = 8;
     int num_neurons;
     Eigen::MatrixXf weights;
     Eigen::MatrixXf biases;
@@ -20,6 +21,10 @@ private:
 
     std::function<Eigen::MatrixXf(const Eigen::MatrixXf&)> activation_func;
     std::function<Eigen::MatrixXf(const Eigen::MatrixXf&)> derivative_func;
+
+    // Utility
+    Eigen::MatrixXf stable_round(const Eigen::MatrixXf& mat, int precision = 8, float threshold = 1e-4);
+
 
 public:
   	//Public Variables

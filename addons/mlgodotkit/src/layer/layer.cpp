@@ -49,7 +49,6 @@ Eigen::MatrixXf Layer::forward(const Eigen::MatrixXf& X) {
 	debug_print(verbosity, 2, "Linear combination (z) -> Shape: " + godot::String::num(z.rows()) + "x" + godot::String::num(z.cols()) +
                           ", Values: " + godot::String(eigen_to_string(z).c_str()));
 
-
     output = activation_func(z);
     grad_z = z;
 
@@ -63,7 +62,7 @@ Eigen::MatrixXf Layer::forward(const Eigen::MatrixXf& X) {
 Eigen::MatrixXf Layer::backward(const Eigen::MatrixXf& error) {
     // Compute the delta (error term)
     Eigen::MatrixXf delta = error.cwiseProduct(derivative_func(grad_z));
-    delta = round_matrix(delta, 5);
+    delta = stable_round(delta, precision);
 
     // Debugging: Print the delta (error term) and its shape
     debug_print(verbosity, 3, "Delta -> Shape: " + godot::String::num(delta.rows()) + "x" + godot::String::num(delta.cols()) +
@@ -73,8 +72,8 @@ Eigen::MatrixXf Layer::backward(const Eigen::MatrixXf& error) {
     Eigen::MatrixXf dW = input.transpose() * delta;
     Eigen::MatrixXf db = delta.colwise().sum();
 
-    dW = round_matrix(dW, 5);
-    db = round_matrix(db, 5);
+    dW = stable_round(dW, precision);
+    db = stable_round(db, precision);
 
     // Debugging: Print gradients
     debug_print(verbosity, 3, "dW -> Shape: " + godot::String::num(dW.rows()) + "x" + godot::String::num(dW.cols()) +
@@ -82,40 +81,12 @@ Eigen::MatrixXf Layer::backward(const Eigen::MatrixXf& error) {
     debug_print(verbosity, 3, "db -> Shape: " + godot::String::num(db.rows()) + "x" + godot::String::num(db.cols()) +
                           ", Values: " + godot::String(eigen_to_string(db).c_str()));
 
-    dW = round_matrix(dW, 5);
-    db = round_matrix(db, 5);
-
-    // Debugging: Print clipped gradients
-    debug_print(verbosity, 3, "Clipped dW -> Shape: " + godot::String::num(dW.rows()) + "x" + godot::String::num(dW.cols()) +
-                          ", Values: " + godot::String(eigen_to_string(dW).c_str()));
-    debug_print(verbosity, 3, "Clipped db -> Shape: " + godot::String::num(db.rows()) + "x" + godot::String::num(db.cols()) +
-                          ", Values: " + godot::String(eigen_to_string(db).c_str()));
-
     // Update weights and biases with gradient clipping
     weights -= lr * dW;
     biases -= lr * db;
 
-    // Normalize and round weights and biases for numerical stability
-	weights = round_matrix(weights, 5); // For example, round to 5 decimal places
-	biases = round_matrix(biases, 5);
-
-    // Standardize the weights
-	if (weights.rows() > 1) {
-    	float mean = weights.mean();
-    	float std_dev = std::sqrt((weights.array() - mean).square().mean());
-    	if (std_dev > 0) { // Avoid division by zero
-        	weights = (weights.array() - mean) / std_dev;
-    	}
-	}
-
-	// Standardize the biases
-	if (biases.rows() > 1) {
-    	float mean = biases.mean();
-    	float std_dev = std::sqrt((biases.array() - mean).square().mean());
-    	if (std_dev > 0) { // Avoid division by zero
-        	biases = (biases.array() - mean) / std_dev;
-    	}
-	}
+	weights = stable_round(weights, precision);
+	biases = stable_round(biases, precision);
 
     // Debugging: Print updated weights and biases
     debug_print(verbosity, 3, "Updated weights -> Shape: " + godot::String::num(weights.rows()) + "x" + godot::String::num(weights.cols()) +
@@ -125,7 +96,7 @@ Eigen::MatrixXf Layer::backward(const Eigen::MatrixXf& error) {
 
     // Compute the next error gradient
     Eigen::MatrixXf grad_input = delta * weights;
-    grad_input = round_matrix(grad_input, 5);
+    grad_input = stable_round(grad_input, precision);
 
     // Debugging: Print the next error gradient and its shape
     debug_print(verbosity, 3, "grad_input -> Shape: " + godot::String::num(grad_input.rows()) + "x" + godot::String::num(grad_input.cols()) +
@@ -174,4 +145,17 @@ godot::String Layer::to_string() const {
            << biases.transpose() << "\n";
 
     return godot::String(stream.str().c_str());
+}
+
+Eigen::MatrixXf Layer::stable_round(const Eigen::MatrixXf& mat, int precision, float threshold) {
+    Eigen::MatrixXf result = mat;
+    float scale = std::pow(10.0f, precision);
+    for (int i = 0; i < result.rows(); ++i) {
+        for (int j = 0; j < result.cols(); ++j) {
+            if (std::abs(result(i, j)) > threshold) {
+                result(i, j) = std::round(result(i, j) * scale) / scale;
+            }
+        }
+    }
+    return result;
 }
