@@ -10,7 +10,6 @@ export_presets.cfg
 
 # Optional: If you want to ignore compiled scripts or custom build artifacts
 # for Godot 4, you might add:
-bin/
 build/
 
 # -----------------------------------------
