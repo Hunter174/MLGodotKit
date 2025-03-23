@@ -26,7 +26,8 @@ func _ready():
 	nn_model.set_learning_rate(0.1)
 	
 	# Add layers
-	nn_model.add_layer(2, 4, "sigmoid")
+	nn_model.add_layer(2, 4, "relu")
+	nn_model.add_layer(4, 4, "relu")
 	nn_model.add_layer(4, 1, "sigmoid")
 	
 	# Print model summary
