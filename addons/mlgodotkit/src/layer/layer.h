@@ -24,6 +24,8 @@ private:
 
     // Utility
     Eigen::MatrixXf stable_round(const Eigen::MatrixXf& mat, int precision = 8, float threshold = 1e-4);
+    std::tuple<Eigen::MatrixXf, Eigen::MatrixXf> init_weights(int input_size, int out_features, const std::string& activation_type);
+
 
 
 public:

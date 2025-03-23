@@ -6,17 +6,13 @@ Layer::Layer(int input_size, int out_features, float learning_rate, std::string 
 
     lr = learning_rate;
 
-    if (activation_type == "sigmoid") {
-		//Initialize weights and bias
-      	weights = Eigen::MatrixXf::Random(input_size, out_features) * sqrt(1.0 / input_size);
-		biases = Eigen::MatrixXf::Zero(1, out_features);
+    std::tie(weights, biases) = init_weights(input_size, out_features, activation_type);
 
+    // Initialize the weights based on the activation func
+    if (activation_type == "sigmoid") {
         activation_func = sigmoid;
         derivative_func = sigmoid_derivative;
     } else if (activation_type == "relu") {
-      	weights = Eigen::MatrixXf::Random(input_size, out_features) * sqrt(2.0 / (input_size + out_features));
-    	biases = Eigen::MatrixXf::Zero(1, out_features);
-
         activation_func = relu;
         derivative_func = relu_derivative;
     } else { //default to relu for now
@@ -136,6 +132,27 @@ Eigen::MatrixXf Layer::relu_derivative(const Eigen::MatrixXf& z) {
     return result;
 }
 
+// *** Weight Initialization Method(s) ***
+
+std::tuple<Eigen::MatrixXf, Eigen::MatrixXf> init_weights(int input_size, int out_features, const std::string& activation_type)
+{
+    Eigen::MatrixXf weights;
+    Eigen::MatrixXf biases = Eigen::MatrixXf::Zero(1, out_features);
+
+    if (activation_type == "sigmoid") {
+        weights = Eigen::MatrixXf::Random(input_size, out_features) * std::sqrt(1.0f / input_size);
+    } else if (activation_type == "relu") {
+        weights = Eigen::MatrixXf::Random(input_size, out_features) * std::sqrt(2.0f / (input_size + out_features));
+    } else {
+        // Default to He initialization
+        weights = Eigen::MatrixXf::Random(input_size, out_features) * std::sqrt(2.0f / input_size);
+    }
+
+    return std::make_tuple(weights, biases);
+}
+
+// *** Class Specific Utility Functions ***
+
 godot::String Layer::to_string() const {
     std::ostringstream stream;
     stream << "Layer Information:\n";
@@ -147,6 +164,7 @@ godot::String Layer::to_string() const {
     return godot::String(stream.str().c_str());
 }
 
+// Rounding for numeric stability
 Eigen::MatrixXf Layer::stable_round(const Eigen::MatrixXf& mat, int precision, float threshold) {
     Eigen::MatrixXf result = mat;
     float scale = std::pow(10.0f, precision);
