@@ -134,7 +134,7 @@ Eigen::MatrixXf Layer::relu_derivative(const Eigen::MatrixXf& z) {
 
 // *** Weight Initialization Method(s) ***
 
-std::tuple<Eigen::MatrixXf, Eigen::MatrixXf> init_weights(int input_size, int out_features, const std::string& activation_type)
+std::tuple<Eigen::MatrixXf, Eigen::MatrixXf> Layer::init_weights(int input_size, int out_features, const std::string& activation_type)
 {
     Eigen::MatrixXf weights;
     Eigen::MatrixXf biases = Eigen::MatrixXf::Zero(1, out_features);
