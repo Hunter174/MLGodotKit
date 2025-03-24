@@ -14,18 +14,22 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Collect build files
+      - name: Prepare addons folder structure
         run: |
-          mkdir release
-          cp mlgodotkit/bin/*.dll release/
-          cp mlgodotkit/bin/*.a release/
-          cp mlgodotkit/mlgodotkit.gdextension release/
-          cd release
-          zip -r ../mlgodotkit.zip .
+          mkdir -p addons/mlgodotkit
+          cp mlgodotkit/bin/*.dll addons/mlgodotkit/
+          cp mlgodotkit/bin/*.a addons/mlgodotkit/
+          cp mlgodotkit/mlgodotkit.gdextension addons/mlgodotkit/
+          cp LICENSE addons/mlgodotkit/
+          cp README.md addons/mlgodotkit/
+
+      - name: Zip into correct structure
+        run: |
+          zip -r mlgodotkit.zip addons LICENSE README.md project.godot icon.png
 
       - name: Upload to GitHub Releases
         uses: softprops/action-gh-release@v1
         with:
           files: ./mlgodotkit.zip
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT}}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
