@@ -3,6 +3,10 @@
 **Empower your Godot projects with the power of machine learning!**  
 MLGodotKit is a C++ GDExtension for Godot, enabling seamless integration of AI-driven features into your games and applications. With support for adaptive behaviors and real-time decision-making, it’s designed to inspire innovation and enhance gameplay.
 
+<p align="center">
+  <img src="place_holder_img.PNG" alt="MLGodotKit Logo" width="200"/>
+</p>
+
 ---
 
 ## Node Extensions in Progress
