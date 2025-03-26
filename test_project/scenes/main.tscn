@@ -1,12 +1,16 @@
-[gd_scene load_steps=2 format=3 uid="uid://x5q157yqoikp"]
+[gd_scene load_steps=4 format=3 uid="uid://x5q157yqoikp"]
 
+[ext_resource type="Script" uid="uid://pn5fi2m8skpi" path="res://scripts/tests/test_LRNode.gd" id="1_sugp2"]
+[ext_resource type="Script" uid="uid://e0cm5ekqvctt" path="res://scripts/tests/test_DTreeNode.gd" id="2_jyhfs"]
 [ext_resource type="Script" uid="uid://brat141r8ve11" path="res://scripts/tests/test_NNNode.gd" id="3_sugp2"]
 
 [node name="main" type="Node2D"]
 
 [node name="test_lrnode" type="Node" parent="."]
+script = ExtResource("1_sugp2")
 
 [node name="test_dtreenode" type="Node" parent="."]
+script = ExtResource("2_jyhfs")
 
 [node name="test_nnnode" type="Node" parent="."]
 script = ExtResource("3_sugp2")
