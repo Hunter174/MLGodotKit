@@ -4,7 +4,7 @@
 MLGodotKit is a C++ GDExtension for Godot, enabling seamless integration of AI-driven features into your games and applications. With support for adaptive behaviors and real-time decision-making, it’s designed to inspire innovation and enhance gameplay.
 
 <p align="center">
-  <img src="MLGodotKit_logo.png" alt="MLGodotKit Logo" width="500"/>
+  <img src="MLGodotKit_logo.png" alt="MLGodotKit Logo" width="1000"/>
 </p>
 
 ---
@@ -16,15 +16,25 @@ MLGodotKit is a C++ GDExtension for Godot, enabling seamless integration of AI-d
 
 ---
 
+## LIMITATIONS
+Please note that this is a work in process pet project of mine and as such will come with a few bugs. If you
+enjoy the project and want to support please open an issue for desired features or bug fixes! 
+
+Next Features to be added:
+- A linear layer for the Neural Network Model for regression based predictons
+- A robust collection of popular loss functions for out of the box use cases
+- More supervised and unsupervised model implementations
+- If you'd like to see something else add an issue!
+
 ## Getting Started
 
 Here are quick examples of how to use the three core models in **MLGodotKit**:
 
-> All models are GDExtension nodes and can be used directly in any Godot scene or script.
+> *All models are GDExtension nodes and can be used directly in any Godot scene or script.*
 
 ---
 
-### Linear Regression (`LRNode`)
+## Linear Regression (`LRNode`)
 
 ```gdscript
 @onready var lr_model = LRNode.new()
@@ -57,8 +67,12 @@ func _ready():
 	var result = tree.predict([[2], [11]])
 	print("Predictions:", result)  # [0, 1]
 ```
+---
 
 ## Neural Network (`NNNode`)
+
+> *Note: All loss functions are left to the user to implement please see examples for suggested implementation
+will be implemented natively at a later date.*
 
 ```gdscript
 @onready var nn = NNNode.new()
@@ -83,12 +97,6 @@ func _ready():
 		print("Input:", inputs[i], " Predicted:", output, "Expected:", targets[i])
 
 ```
-
-
-
-## Current Status
-MLGodotKit is a **work in progress**, with ongoing development focused on core functionality and cross-platform support.
-
 ---
 
 ## Credits
