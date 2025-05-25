@@ -1,0 +1,51 @@
+[gd_scene load_steps=3 format=3 uid="uid://b6lb0d18sykt2"]
+
+[ext_resource type="Script" uid="uid://dhs334rdxu3ec" path="res://scripts/DecisionTreeScene.gd" id="1_qr0vu"]
+[ext_resource type="Script" uid="uid://cvrd34gbuluwc" path="res://scripts/PlotArea.gd" id="2_rb1i3"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_qr0vu")
+
+[node name="DTreeNode" type="DTreeNode" parent="."]
+
+[node name="PlotArea" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 401.0
+offset_top = 437.0
+offset_right = 704.0
+offset_bottom = 630.0
+script = ExtResource("2_rb1i3")
+
+[node name="DataPoints" type="Node2D" parent="PlotArea"]
+
+[node name="ClassificationMap" type="TextureRect" parent="PlotArea"]
+layout_mode = 0
+offset_left = -335.0
+offset_top = -373.0
+offset_right = 91.0
+offset_bottom = -45.0
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="TrainButton" type="Button" parent="UI"]
+offset_left = 44.0
+offset_top = 548.0
+offset_right = 251.0
+offset_bottom = 615.0
+text = "Train Classification Model"
+
+[node name="ClassToggleButton" type="Button" parent="UI"]
+offset_left = 879.0
+offset_top = 523.0
+offset_right = 1113.0
+offset_bottom = 611.0
+
+[node name="PredictionLabel" type="Label" parent="UI"]
+offset_left = 22.0
+offset_top = 5.0
+offset_right = 62.0
+offset_bottom = 28.0
+
+[connection signal="pressed" from="UI/TrainButton" to="." method="_on_train_button_pressed"]
+[connection signal="pressed" from="UI/ClassToggleButton" to="." method="_on_toggle_button_pressed"]
