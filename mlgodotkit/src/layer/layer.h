@@ -1,10 +1,9 @@
 #ifndef LAYER_H
 #define LAYER_H
 
-#include <godot_cpp/variant/utility_functions.hpp>
 #include <sstream>
 #include <Eigen/Dense>
-#include "utility/utils.h"
+//#include "utility/utils.h"
 
 class Layer {
 private:
@@ -47,7 +46,7 @@ public:
     static Eigen::MatrixXf relu(const Eigen::MatrixXf& x);
     static Eigen::MatrixXf relu_derivative(const Eigen::MatrixXf& x);
 
-    godot::String to_string() const;
+//    godot::String to_string() const;
 
     // Getters and Setters
     Eigen::MatrixXf get_weights() const { return weights; }

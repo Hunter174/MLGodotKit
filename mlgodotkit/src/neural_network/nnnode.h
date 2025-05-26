@@ -33,7 +33,7 @@ public:
     void backward(godot::Array error);
 
     // Debug Helpers
-    void model_summary();
+    //    void model_summary();
 
     //Getters and Setters
     void set_verbosity(int verbosity);

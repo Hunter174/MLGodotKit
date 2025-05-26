@@ -1,0 +1,29 @@
+import os
+
+env = Environment(CXX="g++", CXXFLAGS="-std=c++17 -Wall")
+
+# Use absolute project root
+project_root = os.path.abspath("..")  # ../mlgodotkit/
+src_root = os.path.join(project_root, "src")
+
+env.Append(CPPPATH=[
+    "C:/libs/eigen-3.4.0",  # Eigen
+    src_root,               # Now utility/utils.h will resolve
+    ".",                    # Catch2 amalgamated
+])
+
+# Collect all source files
+sources = (
+    Glob(os.path.join(src_root, "test_network_node", "*.cpp")) +
+    Glob(os.path.join(src_root, "layer", "*.cpp"))
+)
+
+# Test-specific sources
+test_sources = [
+    "catch_amalgamated.cpp",
+    "layer/test_layer.cpp"
+] + sources
+
+# Build and run test binary
+test_bin = env.Program("all_tests", test_sources)
+env.AlwaysBuild(env.Alias("run_tests", test_bin, "test_layer"))
