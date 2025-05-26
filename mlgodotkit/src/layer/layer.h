@@ -40,6 +40,8 @@ public:
     Eigen::MatrixXf forward(const Eigen::MatrixXf& X);
     Eigen::MatrixXf backward(const Eigen::MatrixXf& loss_gradient);
 
+    static Eigen::MatrixXf linear(const Eigen::MatrixXf& x);
+    static Eigen::MatrixXf linear_derivative(const Eigen::MatrixXf& z);
     static Eigen::MatrixXf sigmoid(const Eigen::MatrixXf& x);
     static Eigen::MatrixXf sigmoid_derivative(const Eigen::MatrixXf& x);
     static Eigen::MatrixXf relu(const Eigen::MatrixXf& x);

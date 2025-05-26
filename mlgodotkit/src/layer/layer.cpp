@@ -15,7 +15,11 @@ Layer::Layer(int input_size, int out_features, float learning_rate, std::string 
     } else if (activation_type == "relu") {
         activation_func = relu;
         derivative_func = relu_derivative;
-    } else { //default to relu for now
+    } else if (activation_type == "linear") {
+        activation_func = linear;
+        derivative_func = linear_derivative;
+    } else {
+        // fallback default
         activation_func = relu;
         derivative_func = relu_derivative;
     }
@@ -102,6 +106,17 @@ Eigen::MatrixXf Layer::backward(const Eigen::MatrixXf& error) {
 }
 
 // *** Activation Functions ***
+
+// Linear Activation (identity)
+Eigen::MatrixXf Layer::linear(const Eigen::MatrixXf& x) {
+    return x;
+}
+
+// Derivative of Linear Activation
+Eigen::MatrixXf Layer::linear_derivative(const Eigen::MatrixXf& z) {
+    // Derivative of f(x) = x is 1
+    return Eigen::MatrixXf::Ones(z.rows(), z.cols());
+}
 
 // Sigmoid Activation
 Eigen::MatrixXf Layer::sigmoid(const Eigen::MatrixXf& x) {
