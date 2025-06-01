@@ -21,7 +21,7 @@ Please note that this is a work in process pet project of mine and as such will 
 enjoy the project and want to support please open an issue for desired features or bug fixes! 
 
 Next Features to be added:
-- A linear layer for the Neural Network Model for regression based predictons
+- ~~A linear layer for the Neural Network Model for regression based predictions~~
 - A robust collection of popular loss functions for out of the box use cases
 - More supervised and unsupervised model implementations
 - If you'd like to see something else add an issue!
