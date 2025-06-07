@@ -20,6 +20,8 @@ android.debug.x86_64 = "res://addons/mlgodotkit/bin/mlgodotkit.android.debug.x86
 android.release.x86_64 = "res://addons/mlgodotkit/bin/mlgodotkit.android.release.x86_64.so"
 android.debug.arm64 = "res://addons/mlgodotkit/bin/mlgodotkit.android.debug.arm64.so"
 android.release.arm64 = "res://addons/mlgodotkit/bin/mlgodotkit.android.release.arm64.so"
+web.debug = "res://addons/mlgodotkit/bin/mlgodotkit.web.template_debug.wasm32.wasm"
+web.release = "res://addons/mlgodotkit/bin/mlgodotkit.web.template_debug.wasm32.wasm"
 
 [dependencies]
 ios.debug = {

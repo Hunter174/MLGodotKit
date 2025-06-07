@@ -20,7 +20,6 @@ sources = (
     Glob("src/*.cpp")
     + Glob("src/utility/*.cpp")
     + Glob("src/neural_network/*.cpp")
-    + Glob("src/replay_buffer/*.cpp")
     + Glob("src/test_network_node/*.cpp")
     + Glob("src/layer/*.cpp")
     + Glob("src/linear_regression/*.cpp")
