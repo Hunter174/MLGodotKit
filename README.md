@@ -8,12 +8,19 @@ MLGodotKit is a C++ GDExtension for Godot, enabling seamless integration of AI-d
 </p>
 
 
-## 🚀 New Feature: WebAssembly Support
+## 🎉 New Feature: WebAssembly Support
 
 **WebAssembly (WASM) binaries** have been added to the project to enable web-based game development.  
 You can now build and run your game directly in the browser using Godot's Web export.
 
-📘 [See how to compile GDExtensions for the Web](https://docs.godotengine.org/en/stable/contributing/development/compiling/compiling_for_web.html#gdextension)
+**Play the Web Demo:**  
+[Launch Game in Browser](https://fastidious-biscochitos-90f618.netlify.app)
+
+📁 The exported web build is located at:  
+`examples/NNPong/web/`
+
+📘 Learn how to compile GDExtensions for the Web:  
+[Godot Docs – Compiling for Web](https://docs.godotengine.org/en/stable/contributing/development/compiling/compiling_for_web.html#gdextension)
 
 ## Node Extensions in Progress
 - **Data Science Tooling**: Tools for preprocessing, analyzing, and visualizing data directly in Godot.
