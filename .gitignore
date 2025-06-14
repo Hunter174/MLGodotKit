@@ -3,6 +3,7 @@
 # -----------------------------------------
 # Godot 4+ specific ignores
 .godot/
+./mlgodotkit/godot-cpp
 
 # Godot-specific ignores
 .import/
