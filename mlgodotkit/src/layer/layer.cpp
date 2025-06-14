@@ -1,6 +1,6 @@
 #include "layer/layer.h"
 
-//using namespace Utils;
+using namespace Activations;
 
 Layer::Layer(int input_size, int out_features, float learning_rate, std::string activation_type) {
 
@@ -25,11 +25,8 @@ Layer::Layer(int input_size, int out_features, float learning_rate, std::string 
     }
 
     // Debugging: Print the initial weights and biases
-//	debug_print(verbosity, 1, "Initial weights -> Shape: " + godot::String::num(weights.rows()) + "x" + godot::String::num(weights.cols()) +
-//                          ", Values: " + godot::String(eigen_to_string(weights).c_str()));
-//
-//	debug_print(verbosity, 1, "Initial biases -> Shape: " + godot::String::num(biases.rows()) + "x" + godot::String::num(biases.cols()) +
-//                          ", Values: " + godot::String(eigen_to_string(biases).c_str()));
+    Logger::debug(2, "Initialized weights:\n" + GodotUtils::eigen_to_string(weights));
+    Logger::debug(2, "Initialized biases:\n" + GodotUtils::eigen_to_string(biases));
 }
 
 Layer::~Layer() {}
@@ -38,23 +35,19 @@ Eigen::MatrixXf Layer::forward(const Eigen::MatrixXf& X) {
     input = X;
 
     // Debugging: Print input matrix and its shape
-//	debug_print(verbosity, 2, "Forward input -> Shape: " + godot::String::num(input.rows()) + "x" + godot::String::num(input.cols()) +
-//                          ", Values: " + godot::String(eigen_to_string(input).c_str()));
-
+    Logger::debug(2, "Forward input (X):\n" + GodotUtils::eigen_to_string(input));
 
     // Compute the linear combination: z = X * weights + biases
     Eigen::MatrixXf z = (input * weights) + biases;
 
     // Debugging: Print the linear combination matrix z and its shape
-//	debug_print(verbosity, 2, "Linear combination (z) -> Shape: " + godot::String::num(z.rows()) + "x" + godot::String::num(z.cols()) +
-//                          ", Values: " + godot::String(eigen_to_string(z).c_str()));
+    Logger::debug(2, "Linear combination (Z = XW + b):\n" + GodotUtils::eigen_to_string(z));
 
     output = activation_func(z);
     grad_z = z;
 
     // Debugging: Print the output of the activation function
-//	debug_print(verbosity, 2, "Activation-> Shape: " + godot::String::num(output.rows()) + "x" + godot::String::num(output.cols()) +
-//                          ", Values: " + godot::String(eigen_to_string(output).c_str()));
+    Logger::debug(2, "Activation output:\n" + GodotUtils::eigen_to_string(output));
 
     return output;
 }
@@ -62,93 +55,35 @@ Eigen::MatrixXf Layer::forward(const Eigen::MatrixXf& X) {
 Eigen::MatrixXf Layer::backward(const Eigen::MatrixXf& error) {
     // Compute the delta (error term)
     Eigen::MatrixXf delta = error.cwiseProduct(derivative_func(grad_z));
-    delta = stable_round(delta, precision);
 
     // Debugging: Print the delta (error term) and its shape
-//    debug_print(verbosity, 3, "Delta -> Shape: " + godot::String::num(delta.rows()) + "x" + godot::String::num(delta.cols()) +
-//                          ", Values: " + godot::String(eigen_to_string(delta).c_str()));
+    Logger::debug(3, "Delta (error * activation'):\n" + GodotUtils::eigen_to_string(delta));
 
     // Compute gradients for weights and biases
     Eigen::MatrixXf dW = input.transpose() * delta;
     Eigen::MatrixXf db = delta.colwise().sum();
 
-    dW = stable_round(dW, precision);
-    db = stable_round(db, precision);
-
     // Debugging: Print gradients
-//    debug_print(verbosity, 3, "dW -> Shape: " + godot::String::num(dW.rows()) + "x" + godot::String::num(dW.cols()) +
-//                          ", Values: " + godot::String(eigen_to_string(dW).c_str()));
-//    debug_print(verbosity, 3, "db -> Shape: " + godot::String::num(db.rows()) + "x" + godot::String::num(db.cols()) +
-//                          ", Values: " + godot::String(eigen_to_string(db).c_str()));
+    Logger::debug(3, "Weight gradients (dW):\n" + GodotUtils::eigen_to_string(dW));
+    Logger::debug(3, "Bias gradients (db):\n" + GodotUtils::eigen_to_string(db));
 
-    // Update weights and biases with gradient clipping
+    // Update weights and biases
     weights -= lr * dW;
     biases -= lr * db;
 
-	weights = stable_round(weights, precision);
-	biases = stable_round(biases, precision);
-
-    // Debugging: Print updated weights and biases
-//    debug_print(verbosity, 3, "Updated weights -> Shape: " + godot::String::num(weights.rows()) + "x" + godot::String::num(weights.cols()) +
-//                          ", Values: " + godot::String(eigen_to_string(weights).c_str()));
-//    debug_print(verbosity, 3, "Updated biases -> Shape: " + godot::String::num(biases.rows()) + "x" + godot::String::num(biases.cols()) +
-//                          ", Values: " + godot::String(eigen_to_string(biases).c_str()));
+    Logger::debug(3, "Updated weights:\n" + GodotUtils::eigen_to_string(weights));
+    Logger::debug(3, "Updated biases:\n" + GodotUtils::eigen_to_string(biases));
 
     // Compute the next error gradient
     Eigen::MatrixXf grad_input = delta * weights.transpose();
-    grad_input = stable_round(grad_input, precision);
 
-//    // Debugging: Print the next error gradient and its shape
-//    debug_print(verbosity, 3, "grad_input -> Shape: " + godot::String::num(grad_input.rows()) + "x" + godot::String::num(grad_input.cols()) +
-//               	 			", Values: " + godot::String(eigen_to_string(grad_input).c_str()));
+    // Debugging: Print the next error gradient and its shape
+    Logger::debug(3, "Gradient passed to previous layer:\n" + GodotUtils::eigen_to_string(grad_input));
 
     return grad_input;
 }
 
-// *** Activation Functions ***
-
-// Linear Activation (identity)
-Eigen::MatrixXf Layer::linear(const Eigen::MatrixXf& x) {
-    return x;
-}
-
-// Derivative of Linear Activation
-Eigen::MatrixXf Layer::linear_derivative(const Eigen::MatrixXf& z) {
-    // Derivative of f(x) = x is 1
-    return Eigen::MatrixXf::Ones(z.rows(), z.cols());
-}
-
-// Sigmoid Activation
-Eigen::MatrixXf Layer::sigmoid(const Eigen::MatrixXf& x) {
-    Eigen::MatrixXf result = 1.0 / (1.0 + (-x.array()).exp());
-
-    // Clip values to prevent overflow in case of extreme values
-    result = result.array().min(1.0 - epsilon).max(epsilon);
-    return result;
-}
-
-// Sigmoid Derivative
-Eigen::MatrixXf Layer::sigmoid_derivative(const Eigen::MatrixXf& z) {
-    Eigen::MatrixXf s = sigmoid(z);
-
-    // Ensure that derivative is numerically stable
-    return s.array() * (1.0 - s.array()).max(epsilon);
-}
-
-// ReLU Activation
-Eigen::MatrixXf Layer::relu(const Eigen::MatrixXf& x) {
-    Eigen::MatrixXf result = x.cwiseMax(0);
-    return result;
-}
-
-// ReLU Derivative
-Eigen::MatrixXf Layer::relu_derivative(const Eigen::MatrixXf& z) {
-    Eigen::MatrixXf result = (z.array() > 0).cast<float>();
-    return result;
-}
-
 // *** Weight Initialization Method(s) ***
-
 std::tuple<Eigen::MatrixXf, Eigen::MatrixXf> Layer::init_weights(int input_size, int out_features, const std::string& activation_type)
 {
     Eigen::MatrixXf weights;
@@ -167,17 +102,16 @@ std::tuple<Eigen::MatrixXf, Eigen::MatrixXf> Layer::init_weights(int input_size,
 }
 
 // *** Class Specific Utility Functions ***
+std::string Layer::to_string() const {
+    std::ostringstream stream;
+    stream << "Layer Information:\n";
+    stream << "  - Weights (Shape: " << weights.rows() << "x" << weights.cols() << "):\n\t"
+           << weights << "\n";
+    stream << "  - Biases (Shape: " << biases.size() << "):\n\t"
+           << biases.transpose() << "\n";
 
-//godot::String Layer::to_string() const {
-//    std::ostringstream stream;
-//    stream << "Layer Information:\n";
-//    stream << "  - Weights (Shape: " << weights.rows() << "x" << weights.cols() << "):\n\t"
-//           << weights << "\n";
-//    stream << "  - Biases (Shape: " << biases.size() << "):\n\t"
-//           << biases.transpose() << "\n";
-//
-//    return godot::String(stream.str().c_str());
-//}
+    return stream.str();
+}
 
 // Rounding for numeric stability
 Eigen::MatrixXf Layer::stable_round(const Eigen::MatrixXf& mat, int precision, float threshold) {
