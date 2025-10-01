@@ -126,3 +126,15 @@ Eigen::MatrixXf Layer::stable_round(const Eigen::MatrixXf& mat, int precision, f
     }
     return result;
 }
+
+void Layer::copy_weights(const Layer& source) {
+    this->weights = source.weights;
+    this->biases = source.biases;
+}
+
+int Layer::get_input_size() const {
+    return weights.rows();
+}
+int Layer::get_output_size() const {
+    return weights.cols();
+}

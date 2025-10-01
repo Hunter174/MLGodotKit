@@ -14,6 +14,7 @@ void NNNode::_bind_methods() {
     godot::ClassDB::bind_method(godot::D_METHOD("model_summary"), &NNNode::model_summary);
     godot::ClassDB::bind_method(godot::D_METHOD("set_learning_rate", "lr"), &NNNode::set_learning_rate);
     godot::ClassDB::bind_method(godot::D_METHOD("set_verbosity", "level"), &NNNode::set_verbosity);
+    godot::ClassDB::bind_method(godot::D_METHOD("copy_weights", "source"), &NNNode::copy_weights);
 }
 
 void NNNode::add_layer(int input_size, int output_size, godot::String activation){
@@ -82,5 +83,28 @@ void NNNode::set_learning_rate(double lr){
 	this->learning_rate = lr;
 	for(int i = 0; i < layers.size(); i++){
 		layers[i].set_learning_rate(lr);
+    }
+}
+
+void NNNode::copy_weights(const NNNode* source) {
+    if (!source) return;
+    if (source->layers.size() != layers.size()) {
+        godot::UtilityFunctions::print("NNNode::copy_weights - Layer size mismatch!");
+        godot::UtilityFunctions::print("Target NN architecture:");
+        for (size_t i = 0; i < layers.size(); ++i) {
+            godot::UtilityFunctions::print(
+                "  Layer ", (int)i, ": in=", layers[i].get_input_size(), " out=", layers[i].get_output_size()
+            );
+        }
+        godot::UtilityFunctions::print("Source NN architecture:");
+        for (size_t i = 0; i < source->layers.size(); ++i) {
+            godot::UtilityFunctions::print(
+                "  Layer ", (int)i, ": in=", source->layers[i].get_input_size(), " out=", source->layers[i].get_output_size()
+            );
+        }
+        return;
+    }
+    for (size_t i = 0; i < layers.size(); ++i) {
+        layers[i].copy_weights(source->layers[i]);
     }
 }

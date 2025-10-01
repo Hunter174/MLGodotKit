@@ -39,6 +39,8 @@ public:
     void set_verbosity(int verbosity);
     void set_learning_rate(double lr);
 
+    void copy_weights(const NNNode* source);
+
 };
 
 #endif // NNNODE_H
