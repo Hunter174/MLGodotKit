@@ -3,6 +3,7 @@
 # -----------------------------------------
 # Godot 4+ specific ignores
 .godot/
+**/godot-cpp/
 
 # Godot-specific ignores
 .import/

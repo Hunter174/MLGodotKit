@@ -24,7 +24,9 @@ sources = (
     + Glob("src/layer/*.cpp")
     + Glob("src/linear_regression/*.cpp")
     + Glob("src/decision_tree/*.cpp")
+    + Glob("src/activations/*.cpp")
 )
+
 
 if env["platform"] == "macos":
     library = env.SharedLibrary(

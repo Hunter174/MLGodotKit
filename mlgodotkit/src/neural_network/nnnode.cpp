@@ -1,4 +1,5 @@
 #include "nnnode.h"
+#include "utility/logger.h"
 
 using namespace Utils;
 
@@ -10,7 +11,7 @@ void NNNode::_bind_methods() {
     godot::ClassDB::bind_method(godot::D_METHOD("add_layer", "input_size", "output_size", "activation"), &NNNode::add_layer);
     godot::ClassDB::bind_method(godot::D_METHOD("forward", "input"), &NNNode::forward);
     godot::ClassDB::bind_method(godot::D_METHOD("backward", "error"), &NNNode::backward);
-//    godot::ClassDB::bind_method(godot::D_METHOD("model_summary"), &NNNode::model_summary);
+    godot::ClassDB::bind_method(godot::D_METHOD("model_summary"), &NNNode::model_summary);
     godot::ClassDB::bind_method(godot::D_METHOD("set_learning_rate", "lr"), &NNNode::set_learning_rate);
     godot::ClassDB::bind_method(godot::D_METHOD("set_verbosity", "level"), &NNNode::set_verbosity);
 }
@@ -56,18 +57,26 @@ void NNNode::backward(godot::Array error) {
     set_learning_rate(learning_rate);
 }
 
-//void NNNode::model_summary() {
-//    for (int i = 0; i < layers.size(); i++) {
-//        godot::UtilityFunctions::print(layers[i].to_string());
-//    }
-//}
+void NNNode::model_summary() {
+    for (int i = 0; i < layers.size(); i++) {
+        Logger::debug(1, layers[i].to_string());
+    }
+}
 
 void NNNode::set_verbosity(int verbosity) {
     this->verbosity = verbosity;
-    for(int i = 0; i < layers.size(); i++){
+    Logger::set_verbosity(verbosity);
+
+    // Route logs to Godot's output
+    Logger::set_handler([](const std::string& msg) {
+        godot::UtilityFunctions::print(godot::String(msg.c_str()));
+    });
+
+    for (int i = 0; i < layers.size(); i++) {
         layers[i].set_verbosity(verbosity);
     }
 }
+
 
 void NNNode::set_learning_rate(double lr){
 	this->learning_rate = lr;

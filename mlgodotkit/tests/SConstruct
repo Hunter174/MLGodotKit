@@ -15,13 +15,15 @@ env.Append(CPPPATH=[
 # Collect all source files
 sources = (
     Glob(os.path.join(src_root, "test_network_node", "*.cpp")) +
-    Glob(os.path.join(src_root, "layer", "*.cpp"))
+    Glob(os.path.join(src_root, "layer", "*.cpp")) +
+    Glob(os.path.join(src_root, "activations", "*.cpp"))
 )
 
 # Test-specific sources
 test_sources = [
     "catch_amalgamated.cpp",
-    "layer/test_layer.cpp"
+    "layer/test_layer.cpp",
+    "activations/test_activations.cpp"
 ] + sources
 
 # Build and run test binary
