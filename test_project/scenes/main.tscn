@@ -1,20 +1,18 @@
 [gd_scene load_steps=4 format=3 uid="uid://x5q157yqoikp"]
 
-[ext_resource type="Script" uid="uid://pn5fi2m8skpi" path="res://scripts/tests/test_LRNode.gd" id="1_sugp2"]
-[ext_resource type="Script" uid="uid://e0cm5ekqvctt" path="res://scripts/tests/test_DTreeNode.gd" id="2_jyhfs"]
-[ext_resource type="Script" uid="uid://brat141r8ve11" path="res://scripts/tests/test_NNNode.gd" id="3_sugp2"]
+[ext_resource type="Script" uid="uid://c7h0fkh55kqkw" path="res://addons/mlgodotkit/nodes/rlnode.gd" id="3_tbgi4"]
+[ext_resource type="Script" uid="uid://n0x7hl5styhq" path="res://scenes/reward_graph.gd" id="4_jyhfs"]
+[ext_resource type="Script" uid="uid://1ohyhnf75dh3" path="res://scenes/cart_pole_environment.gd" id="4_tbgi4"]
 
 [node name="main" type="Node2D"]
+z_index = 86
 
-[node name="test_lrnode" type="Node" parent="."]
-script = ExtResource("1_sugp2")
+[node name="RLNode" type="Node" parent="."]
+script = ExtResource("3_tbgi4")
+metadata/_custom_type_script = "uid://c7h0fkh55kqkw"
 
-[node name="test_dtreenode" type="Node" parent="."]
-script = ExtResource("2_jyhfs")
+[node name="CartPoleEnvironment" type="Node2D" parent="."]
+script = ExtResource("4_tbgi4")
 
-[node name="test_nnnode" type="Node" parent="."]
-script = ExtResource("3_sugp2")
-
-[node name="test_cleanup" type="Node" parent="."]
-
-[node name="Node" type="Node" parent="."]
+[node name="RewardGraph" type="Node2D" parent="."]
+script = ExtResource("4_jyhfs")

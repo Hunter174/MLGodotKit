@@ -9,6 +9,7 @@ namespace Utils {
 
     // Conversion tools from godot to eigen
     Eigen::MatrixXf godot_to_eigen(godot::Array array);
+    Eigen::MatrixXf godot_to_eigen(const godot::Array &arr, int batch_size);
     Eigen::VectorXf godot_to_eigen_vector(godot::Array array);
 
     // Conversion tools from eigen to godot

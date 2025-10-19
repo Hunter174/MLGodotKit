@@ -1,4 +1,5 @@
 #include "utils.h"
+#include "utility/logger.h"
 
 Eigen::MatrixXf Utils::godot_to_eigen(godot::Array array) {
     int rows = array.size();
@@ -33,6 +34,50 @@ Eigen::MatrixXf Utils::godot_to_eigen(godot::Array array) {
     return out;
 }
 
+Eigen::MatrixXf Utils::godot_to_eigen(const godot::Array &arr, int batch_size) {
+    if (arr.is_empty())
+        return Eigen::MatrixXf();
+
+    // Case 1: already a nested batch array [[...], [...]]
+    if (arr[0].get_type() == godot::Variant::ARRAY) {
+        int provided_batch = arr.size();
+        int feature_size = ((godot::Array)arr[0]).size();
+        Eigen::MatrixXf m(provided_batch, feature_size);
+        for (int i = 0; i < provided_batch; i++) {
+            godot::Array row = arr[i];
+            for (int j = 0; j < feature_size; j++)
+                m(i, j) = (float)row[j];
+        }
+        if (provided_batch != batch_size) {
+            Logger::warn("Batch size mismatch: provided=" + std::to_string(provided_batch)
+                + ", expected=" + std::to_string(batch_size));
+        }
+        return m;
+    }
+
+    // Case 2: flat 1D array treated as contiguous batch data
+    int total_len = arr.size();
+    if (batch_size == 1) {
+        Eigen::MatrixXf m(1, total_len);
+        for (int j = 0; j < total_len; j++)
+            m(0, j) = (float)arr[j];
+        return m;
+    }
+
+    if (total_len % batch_size != 0) {
+        Logger::error_raise("godot_to_eigen() - Input size not divisible by batch size");
+        return Eigen::MatrixXf();
+    }
+
+    int feature_size = total_len / batch_size;
+    Eigen::MatrixXf m(batch_size, feature_size);
+    for (int i = 0; i < batch_size; i++) {
+        for (int j = 0; j < feature_size; j++)
+            m(i, j) = (float)arr[i * feature_size + j];
+    }
+    return m;
+}
+
 Eigen::VectorXf Utils::godot_to_eigen_vector(godot::Array array) {
     int size = array.size();
     Eigen::VectorXf vec(size);
@@ -44,17 +89,12 @@ Eigen::VectorXf Utils::godot_to_eigen_vector(godot::Array array) {
     return vec;
 }
 
-godot::Array Utils::eigen_to_godot(Eigen::MatrixXf matrix){
+godot::Array Utils::eigen_to_godot(Eigen::MatrixXf matrix) {
     godot::Array out;
-
-    for(int i=0;i<matrix.rows();i++){
+    for (int i = 0; i < matrix.rows(); i++) {
         godot::Array row;
-        for(int j=0;j<matrix.cols();j++){
-            row.push_back(matrix(i,j));
-        }
-        if(matrix.rows() <= 1){
-            return row;
-        }
+        for (int j = 0; j < matrix.cols(); j++)
+            row.push_back(matrix(i, j));
         out.push_back(row);
     }
     return out;

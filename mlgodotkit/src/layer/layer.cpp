@@ -1,140 +1,136 @@
 #include "layer/layer.h"
+#include <cmath>
 
 using namespace Activations;
 
-Layer::Layer(int input_size, int out_features, float learning_rate, std::string activation_type) {
+Layer::Layer(int input_size, int out_features, float learning_rate, const std::string& activation)
+    : lr(learning_rate), activation_type(activation) {
 
-    lr = learning_rate;
+    std::tie(weights, biases) = init_weights(input_size, out_features, activation);
 
-    std::tie(weights, biases) = init_weights(input_size, out_features, activation_type);
+    // Initialize momentum buffers
+    mW = Eigen::MatrixXf::Zero(input_size, out_features);
+    mb = Eigen::MatrixXf::Zero(1, out_features);
 
-    // Initialize the weights based on the activation func
-    if (activation_type == "sigmoid") {
+    // Select activation
+    if (activation == "sigmoid") {
         activation_func = sigmoid;
         derivative_func = sigmoid_derivative;
-    } else if (activation_type == "relu") {
+    } else if (activation == "relu") {
         activation_func = relu;
         derivative_func = relu_derivative;
-    } else if (activation_type == "linear") {
+    } else if (activation == "leaky_relu") {
+        activation_func = [](const Eigen::MatrixXf& x){ return leaky_relu(x, 0.01f); };
+        derivative_func = [](const Eigen::MatrixXf& z){ return leaky_relu_derivative(z, 0.01f); };
+    } else {
         activation_func = linear;
         derivative_func = linear_derivative;
-    } else {
-        // fallback default
-        activation_func = relu;
-        derivative_func = relu_derivative;
     }
 
-    // Debugging: Print the initial weights and biases
-    Logger::debug(2, "Initialized weights:\n" + GodotUtils::eigen_to_string(weights));
-    Logger::debug(2, "Initialized biases:\n" + GodotUtils::eigen_to_string(biases));
+    Logger::debug(2, "Layer initialized (" + activation +
+        ") weights=" + std::to_string(input_size) + "x" + std::to_string(out_features));
 }
 
 Layer::~Layer() {}
 
+std::tuple<Eigen::MatrixXf, Eigen::MatrixXf> Layer::init_weights(int in, int out, const std::string& activation) {
+    Eigen::MatrixXf W;
+    Eigen::MatrixXf b = Eigen::MatrixXf::Zero(1, out);
+
+    if (activation == "relu" || activation == "leaky_relu") {
+        float stddev = std::sqrt(2.0f / in);  // He init
+        W = Eigen::MatrixXf::Random(in, out) * stddev;
+    } else {
+        float stddev = std::sqrt(1.0f / in);  // Xavier
+        W = Eigen::MatrixXf::Random(in, out) * stddev;
+    }
+    return std::make_tuple(W, b);
+}
+
 Eigen::MatrixXf Layer::forward(const Eigen::MatrixXf& X) {
     input = X;
 
-    // Debugging: Print input matrix and its shape
-    Logger::debug(2, "Forward input (X):\n" + GodotUtils::eigen_to_string(input));
+    // z = XW + b (bias broadcast)
+	Eigen::MatrixXf z = (X * weights).rowwise() + biases.row(0);
 
-    // Compute the linear combination: z = X * weights + biases
-    Eigen::MatrixXf z = (input * weights) + biases;
 
-    // Debugging: Print the linear combination matrix z and its shape
-    Logger::debug(2, "Linear combination (Z = XW + b):\n" + GodotUtils::eigen_to_string(z));
+    // Apply activation
+    Eigen::MatrixXf a = activation_func(z);
 
-    output = activation_func(z);
-    grad_z = z;
-
-    // Debugging: Print the output of the activation function
-    Logger::debug(2, "Activation output:\n" + GodotUtils::eigen_to_string(output));
+    // Optional squash for stable Q-heads
+    if (squash_enabled) {
+        Eigen::MatrixXf z_scaled = z / squash_scale_in;
+        grad_z = z_scaled;
+        output = z_scaled.array().tanh() * squash_scale_out;
+    } else {
+        output = a;
+        grad_z = z;
+    }
 
     return output;
 }
 
-Eigen::MatrixXf Layer::backward(const Eigen::MatrixXf& error) {
-    // Compute the delta (error term)
-    Eigen::MatrixXf delta = error.cwiseProduct(derivative_func(grad_z));
+Eigen::MatrixXf Layer::backward_compute(const Eigen::MatrixXf& loss_grad) {
+    if (loss_grad.size() == 0 || !loss_grad.allFinite()) {
+        Logger::warn("Layer::backward_compute - invalid gradient input");
+        return Eigen::MatrixXf::Zero(input.rows(), weights.rows());
+    }
 
-    // Debugging: Print the delta (error term) and its shape
-    Logger::debug(3, "Delta (error * activation'):\n" + GodotUtils::eigen_to_string(delta));
-
-    // Compute gradients for weights and biases
-    Eigen::MatrixXf dW = input.transpose() * delta;
-    Eigen::MatrixXf db = delta.colwise().sum();
-
-    // Debugging: Print gradients
-    Logger::debug(3, "Weight gradients (dW):\n" + GodotUtils::eigen_to_string(dW));
-    Logger::debug(3, "Bias gradients (db):\n" + GodotUtils::eigen_to_string(db));
-
-    // Update weights and biases
-    weights -= lr * dW;
-    biases -= lr * db;
-
-    Logger::debug(3, "Updated weights:\n" + GodotUtils::eigen_to_string(weights));
-    Logger::debug(3, "Updated biases:\n" + GodotUtils::eigen_to_string(biases));
-
-    // Compute the next error gradient
-    Eigen::MatrixXf grad_input = delta * weights.transpose();
-
-    // Debugging: Print the next error gradient and its shape
-    Logger::debug(3, "Gradient passed to previous layer:\n" + GodotUtils::eigen_to_string(grad_input));
-
-    return grad_input;
-}
-
-// *** Weight Initialization Method(s) ***
-std::tuple<Eigen::MatrixXf, Eigen::MatrixXf> Layer::init_weights(int input_size, int out_features, const std::string& activation_type)
-{
-    Eigen::MatrixXf weights;
-    Eigen::MatrixXf biases = Eigen::MatrixXf::Zero(1, out_features);
-
-    if (activation_type == "sigmoid") {
-        weights = Eigen::MatrixXf::Random(input_size, out_features) * std::sqrt(1.0f / input_size);
-    } else if (activation_type == "relu") {
-        weights = Eigen::MatrixXf::Random(input_size, out_features) * std::sqrt(2.0f / (input_size + out_features));
+    // Activation derivative
+    Eigen::MatrixXf act_prime;
+    if (squash_enabled) {
+        Eigen::ArrayXXf a = grad_z.array().tanh();
+        act_prime = (1.0f - a.square()).matrix() * (1.0f / squash_scale_in);
     } else {
-        // Default to He initialization
-        weights = Eigen::MatrixXf::Random(input_size, out_features) * std::sqrt(2.0f / input_size);
+        act_prime = derivative_func(grad_z);
     }
 
-    return std::make_tuple(weights, biases);
+    Eigen::MatrixXf delta = loss_grad.cwiseProduct(act_prime);
+
+    // Compute gradients
+    dW = input.transpose() * delta;
+    db = delta.colwise().sum();
+
+    // Ensure finite
+    dW = dW.unaryExpr([](float v){ return std::isfinite(v) ? v : 0.0f; });
+    db = db.unaryExpr([](float v){ return std::isfinite(v) ? v : 0.0f; });
+
+    dW /= static_cast<float>(input.rows());
+	db /= static_cast<float>(input.rows());
+
+    // Return for chain rule
+    return delta * weights.transpose();
 }
 
-// *** Class Specific Utility Functions ***
-std::string Layer::to_string() const {
-    std::ostringstream stream;
-    stream << "Layer Information:\n";
-    stream << "  - Weights (Shape: " << weights.rows() << "x" << weights.cols() << "):\n\t"
-           << weights << "\n";
-    stream << "  - Biases (Shape: " << biases.size() << "):\n\t"
-           << biases.transpose() << "\n";
-
-    return stream.str();
+void Layer::normalize_gradients(float scale) {
+    dW *= scale;
+    db *= scale;
 }
 
-// Rounding for numeric stability
-Eigen::MatrixXf Layer::stable_round(const Eigen::MatrixXf& mat, int precision, float threshold) {
-    Eigen::MatrixXf result = mat;
-    float scale = std::pow(10.0f, precision);
-    for (int i = 0; i < result.rows(); ++i) {
-        for (int j = 0; j < result.cols(); ++j) {
-            if (std::abs(result(i, j)) > threshold) {
-                result(i, j) = std::round(result(i, j) * scale) / scale;
-            }
-        }
-    }
-    return result;
+void Layer::apply_update() {
+    const float beta = 0.9f;           // momentum
+    const float weight_decay = 1e-4f;  // L2 regularization
+
+    // Momentum update (per layer)
+    mW = beta * mW + (1.0f - beta) * dW;
+    mb = beta * mb + (1.0f - beta) * db;
+
+    weights -= lr * (mW + weight_decay * weights);
+    biases  -= lr * (mb + 1e-6f * biases);
 }
 
-void Layer::copy_weights(const Layer& source) {
-    this->weights = source.weights;
-    this->biases = source.biases;
+void Layer::copy_weights(const Layer& src) {
+    weights = src.weights;
+    biases  = src.biases;
 }
 
-int Layer::get_input_size() const {
-    return weights.rows();
+void Layer::set_learning_rate(float learning_rate) { lr = learning_rate; }
+void Layer::set_verbosity(int v) { verbosity = v; }
+void Layer::set_output_squash(bool enabled, float scale_in, float scale_out) {
+    squash_enabled   = enabled;
+    squash_scale_in  = (scale_in  <= 0.0f ? 10.0f : scale_in);
+    squash_scale_out = (scale_out <= 0.0f ? 10.0f : scale_out);
 }
-int Layer::get_output_size() const {
-    return weights.cols();
-}
+
+int Layer::get_input_size() const { return weights.rows(); }
+int Layer::get_output_size() const { return weights.cols(); }
