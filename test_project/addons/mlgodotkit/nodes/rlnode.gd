@@ -10,8 +10,8 @@ signal policy_updated(epoch: int, loss: float)
 @onready var graph: RewardGraph = $"../RewardGraph" 
 
 # Hyper params
-@export var gamma := 0.95
-@export var learning_rate := 0.001
+@export var gamma := 0.99
+@export var learning_rate := 0.02
 
 @export var epsilon: float = 1.0
 @export var epsilon_decay: float = 0.995
@@ -23,7 +23,7 @@ signal policy_updated(epoch: int, loss: float)
 
 @export var batch_size: int = 128
 @export var buffer_capacity: int = 10000
-
+@export var buffer_warmup: int = 1000
 @export var train_every_n_steps: int = 1
 @export var target_update_period: int = 5000
 
@@ -122,8 +122,6 @@ func _select_action(s: Array) -> int:
 	# Here we need to reset the batch size to single sample
 	q_online.set_batch_size(1)
 	var q_values = _flatten_1d(q_online.forward([s]))
-	#for i in range(q_values.size()):
-		#q_values[i] = clamp(q_values[i], -10.0, 10.0)
 	
 	# Reset back to the origional batch size	
 	q_online.set_batch_size(batch_size)
@@ -137,12 +135,16 @@ func _store_experience(s, a, r, s_next, done) -> void:
 		replay_buffer.pop_front()
 
 func _train_from_replay() -> void:
+	
+	if replay_buffer.size() < buffer_warmup:
+		return
+		
 	# --- 1. Sample random batch ---
 	var batch: Array = []
 	for i in range(batch_size):
 		batch.append(replay_buffer.pick_random())
 
-	# --- 2. Split batch into components ---
+	# --- 2. Split batch ---
 	var states: Array = []
 	var next_states: Array = []
 	var actions: Array = []
@@ -153,21 +155,19 @@ func _train_from_replay() -> void:
 		states.append(exp.s)
 		next_states.append(exp.s_next)
 		actions.append(exp.a)
-
-		# ✅ Reward clipping (keeps scale consistent)
-		rewards.append(exp.r)#clamp(exp.r, -1.0, 1.0))
+		rewards.append(exp.r)
 		dones.append(exp.done)
 
-	# --- 3. Set correct batch sizes ---
+	# --- 3. Batch sizes ---
 	q_online.set_batch_size(batch_size)
 	q_target.set_batch_size(batch_size)
 
-	# --- 4. Forward pass (batched) ---
+	# --- 4. Forward passes ---
 	var q_values_batch: Array = q_online.forward(states)
 	var next_q_online_batch: Array = q_online.forward(next_states)
 	var next_q_target_batch: Array = q_target.forward(next_states)
 
-	# --- 5. Compute TD errors (batched) ---
+	# --- 5. TD errors (Double DQN target) ---
 	var td_errors: Array = []
 	for i in range(batch_size):
 		var q_values = _flatten_1d(q_values_batch[i])
@@ -179,32 +179,34 @@ func _train_from_replay() -> void:
 		if not dones[i]:
 			td_target += gamma * next_q_target[a_star]
 
-		# ✅ Clamp Q-target range for numerical stability
-		td_target = clamp(td_target, -10.0, 10.0)
-
 		var q_pred = q_values[actions[i]]
 		var td_error = td_target - q_pred
-		
 		td_errors.append(td_error)
 
-	# --- 6. Construct Huber derivative error matrix ---
+	# --- 6. Huber derivative, correct formula + correct sign ---
 	var error_matrix: Array = []
 	for i in range(batch_size):
-		var error_row: Array = []
+		var row: Array = []
 		for j in range(ACTION_SIZE):
-			error_row.append(0.0)
+			row.append(0.0)
 
 		var err = td_errors[i]
-		# ✅ Huber derivative normalized to [-1, 1]
-		var grad_val = err / huber_delta if abs(err) < huber_delta else sign(err)
-		# ✅ Average across batch to prevent oversized updates
-		error_row[actions[i]] = grad_val / float(batch_size)
-		error_matrix.append(error_row)
+		var grad_val: float
+		if abs(err) <= huber_delta:
+			# dL/d(err) = err
+			grad_val = err
+		else:
+			# dL/d(err) = huber_delta * sign(err)
+			grad_val = huber_delta * sign(err)
 
-	# --- 7. Backpropagate the stabilized gradient ---
+		# dL/dQ = - dL/d(err)
+		row[actions[i]] = -grad_val
+		error_matrix.append(row)
+
+	# --- 7. Backprop ---
 	q_online.backward(error_matrix)
 
-	# --- 8. Optional: Log diagnostics ---
+	# --- 8. Diagnostics ---
 	if (global_step % 500) == 0:
 		var mean_td = abs(td_errors.reduce(func(a,b): return a+b) / td_errors.size())
 		print("🧮 Step %d | Mean |TD|=%.4f | ε=%.3f" % [global_step, mean_td, epsilon])

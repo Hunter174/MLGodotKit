@@ -28,11 +28,12 @@ class_name CartPoleEnvironment
 # --- Visualization
 # ----------------------------------------------------------
 @export var origin: Vector2 = Vector2(400, 300)
-@export var scale_factor: float = 100.0
-@export var cart_size: Vector2 = Vector2(60, 20)
-@export var pole_width: float = 6.0
+@export var scale_factor: float = 150.0
+@export var cart_size: Vector2 = Vector2(120, 40)
+@export var pole_width: float = 10.0
 @export var pole_color: Color = Color(0.39, 0.58, 0.93)
-@export var cart_color: Color = Color(0.4, 0.4, 0.4)
+@export var cart_color: Color = Color(0.35, 0.35, 0.35)
+@export var pole_tip_radius: float = 10.0
 
 # ----------------------------------------------------------
 # --- Internal State
@@ -67,7 +68,7 @@ func _draw() -> void:
 	var pole_len_px := pole_length * scale_factor * 2.0
 	var pole_tip := cart_px + Vector2(pole_len_px * sin(theta), -pole_len_px * cos(theta))
 	draw_line(cart_px, pole_tip, pole_color, pole_width)
-	draw_circle(pole_tip, 6.0, Color.SKY_BLUE)
+	draw_circle(pole_tip, pole_tip_radius, Color.SKY_BLUE)
 
 	var msg := "x=%.2f | θ=%.2f° | reward=%.2f" % [x, rad_to_deg(theta), last_reward]
 	draw_string(ThemeDB.fallback_font, origin + Vector2(-120, -180), msg, 0, 1, 16, Color.WHITE, 16)
@@ -76,13 +77,11 @@ func _draw() -> void:
 # --- RL API
 # ----------------------------------------------------------
 func get_state() -> Array:
-	# Slight normalization (not clamped)
-	return [
-		x / x_threshold,
-		x_dot / 2.0,
-		theta / theta_threshold,
-		theta_dot / 2.0
-	]
+	var x_norm = clamp(x / x_threshold, -1.0, 1.0)
+	var xdot_norm = clamp(x_dot / 5.0, -1.0, 1.0)
+	var theta_norm = clamp(theta / theta_threshold, -1.0, 1.0)
+	var thetadot_norm = clamp(theta_dot / 5.0, -1.0, 1.0)
+	return [x_norm, xdot_norm, theta_norm, thetadot_norm]
 
 func reset() -> Array:
 	x = randf_range(-0.4, 0.4)
@@ -116,7 +115,7 @@ func step(action: Array) -> Dictionary:
 	theta_dot += tau * theta_acc
 
 	# --- Termination & Reward Shaping ---
-	var done = abs(x) > x_threshold or abs(theta) > theta_threshold or step_count >= max_steps
+	var done = abs(x) > x_threshold or abs(theta) > theta_threshold or step_count >= max_steps_per_episode
 
 	# --- Progressive reward shaping ---
 	# The closer the pole is to vertical (θ = 0) and the cart to center (x = 0), the higher the reward.
