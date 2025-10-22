@@ -3,6 +3,7 @@
 
 // Utility Classes
 #include "utility/utils.h"
+#include "benchmark/benchmark.h"
 
 // Node Classes
 #include "neural_network/nnnode.h"
