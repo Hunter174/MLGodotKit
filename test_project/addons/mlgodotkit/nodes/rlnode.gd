@@ -6,30 +6,37 @@ signal policy_updated(epoch: int, loss: float)
 
 @onready var env: CartPoleEnvironment = $"../CartPoleEnvironment"
 
-# Optional maybe abstract out into an inspector view
-@onready var graph: RewardGraph = $"../RewardGraph" 
-
-# Hyper params
+@export_category("Learning")
 @export var gamma := 0.99
 @export var learning_rate := 0.02
 
+@export_category("Exploration")
 @export var epsilon: float = 1.0
 @export var epsilon_decay: float = 0.995
 @export var epsilon_min: float = 0.05
 
+@export_category("Episode Settings")
 @export var max_steps_per_episode: int = 500
 @export var step_delay: float = 0.01
 @export var render_mode: bool = true
 
+@export_category("Replay Buffer")
 @export var batch_size: int = 128
 @export var buffer_capacity: int = 10000
 @export var buffer_warmup: int = 1000
+
+@export_category("Training Schedule")
 @export var train_every_n_steps: int = 1
 @export var target_update_period: int = 5000
 
+@export_category("Optimization")
 @export var polyak_tau: float = 0.005
 @export var max_grad_norm := 2.5
 @export var huber_delta := 1.0
+
+# Export the rewards log of the n most recent
+signal rewards_log_updated
+@export var rewards_log: Array = []
 
 var q_online: NNNode
 var q_target: NNNode
@@ -84,10 +91,8 @@ func run_episode() -> void:
 
 	print("✅ Episode %d | Total Reward: %.2f | ε: %.3f" % [episode_counter, total_reward, epsilon])
 	
-	# Abstract out
-	graph.add_reward(total_reward)
-	emit_signal("episode_finished", total_reward)
-
+	rewards_log.append(total_reward)
+	emit_signal("rewards_log_updated", rewards_log)
 
 func _run_step_loop() -> void:
 	for step in range(max_steps_per_episode):
@@ -112,7 +117,6 @@ func _run_step_loop() -> void:
 
 		if render_mode:
 			await get_tree().create_timer(step_delay).timeout
-
 
 func _select_action(s: Array) -> int:
 	# If a random tick is less than ε choose a random action
