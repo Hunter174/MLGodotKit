@@ -19,6 +19,7 @@ env.Append(CPPPATH=["src/", "C:/libs/eigen-3.4.0"])
 sources = (
     Glob("src/*.cpp")
     + Glob("src/utility/*.cpp")
+    + Glob("src/linalg/*.cpp")
     + Glob("src/neural_network/*.cpp")
     + Glob("src/test_network_node/*.cpp")
     + Glob("src/layer/*.cpp")
