@@ -1,19 +1,8 @@
 #include "linalg.h"
 #include <godot_cpp/core/class_db.hpp>
 #include <random>
-
-namespace {
-
-Eigen::VectorXf to_vector(const Eigen::MatrixXf &m) {
-    if (m.rows() == 1)
-        return m.transpose();
-    if (m.cols() == 1)
-        return m;
-    Logger::error_raise("Expected a vector (1xN or Nx1)");
-    return Eigen::VectorXf();
-}
-
-} // anonymous namespace
+#include "utility/logger.h"
+#include "utility/utils.h"
 
 namespace godot {
 
@@ -263,8 +252,8 @@ Array Linalg::get_col(const Array &A, int j) {
 }
 
 float Linalg::dot(const Array &a, const Array &b) {
-    Eigen::VectorXf va = to_vector(Utils::godot_to_eigen(a));
-    Eigen::VectorXf vb = to_vector(Utils::godot_to_eigen(b));
+    Eigen::VectorXf va = Utils::godot_to_eigen_vector(a);
+    Eigen::VectorXf vb = Utils::godot_to_eigen_vector(b);
 
     if (va.size() != vb.size()) {
         Logger::error_raise("Linalg.dot(): vector size mismatch");
@@ -275,7 +264,7 @@ float Linalg::dot(const Array &a, const Array &b) {
 }
 
 Array Linalg::normalize(const Array &a) {
-    Eigen::VectorXf v = to_vector(Utils::godot_to_eigen(a));
+    Eigen::VectorXf v = Utils::godot_to_eigen_vector(a);
 
     float n = v.norm();
     if (n == 0.0f) {
@@ -287,18 +276,18 @@ Array Linalg::normalize(const Array &a) {
 }
 
 Array Linalg::cross(const Array &a, const Array &b) {
-    Eigen::VectorXf va = to_vector(Utils::godot_to_eigen(a));
-    Eigen::VectorXf vb = to_vector(Utils::godot_to_eigen(b));
+    Eigen::VectorXf va = Utils::godot_to_eigen_vector(a);
+    Eigen::VectorXf vb = Utils::godot_to_eigen_vector(b);
 
     if (va.size() != 3 || vb.size() != 3) {
         Logger::error_raise("Linalg.cross(): only defined for 3D vectors");
         return Array();
     }
 
-    Eigen::Vector3f ca = va;
-    Eigen::Vector3f cb = vb;
+    Eigen::Vector3f v3a = va;
+    Eigen::Vector3f v3b = vb;
 
-    return Utils::eigen_to_godot(ca.cross(cb));
+    return Utils::eigen_to_godot(v3a.cross(v3b));
 }
 
 Array Linalg::solve(const Array &A, const Array &b) {
