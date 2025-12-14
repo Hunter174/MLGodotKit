@@ -28,7 +28,9 @@ void Linalg::_bind_methods() {
 	ClassDB::bind_static_method("Linalg", D_METHOD("reshape", "A", "rows", "cols"), &Linalg::reshape);
 	ClassDB::bind_static_method("Linalg", D_METHOD("get_row", "A", "i"), &Linalg::get_row);
 	ClassDB::bind_static_method("Linalg", D_METHOD("get_col", "A", "j"), &Linalg::get_col);
-
+    ClassDB::bind_static_method("Linalg", D_METHOD("dot", "a", "b"), &Linalg::dot);
+	ClassDB::bind_static_method("Linalg", D_METHOD("normalize", "a"), &Linalg::normalize);
+	ClassDB::bind_static_method("Linalg", D_METHOD("cross", "a", "b"), &Linalg::cross);
 }
 
 Array Linalg::add(const Array &A, const Array &B) {
@@ -225,6 +227,54 @@ Array Linalg::get_col(const Array &A, int j) {
     }
 
     return Utils::eigen_to_godot(mA.col(j));
+}
+
+static Eigen::VectorXf to_vector(const Eigen::MatrixXf &m) {
+    if (m.rows() == 1)
+        return m.transpose();
+    if (m.cols() == 1)
+        return m;
+    Logger::error_raise("Expected a vector (1xN or Nx1)");
+    return Eigen::VectorXf();
+}
+
+float Linalg::dot(const Array &a, const Array &b) {
+    Eigen::VectorXf va = to_vector(Utils::godot_to_eigen(a));
+    Eigen::VectorXf vb = to_vector(Utils::godot_to_eigen(b));
+
+    if (va.size() != vb.size()) {
+        Logger::error_raise("Linalg.dot(): vector size mismatch");
+        return 0.0f;
+    }
+
+    return va.dot(vb);
+}
+
+Array Linalg::normalize(const Array &a) {
+    Eigen::VectorXf v = to_vector(Utils::godot_to_eigen(a));
+
+    float n = v.norm();
+    if (n == 0.0f) {
+        Logger::error_raise("Linalg.normalize(): zero vector");
+        return Array();
+    }
+
+    return Utils::eigen_to_godot(v / n);
+}
+
+Array Linalg::cross(const Array &a, const Array &b) {
+    Eigen::VectorXf va = to_vector(Utils::godot_to_eigen(a));
+    Eigen::VectorXf vb = to_vector(Utils::godot_to_eigen(b));
+
+    if (va.size() != 3 || vb.size() != 3) {
+        Logger::error_raise("Linalg.cross(): only defined for 3D vectors");
+        return Array();
+    }
+
+    Eigen::Vector3f ca = va;
+    Eigen::Vector3f cb = vb;
+
+    return Utils::eigen_to_godot(ca.cross(cb));
 }
 
 } // namespace godot
