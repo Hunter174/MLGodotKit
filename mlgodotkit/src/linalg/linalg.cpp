@@ -35,6 +35,15 @@ void Linalg::_bind_methods() {
 	ClassDB::bind_static_method("Linalg", D_METHOD("least_squares", "A", "b"), &Linalg::least_squares);
 	ClassDB::bind_static_method("Linalg", D_METHOD("pinv", "A"), &Linalg::pinv);
     ClassDB::bind_static_method("Linalg", D_METHOD("qr", "A"), &Linalg::qr);
+	ClassDB::bind_static_method("Linalg", D_METHOD("svd", "A"), &Linalg::svd);
+	ClassDB::bind_static_method("Linalg", D_METHOD("eig", "A"), &Linalg::eig);
+	ClassDB::bind_static_method("Linalg", D_METHOD("lu", "A"), &Linalg::lu);
+    ClassDB::bind_static_method("Linalg", D_METHOD("zeros", "rows", "cols"), &Linalg::zeros);
+	ClassDB::bind_static_method("Linalg", D_METHOD("ones", "rows", "cols"), &Linalg::ones);
+	ClassDB::bind_static_method("Linalg", D_METHOD("full", "rows", "cols", "value"), &Linalg::full);
+	ClassDB::bind_static_method("Linalg", D_METHOD("eye", "n"), &Linalg::eye);
+	ClassDB::bind_static_method("Linalg", D_METHOD("rand", "rows", "cols"), &Linalg::rand);
+	ClassDB::bind_static_method("Linalg", D_METHOD("randn", "rows", "cols"), &Linalg::randn);
 }
 
 Array Linalg::add(const Array &A, const Array &B) {
@@ -330,6 +339,70 @@ Array Linalg::pinv(const Array &A) {
         svd.matrixV() * inv_s.asDiagonal() * svd.matrixU().transpose();
 
     return Utils::eigen_to_godot(pinv);
+}
+
+Dictionary Linalg::qr(const Array &A) {
+    Eigen::MatrixXf mA = Utils::godot_to_eigen(A);
+
+    Eigen::HouseholderQR<Eigen::MatrixXf> qr(mA);
+    Eigen::MatrixXf Q = qr.householderQ();
+    Eigen::MatrixXf R = qr.matrixQR().triangularView<Eigen::Upper>();
+
+    Dictionary out;
+    out["Q"] = Utils::eigen_to_godot(Q);
+    out["R"] = Utils::eigen_to_godot(R);
+    return out;
+}
+
+Dictionary Linalg::svd(const Array &A) {
+    Eigen::MatrixXf mA = Utils::godot_to_eigen(A);
+
+    Eigen::JacobiSVD<Eigen::MatrixXf> svd(
+        mA, Eigen::ComputeThinU | Eigen::ComputeThinV
+    );
+
+    Dictionary out;
+    out["U"] = Utils::eigen_to_godot(svd.matrixU());
+    out["S"] = Utils::eigen_to_godot(svd.singularValues());
+    out["V"] = Utils::eigen_to_godot(svd.matrixV());
+    return out;
+}
+
+Dictionary Linalg::eig(const Array &A) {
+    Eigen::MatrixXf mA = Utils::godot_to_eigen(A);
+
+    if (mA.rows() != mA.cols()) {
+        Logger::error_raise("Linalg.eig(): matrix must be square");
+        return Dictionary();
+    }
+
+    Eigen::SelfAdjointEigenSolver<Eigen::MatrixXf> eig(mA);
+
+    if (eig.info() != Eigen::Success) {
+        Logger::error_raise("Linalg.eig(): decomposition failed");
+        return Dictionary();
+    }
+
+    Dictionary out;
+    out["values"] = Utils::eigen_to_godot(eig.eigenvalues());
+    out["vectors"] = Utils::eigen_to_godot(eig.eigenvectors());
+    return out;
+}
+
+Dictionary Linalg::lu(const Array &A) {
+    Eigen::MatrixXf mA = Utils::godot_to_eigen(A);
+
+    Eigen::PartialPivLU<Eigen::MatrixXf> lu(mA);
+
+    Dictionary out;
+    out["L"] = Utils::eigen_to_godot(
+        Eigen::MatrixXf(lu.matrixLU().triangularView<Eigen::UnitLower>())
+    );
+    out["U"] = Utils::eigen_to_godot(
+        Eigen::MatrixXf(lu.matrixLU().triangularView<Eigen::Upper>())
+    );
+    out["P"] = Utils::eigen_to_godot(lu.permutationP());
+    return out;
 }
 
 } // namespace godot
