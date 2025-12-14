@@ -23,6 +23,11 @@ void Linalg::_bind_methods() {
 	ClassDB::bind_static_method("Linalg", D_METHOD("col_sum", "A"), &Linalg::col_sum);
 	ClassDB::bind_static_method("Linalg", D_METHOD("col_mean", "A"), &Linalg::col_mean);
 	ClassDB::bind_static_method("Linalg", D_METHOD("col_norm", "A"), &Linalg::col_norm);
+    ClassDB::bind_static_method("Linalg", D_METHOD("diag", "A"), &Linalg::diag);
+	ClassDB::bind_static_method("Linalg", D_METHOD("block", "A", "r0", "c0", "r", "c"), &Linalg::block);
+	ClassDB::bind_static_method("Linalg", D_METHOD("reshape", "A", "rows", "cols"), &Linalg::reshape);
+	ClassDB::bind_static_method("Linalg", D_METHOD("get_row", "A", "i"), &Linalg::get_row);
+	ClassDB::bind_static_method("Linalg", D_METHOD("get_col", "A", "j"), &Linalg::get_col);
 
 }
 
@@ -168,6 +173,58 @@ Array Linalg::col_norm(const Array &A) {
         out(j) = mA.col(j).norm();
 
     return Utils::eigen_to_godot(out);
+}
+
+Array Linalg::diag(const Array &A) {
+    Eigen::MatrixXf mA = Utils::godot_to_eigen(A);
+    Eigen::VectorXf d = mA.diagonal();
+    return Utils::eigen_to_godot(d);
+}
+
+Array Linalg::block(const Array &A, int r0, int c0, int r, int c) {
+    Eigen::MatrixXf mA = Utils::godot_to_eigen(A);
+
+    if (r0 < 0 || c0 < 0 || r <= 0 || c <= 0 ||
+        r0 + r > mA.rows() || c0 + c > mA.cols()) {
+        Logger::error_raise("Linalg.block(): invalid block indices");
+        return Array();
+    }
+
+    return Utils::eigen_to_godot(mA.block(r0, c0, r, c));
+}
+
+Array Linalg::reshape(const Array &A, int rows, int cols) {
+    Eigen::MatrixXf mA = Utils::godot_to_eigen(A);
+
+    if (rows * cols != mA.size()) {
+        Logger::error_raise("Linalg.reshape(): total size mismatch");
+        return Array();
+    }
+
+    Eigen::MatrixXf out = Eigen::Map<Eigen::MatrixXf>(mA.data(), rows, cols);
+    return Utils::eigen_to_godot(out);
+}
+
+Array Linalg::get_row(const Array &A, int i) {
+    Eigen::MatrixXf mA = Utils::godot_to_eigen(A);
+
+    if (i < 0 || i >= mA.rows()) {
+        Logger::error_raise("Linalg.get_row(): index out of range");
+        return Array();
+    }
+
+    return Utils::eigen_to_godot(mA.row(i));
+}
+
+Array Linalg::get_col(const Array &A, int j) {
+    Eigen::MatrixXf mA = Utils::godot_to_eigen(A);
+
+    if (j < 0 || j >= mA.cols()) {
+        Logger::error_raise("Linalg.get_col(): index out of range");
+        return Array();
+    }
+
+    return Utils::eigen_to_godot(mA.col(j));
 }
 
 } // namespace godot
