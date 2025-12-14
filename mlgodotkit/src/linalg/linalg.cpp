@@ -31,6 +31,10 @@ void Linalg::_bind_methods() {
     ClassDB::bind_static_method("Linalg", D_METHOD("dot", "a", "b"), &Linalg::dot);
 	ClassDB::bind_static_method("Linalg", D_METHOD("normalize", "a"), &Linalg::normalize);
 	ClassDB::bind_static_method("Linalg", D_METHOD("cross", "a", "b"), &Linalg::cross);
+   	ClassDB::bind_static_method("Linalg", D_METHOD("solve", "A", "b"), &Linalg::solve);
+	ClassDB::bind_static_method("Linalg", D_METHOD("least_squares", "A", "b"), &Linalg::least_squares);
+	ClassDB::bind_static_method("Linalg", D_METHOD("pinv", "A"), &Linalg::pinv);
+    ClassDB::bind_static_method("Linalg", D_METHOD("qr", "A"), &Linalg::qr);
 }
 
 Array Linalg::add(const Array &A, const Array &B) {
@@ -275,6 +279,57 @@ Array Linalg::cross(const Array &a, const Array &b) {
     Eigen::Vector3f cb = vb;
 
     return Utils::eigen_to_godot(ca.cross(cb));
+}
+
+Array Linalg::solve(const Array &A, const Array &b) {
+    Eigen::MatrixXf mA = Utils::godot_to_eigen(A);
+    Eigen::MatrixXf mb = Utils::godot_to_eigen(b);
+
+    if (mA.rows() != mA.cols()) {
+        Logger::error_raise("Linalg.solve(): A must be square");
+        return Array();
+    }
+
+    if (mA.rows() != mb.rows()) {
+        Logger::error_raise("Linalg.solve(): dimension mismatch");
+        return Array();
+    }
+
+    Eigen::MatrixXf x = mA.partialPivLu().solve(mb);
+    return Utils::eigen_to_godot(x);
+}
+
+Array Linalg::least_squares(const Array &A, const Array &b) {
+    Eigen::MatrixXf mA = Utils::godot_to_eigen(A);
+    Eigen::MatrixXf mb = Utils::godot_to_eigen(b);
+
+    if (mA.rows() != mb.rows()) {
+        Logger::error_raise("Linalg.least_squares(): dimension mismatch");
+        return Array();
+    }
+
+    Eigen::MatrixXf x = mA.colPivHouseholderQr().solve(mb);
+    return Utils::eigen_to_godot(x);
+}
+
+Array Linalg::pinv(const Array &A) {
+    Eigen::MatrixXf mA = Utils::godot_to_eigen(A);
+
+    Eigen::JacobiSVD<Eigen::MatrixXf> svd(
+        mA, Eigen::ComputeThinU | Eigen::ComputeThinV
+    );
+
+    const float tol = 1e-6f * std::max(mA.rows(), mA.cols()) *
+                      svd.singularValues().array().abs().maxCoeff();
+
+    Eigen::VectorXf inv_s = svd.singularValues();
+    for (int i = 0; i < inv_s.size(); i++)
+        inv_s(i) = (inv_s(i) > tol) ? 1.0f / inv_s(i) : 0.0f;
+
+    Eigen::MatrixXf pinv =
+        svd.matrixV() * inv_s.asDiagonal() * svd.matrixU().transpose();
+
+    return Utils::eigen_to_godot(pinv);
 }
 
 } // namespace godot
