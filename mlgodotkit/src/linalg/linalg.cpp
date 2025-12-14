@@ -1,5 +1,19 @@
 #include "linalg.h"
 #include <godot_cpp/core/class_db.hpp>
+#include <random>
+
+namespace {
+
+Eigen::VectorXf to_vector(const Eigen::MatrixXf &m) {
+    if (m.rows() == 1)
+        return m.transpose();
+    if (m.cols() == 1)
+        return m;
+    Logger::error_raise("Expected a vector (1xN or Nx1)");
+    return Eigen::VectorXf();
+}
+
+} // anonymous namespace
 
 namespace godot {
 
@@ -216,7 +230,13 @@ Array Linalg::reshape(const Array &A, int rows, int cols) {
         return Array();
     }
 
-    Eigen::MatrixXf out = Eigen::Map<Eigen::MatrixXf>(mA.data(), rows, cols);
+    Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> tmp =
+    Eigen::Map<
+    	Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
+    >(mA.data(), rows, cols);
+
+	Eigen::MatrixXf out = tmp;
+
     return Utils::eigen_to_godot(out);
 }
 
@@ -240,15 +260,6 @@ Array Linalg::get_col(const Array &A, int j) {
     }
 
     return Utils::eigen_to_godot(mA.col(j));
-}
-
-static Eigen::VectorXf to_vector(const Eigen::MatrixXf &m) {
-    if (m.rows() == 1)
-        return m.transpose();
-    if (m.cols() == 1)
-        return m;
-    Logger::error_raise("Expected a vector (1xN or Nx1)");
-    return Eigen::VectorXf();
 }
 
 float Linalg::dot(const Array &a, const Array &b) {
@@ -345,7 +356,7 @@ Dictionary Linalg::qr(const Array &A) {
     Eigen::MatrixXf mA = Utils::godot_to_eigen(A);
 
     Eigen::HouseholderQR<Eigen::MatrixXf> qr(mA);
-    Eigen::MatrixXf Q = qr.householderQ();
+    Eigen::MatrixXf Q = qr.householderQ() * Eigen::MatrixXf::Identity(mA.rows(), mA.cols());
     Eigen::MatrixXf R = qr.matrixQR().triangularView<Eigen::Upper>();
 
     Dictionary out;
@@ -403,6 +414,64 @@ Dictionary Linalg::lu(const Array &A) {
     );
     out["P"] = Utils::eigen_to_godot(lu.permutationP());
     return out;
+}
+
+Array Linalg::zeros(int rows, int cols) {
+    if (rows <= 0 || cols <= 0) {
+        Logger::error_raise("Linalg.zeros(): invalid shape");
+        return Array();
+    }
+    return Utils::eigen_to_godot(Eigen::MatrixXf::Zero(rows, cols));
+}
+
+Array Linalg::ones(int rows, int cols) {
+    if (rows <= 0 || cols <= 0) {
+        Logger::error_raise("Linalg.ones(): invalid shape");
+        return Array();
+    }
+    return Utils::eigen_to_godot(Eigen::MatrixXf::Ones(rows, cols));
+}
+
+Array Linalg::full(int rows, int cols, float value) {
+    if (rows <= 0 || cols <= 0) {
+        Logger::error_raise("Linalg.full(): invalid shape");
+        return Array();
+    }
+    return Utils::eigen_to_godot(Eigen::MatrixXf::Constant(rows, cols, value));
+}
+
+Array Linalg::eye(int n) {
+    if (n <= 0) {
+        Logger::error_raise("Linalg.eye(): size must be positive");
+        return Array();
+    }
+    return Utils::eigen_to_godot(Eigen::MatrixXf::Identity(n, n));
+}
+
+Array Linalg::rand(int rows, int cols) {
+    if (rows <= 0 || cols <= 0) {
+        Logger::error_raise("Linalg.rand(): invalid shape");
+        return Array();
+    }
+    Eigen::MatrixXf m = Eigen::MatrixXf::Random(rows, cols);
+    m = (m.array() + 1.0f) * 0.5f; // map [-1,1] → [0,1]
+    return Utils::eigen_to_godot(m);
+}
+
+Array Linalg::randn(int rows, int cols) {
+    if (rows <= 0 || cols <= 0) {
+        Logger::error_raise("Linalg.randn(): invalid shape");
+        return Array();
+    }
+    Eigen::MatrixXf m(rows, cols);
+    std::normal_distribution<float> dist(0.0f, 1.0f);
+    static std::mt19937 gen(std::random_device{}());
+
+    for (int i = 0; i < rows; ++i)
+        for (int j = 0; j < cols; ++j)
+            m(i, j) = dist(gen);
+
+    return Utils::eigen_to_godot(m);
 }
 
 } // namespace godot
