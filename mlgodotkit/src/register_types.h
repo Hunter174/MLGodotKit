@@ -1,9 +1,10 @@
-#ifndef GDEXAMPLE_REGISTER_TYPES_H
-#define GDEXAMPLE_REGISTER_TYPES_H
+#ifndef ML_GODOT_KIT_REGISTER_TYPES_H
+#define ML_GODOT_KIT_REGISTER_TYPES_H
 
 // Utility Classes
 #include "utility/utils.h"
 #include "benchmark/benchmark.h"
+#include "linalg/linalg.h"
 
 // Node Classes
 #include "neural_network/nnnode.h"
@@ -17,7 +18,7 @@
 #include <godot_cpp/godot.hpp>
 
 using namespace godot;
-
+void register_mlgogodot_types();
 void initialize_example_module(ModuleInitializationLevel p_level);
 void uninitialize_example_module(ModuleInitializationLevel p_level);
 
