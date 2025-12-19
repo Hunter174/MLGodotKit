@@ -1,6 +1,9 @@
 #ifndef ML_GODOT_KIT_REGISTER_TYPES_H
 #define ML_GODOT_KIT_REGISTER_TYPES_H
 
+//Primative Classes
+#include "matrix/matrix.h"
+
 // Utility Classes
 #include "utility/utils.h"
 #include "benchmark/benchmark.h"
