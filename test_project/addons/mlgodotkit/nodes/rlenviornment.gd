@@ -1,10 +1,7 @@
 extends Node2D
 class_name RLEnvironment
 
-## ----------------------------------------------------------
 ## Signals
-## ----------------------------------------------------------
-
 # Emitted whenever a new episode starts
 signal episode_reset(initial_state: Array)
 
@@ -14,19 +11,13 @@ signal step_completed(state: Array, reward: float, done: bool)
 # Emitted when the episode ends
 signal episode_done(total_reward: float)
 
-## ----------------------------------------------------------
 ## Variables
-## ----------------------------------------------------------
-
 var state: Array = []   # current state representation
 var step_count: int = 0 # step counter for the episode
 var total_reward: float = 0.0
 var max_steps: int = 100  # override in subclasses if needed
 
-## ----------------------------------------------------------
 ## Public Methods (to be overridden)
-## ----------------------------------------------------------
-
 func reset() -> Array:
 	"""
 	Resets the environment to an initial state and returns that state.

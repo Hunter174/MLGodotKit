@@ -9,7 +9,6 @@ void initialize_mlgodotkit_module(ModuleInitializationLevel p_level) {
     GDREGISTER_CLASS(NNNode);
     GDREGISTER_CLASS(LRNode);
     GDREGISTER_CLASS(DTreeNode);
-    GDREGISTER_CLASS(Benchmark);
     GDREGISTER_CLASS(Linalg);
     GDREGISTER_CLASS(Matrix);
 }

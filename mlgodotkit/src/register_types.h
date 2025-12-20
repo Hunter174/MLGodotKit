@@ -6,13 +6,12 @@
 
 // Utility Classes
 #include "utility/utils.h"
-#include "benchmark/benchmark.h"
 #include "linalg/linalg.h"
 
 // Node Classes
-#include "neural_network/nnnode.h"
-#include "linear_regression/lrnode.h"
-#include "decision_tree/dtreenode.h"
+#include "models/neural_network/nnnode.h"
+#include "models/linear_regression/lrnode.h"
+#include "models/decision_tree/dtreenode.h"
 
 // Godot Classes
 #include <gdextension_interface.h>
