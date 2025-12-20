@@ -241,10 +241,3 @@ func _argmax(arr: Array) -> int:
 			best_val = arr[i]
 			best_idx = i
 	return best_idx
-
-# Why do we need hubber?
-func _huber(td_error: float) -> float:
-	if abs(td_error) < huber_delta:
-		return 0.5 * td_error * td_error
-	else:
-		return huber_delta * (abs(td_error) - 0.5 * huber_delta)

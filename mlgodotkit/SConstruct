@@ -21,12 +21,11 @@ sources = (
     + Glob("src/utility/*.cpp")
     + Glob("src/linalg/*.cpp")
     + Glob("src/matrix/*.cpp")
-    + Glob("src/neural_network/*.cpp")
-    + Glob("src/test_network_node/*.cpp")
-    + Glob("src/layer/*.cpp")
-    + Glob("src/linear_regression/*.cpp")
-    + Glob("src/decision_tree/*.cpp")
-    + Glob("src/activations/*.cpp")
+    + Glob("src/models/neural_network/*.cpp")
+    + Glob("src/models/linear_regression/*.cpp")
+    + Glob("src/models/decision_tree/*.cpp")
+    + Glob("src/models/neural_network/layer/*.cpp")
+    + Glob("src/models/neural_network/activations/*.cpp",)
 )
 
 
