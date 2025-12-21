@@ -1,4 +1,7 @@
-[gd_scene format=3 uid="uid://x5q157yqoikp"]
+[gd_scene load_steps=2 format=3 uid="uid://x5q157yqoikp"]
+
+[ext_resource type="Script" uid="uid://bk36noap3tap5" path="res://main.gd" id="1_ig7tw"]
 
 [node name="main" type="Node2D"]
 z_index = 86
+script = ExtResource("1_ig7tw")
