@@ -1,0 +1,32 @@
+/* MLGodotKit - minimal RTD theme overrides */
+
+/* Slightly wider content for code-heavy docs */
+.wy-nav-content {
+  max-width: 1100px;
+}
+
+/* Improve readability */
+.rst-content {
+  line-height: 1.65;
+}
+
+/* Code blocks: slightly smaller + better wrapping for long lines */
+.rst-content pre,
+.rst-content div[class^="highlight"] pre {
+  font-size: 0.92em;
+  line-height: 1.45;
+  overflow-x: auto;
+}
+
+/* Inline code: subtle background, keep it readable */
+.rst-content code.literal,
+.rst-content tt.literal {
+  padding: 0.1em 0.25em;
+  border-radius: 3px;
+}
+
+/* Sidebar: show deeper nav with less wasted vertical space */
+.wy-menu-vertical li.toctree-l1 > a {
+  padding-top: 0.45em;
+  padding-bottom: 0.45em;
+}
