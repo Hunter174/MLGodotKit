@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bge7rgkf2jcf6"]
+
+[ext_resource type="Script" uid="uid://utwe2hyvouwb" path="res://scripts/examples/cartpole_regression/CartPoleRegressionTest.gd" id="1_xbyv3"]
+
+[node name="CartpoleTest" type="Node2D"]
+script = ExtResource("1_xbyv3")
