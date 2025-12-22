@@ -27,7 +27,7 @@ Numerical Foundations
 Low-level numerical utilities used throughout the library.
 
 ``Matrix`` This is a dense matrix container meant to act as a pseudo primitive class for downstream linear algebra tooling
- and model development.
+and model development.
 
 ``Linalg`` Leveraging the support of Eigen (C++ library) this module acts as a stateless wrapper for many of the built in
 utility presented by Eigen. This module works seamlessly with native godot scripting and the matrix container class.
@@ -67,8 +67,7 @@ Included components:
 - Episode runners
 - Trainers and experience buffers
 
-The RL API is inspired by Gym-style design, while remaining engine-first and
-explicit.
+The RL API is inspired by Gym-style design, while remaining engine-first and explicit.
 
 ----
 
@@ -83,4 +82,4 @@ The API is intentionally:
 - **Engine-integrated** — designed for real-time Godot execution
 
 Users are encouraged to build their own workflows rather than rely on fixed
-pipelines.
+pipelines. That being said examples and recommendations can be found at :doc:`guides/index`
