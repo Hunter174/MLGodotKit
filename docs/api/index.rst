@@ -2,6 +2,7 @@ API Reference
 =============
 .. toctree::
     :maxdepth: 2
+    :hidden:
 
     matrix
     linalg
@@ -25,14 +26,14 @@ Numerical Foundations
 
 Low-level numerical utilities used throughout the library.
 
-``Matrix``
-    Dense matrix container with basic linear algebra operations.
+``Matrix`` This is a dense matrix container meant to act as a pseudo primitive class for downstream linear algebra tooling
+ and model development.
 
-``Linalg``
-    Stateless solvers and matrix decompositions backed by Eigen.
+``Linalg`` Leveraging the support of Eigen (C++ library) this module acts as a stateless wrapper for many of the built in
+utility presented by Eigen. This module works seamlessly with native godot scripting and the matrix container class.
 
-These components form the numerical backbone for learning models and
-reinforcement learning algorithms.
+These tools form the numerical backbone of this plugin and serve as independent utility outside of the currently support
+models.
 
 ----
 
