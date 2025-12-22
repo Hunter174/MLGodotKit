@@ -1,14 +1,5 @@
 MLGodotKit Documentation
 ========================
-MLGodotKit Documentation
-========================
-
-.. toctree::
-   :maxdepth: 1
-
-   api
-   introduction
-   guides
 
 Welcome to the official `MLGodotKit <https://github.com/Hunter174/MLGodotKit>`_ documentation!
 
@@ -42,8 +33,9 @@ Have an idea? Just open an issue or pull request on the `GitHub repository <http
 Community feedback directly influences the project roadmap.
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+    :maxdepth: 2
+    :caption: Contents:
 
-   guides/index
-   api/index
+    api/index
+    introduction/index
+    guides/index
