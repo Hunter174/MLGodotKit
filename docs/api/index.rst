@@ -1,5 +1,12 @@
 API Reference
 =============
+.. toctree::
+    :maxdepth: 2
+
+    matrix
+    linalg
+    models/index
+    rl/index
 
 Public API documentation for MLGodotKit.
 
@@ -76,13 +83,3 @@ The API is intentionally:
 
 Users are encouraged to build their own workflows rather than rely on fixed
 pipelines.
-
-----
-
-.. toctree::
-   :maxdepth: 2
-
-   matrix
-   linalg
-   models/index
-   rl/index
