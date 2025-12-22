@@ -30,7 +30,9 @@ Low-level numerical utilities used throughout the library.
 and model development.
 
 ``Linalg`` Leveraging the support of Eigen (C++ library) this module acts as a stateless wrapper for many of the built in
-utility presented by Eigen. This module works seamlessly with native godot scripting and the matrix container class.
+utility presented by Eigen. This module is meant to work seamlessly with both native godot scripting and nodes as well as
+the aforementioned matrix container class. If there is utility offered by eigen that we do not currently support please
+add an issue on the github linking to that utility and I will do my best to implement it!
 
 These tools form the numerical backbone of this plugin and serve as independent utility outside of the currently support
 models.
@@ -40,14 +42,9 @@ models.
 Machine Learning Models
 -----------------------
 
-Core learning models implemented as native Godot nodes.
-
-See :doc:`models/index` for a complete overview.
-
-Supported Models (so far):
-- Linear regression
-- Decision tree classification
-- Feed-forward neural networks
+Core learning models implemented as native Godot nodes. See :doc:`models/index` for a complete overview. This plugin
+currently supports three model implementation (so far). Those models are a simple stochastic linear regression, a
+classification decision tree, and a feed forward neural network.
 
 Models expose explicit training and inference interfaces and do not assume
 specific data pipelines or loss functions.
