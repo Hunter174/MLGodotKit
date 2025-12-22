@@ -40,6 +40,7 @@ bug reports, and contributions are welcome!
 
 Have an idea? Just open an issue or pull request on the `GitHub repository <https://github.com/Hunter174/MLGodotKit/issues>`_.
 Community feedback directly influences the project roadmap.
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
