@@ -10,7 +10,7 @@ produced by a neural network. It selects random actions with probability
 This policy is designed to be used with ``NNNode`` as the online Q-network and
 integrates naturally with ``RLRunner`` and ``RLEnvironment``.
 
----
+----
 
 Overview
 --------
@@ -21,7 +21,7 @@ Overview
 - Episode-based epsilon decay
 - Stateless action selection
 
----
+----
 
 Parameters
 ----------
@@ -37,7 +37,7 @@ Parameters
 
 All parameters are inspector-visible and may be modified at runtime.
 
----
+----
 
 Configuration
 -------------
@@ -59,7 +59,7 @@ Configuration
         - ``q_online`` must be non-null.
         - ``action_size`` must be greater than zero.
 
----
+----
 
 Action Selection
 ----------------
@@ -80,7 +80,7 @@ Action Selection
         - Otherwise, selects the action with the highest predicted Q-value.
         - Temporarily sets the Q-network batch size to 1 for inference.
 
----
+----
 
 Episode Lifecycle
 -----------------
@@ -94,7 +94,7 @@ Episode Lifecycle
         - After warmup, ``epsilon`` is decayed multiplicatively and clipped
           to ``epsilon_min``.
 
----
+----
 
 Algorithm Details
 -----------------
@@ -104,7 +104,7 @@ Algorithm Details
 - Epsilon decay: episode-based, post-warmup
 - Q-value computation: forward pass through ``NNNode``
 
----
+----
 
 Usage Pattern
 -------------

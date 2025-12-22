@@ -7,7 +7,7 @@ This module provides simple data structures for storing and sampling
 environment interactions. Buffers are deliberately minimal and designed
 to be paired with explicit training loops rather than automated pipelines.
 
----
+----
 
 ReplayBuffer
 ------------
@@ -17,7 +17,7 @@ First-in, first-out (FIFO) experience replay buffer.
 ``ReplayBuffer`` stores individual transitions and supports random sampling.
 It is primarily intended for off-policy algorithms such as DQN.
 
----
+----
 
 Overview
 ^^^^^^^^
@@ -27,7 +27,7 @@ Overview
 - Uniform random sampling
 - Suitable for off-policy learning
 
----
+----
 
 Stored Transition Format
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -40,7 +40,7 @@ Each entry in the buffer is a dictionary with keys:
 - ``s_next``: next state
 - ``done``: terminal flag
 
----
+----
 
 Parameters
 ^^^^^^^^^^
@@ -49,7 +49,7 @@ Parameters
     Maximum number of stored transitions.
     Oldest entries are discarded when capacity is exceeded.
 
----
+----
 
 Methods
 ^^^^^^^
@@ -61,7 +61,7 @@ Methods
         - Transitions are appended in chronological order.
         - Oldest transitions are removed when capacity is exceeded.
 
----
+----
 
 ``sample(batch_size)``
     Sample a batch of transitions uniformly at random.
@@ -74,12 +74,12 @@ Methods
         - Sampling is with replacement.
         - Caller is responsible for ensuring sufficient buffer size.
 
----
+----
 
 ``size()``
     Return the number of stored transitions.
 
----
+----
 
 Usage
 ^^^^^
@@ -93,7 +93,7 @@ Typical usage with ``DQNTrainer``:
    if buffer.size() >= batch_size:
        var batch = buffer.sample(batch_size)
 
----
+----
 
 Limitations
 ^^^^^^^^^^^
@@ -103,7 +103,7 @@ Limitations
 - No episode boundary tracking
 - No sequence sampling
 
----
+----
 
 RolloutBuffer
 -------------
@@ -114,7 +114,7 @@ Trajectory-based buffer for on-policy algorithms.
 or rollout. It is intended for on-policy methods such as PPO, A2C, or policy
 gradient algorithms.
 
----
+----
 
 Overview
 ^^^^^^^^
@@ -124,7 +124,7 @@ Overview
 - Cleared after each rollout
 - Suitable for advantage-based methods
 
----
+----
 
 Stored Data
 ^^^^^^^^^^^
@@ -140,7 +140,7 @@ The buffer stores the following arrays:
 
 All arrays are appended synchronously per step.
 
----
+----
 
 Methods
 ^^^^^^^
@@ -167,17 +167,17 @@ Methods
         ``v``
             Estimated state value.
 
----
+----
 
 ``clear()``
     Clear all stored rollout data.
 
----
+----
 
 ``size()``
     Return the number of stored timesteps.
 
----
+----
 
 Usage
 ^^^^^
@@ -192,7 +192,7 @@ Typical usage pattern:
        process_rollout(rollout)
        rollout.clear()
 
----
+----
 
 Limitations
 ^^^^^^^^^^^
@@ -202,7 +202,7 @@ Limitations
 - No return or advantage computation
 - No time-limit handling
 
----
+----
 
 Design Notes
 ------------
@@ -211,7 +211,7 @@ Design Notes
 than computed targets or advantages. This keeps learning logic explicit and
 allows trainers to implement custom algorithms without hidden assumptions.
 
----
+----
 
 See Also
 --------

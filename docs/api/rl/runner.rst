@@ -11,7 +11,7 @@ This class does **not** implement learning logic itself; instead, it provides a
 deterministic and explicit control loop suitable for experimentation, debugging,
 and real-time learning.
 
----
+----
 
 Overview
 --------
@@ -22,7 +22,7 @@ Overview
 - Explicit global step tracking
 - Signal-based episode completion
 
----
+----
 
 Core Components
 ---------------
@@ -37,7 +37,7 @@ Core Components
     Training component responsible for learning updates.
     The runner treats this object as a black box.
 
----
+----
 
 Configuration
 -------------
@@ -55,7 +55,7 @@ Configuration
         ``trainer``
             Trainer object implementing the expected training interface.
 
----
+----
 
 Execution
 ---------
@@ -76,7 +76,7 @@ Execution
         - Terminates on environment signal or step limit
         - Emits ``episode_finished`` signal
 
----
+----
 
 Trainer Interface Expectations
 ------------------------------
@@ -93,7 +93,7 @@ This design allows trainers to implement:
 - On-policy or off-policy algorithms
 - Experience replay or direct updates
 
----
+----
 
 Signals
 -------
@@ -101,7 +101,7 @@ Signals
 ``episode_finished(total_reward)``
     Emitted when an episode completes.
 
----
+----
 
 Configuration Parameters
 ------------------------
@@ -113,7 +113,7 @@ Configuration Parameters
 ``render_mode`` : bool, default=false
     If enabled, the runner yields execution between steps using ``step_delay``.
 
----
+----
 
 Global Step Tracking
 --------------------
@@ -122,7 +122,7 @@ Global Step Tracking
     Counter incremented after every environment step across all episodes.
     Typically used by trainers to schedule updates or exploration decay.
 
----
+----
 
 Execution Flow
 --------------
@@ -137,7 +137,7 @@ Typical usage pattern:
        var reward = runner.run_episode()
        print("Episode reward:", reward)
 
----
+----
 
 Design Philosophy
 -----------------
@@ -154,7 +154,7 @@ This makes it suitable for:
 - Real-time interactive training
 - Deterministic experimentation
 
----
+----
 
 Limitations
 -----------

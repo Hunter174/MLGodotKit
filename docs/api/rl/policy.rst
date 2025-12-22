@@ -10,7 +10,7 @@ components in reinforcement learning workflows. A policy maps observations
 This class is intended to be subclassed. It does not implement any learning or
 decision logic by default.
 
----
+----
 
 Overview
 --------
@@ -20,7 +20,7 @@ Overview
 - Optional episode lifecycle hook
 - Designed to integrate with ``RLEnvironment``
 
----
+----
 
 Core Concept
 ------------
@@ -34,7 +34,7 @@ networks, or learned value functions—is entirely up to the implementation.
 - Any particular observation format
 - Any learning algorithm
 
----
+----
 
 Methods
 -------
@@ -53,7 +53,7 @@ Methods
         - Must be overridden by subclasses.
         - Called once per environment step.
 
----
+----
 
 ``on_episode_end()``
     Optional hook invoked at the end of an episode.
@@ -63,7 +63,7 @@ Methods
         - Override to reset internal state, update exploration schedules,
           or finalize learning updates.
 
----
+----
 
 Usage Pattern
 -------------
@@ -81,7 +81,7 @@ Policies are typically used alongside an ``RLEnvironment``:
            policy.on_episode_end()
            break
 
----
+----
 
 Design Philosophy
 -----------------
@@ -98,7 +98,7 @@ This allows the same environment to be paired with:
 - Reinforcement learning agents
 - Evaluation-only controllers
 
----
+----
 
 Limitations
 -----------
@@ -108,7 +108,7 @@ Limitations
 - No observation preprocessing
 - Single-agent only
 
----
+----
 
 See Also
 --------

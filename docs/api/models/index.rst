@@ -11,7 +11,7 @@ The models in this section prioritize transparency and control over automation.
 Training loops, loss functions, and data handling are intentionally left to the
 user.
 
----
+----
 
 Available Models
 ----------------
@@ -26,7 +26,7 @@ Linear Models
     - Mean squared error loss
     - Deterministic batch training
 
----
+----
 
 Tree-Based Models
 ^^^^^^^^^^^^^^^^^
@@ -38,7 +38,7 @@ Tree-Based Models
     - Greedy, deterministic splits
     - No pruning or ensembles
 
----
+----
 
 Neural Networks
 ^^^^^^^^^^^^^^^
@@ -50,7 +50,7 @@ Neural Networks
     - Configurable layer architecture
     - External loss and training control
 
----
+----
 
 Design Philosophy
 -----------------
@@ -65,7 +65,7 @@ This makes them well suited for:
 - Educational and experimental workflows
 - Tight integration with gameplay logic
 
----
+----
 
 .. toctree::
    :maxdepth: 1

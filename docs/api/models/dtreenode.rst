@@ -13,7 +13,7 @@ and integration directly inside the Godot Engine via GDExtension.
 The interface and behavior are inspired by ``sklearn.tree.DecisionTreeClassifier``,
 with a deliberately reduced feature set.
 
----
+----
 
 Overview
 --------
@@ -24,7 +24,7 @@ Overview
 - No pruning or ensemble support
 - CPU-only, single-threaded
 
----
+----
 
 Parameters
 ----------
@@ -37,7 +37,7 @@ Parameters
 
 Both parameters can be set before training using the provided setter methods.
 
----
+----
 
 Methods
 -------
@@ -55,7 +55,7 @@ Configuration
 ``get_max_depth()``
     Return the configured maximum tree depth.
 
----
+----
 
 Training
 ^^^^^^^^
@@ -75,7 +75,7 @@ Training
         - Training is deterministic given identical inputs.
         - All data is converted internally to Eigen matrices.
 
----
+----
 
 Prediction
 ^^^^^^^^^^
@@ -95,7 +95,7 @@ Prediction
         - ``fit`` must be called before prediction.
         - Each sample is evaluated independently by traversing the tree.
 
----
+----
 
 Algorithm Details
 -----------------
@@ -111,7 +111,7 @@ Stopping criteria:
 - Pure node (all labels identical)
 - No valid split found
 
----
+----
 
 Limitations
 -----------
@@ -123,7 +123,7 @@ Limitations
 - No missing-value handling
 - Not optimized for large datasets
 
----
+----
 
 Examples
 --------
@@ -139,7 +139,7 @@ Minimal usage from GDScript:
    tree.fit(X_train, y_train)
    var predictions = tree.predict(X_test)
 
----
+----
 
 See Also
 --------

@@ -11,7 +11,7 @@ built-in vector types.
 ``Matrix`` is the primary numerical container used throughout MLGodotKit and
 serves as the input and output type for the ``Linalg`` module.
 
----
+----
 
 Overview
 --------
@@ -22,7 +22,7 @@ Overview
 - Designed for small to medium matrices
 - CPU-only, single-precision floats
 
----
+----
 
 Construction
 ------------
@@ -37,7 +37,7 @@ Matrices are created using static factory methods.
 
 Matrices may also be constructed from Godot arrays or vector types.
 
----
+----
 
 Static Methods
 --------------
@@ -62,7 +62,7 @@ Static Methods
     If ``column`` is ``true``, the result is a column vector.
     Otherwise, a row vector is created.
 
----
+----
 
 Shape and Access
 ----------------
@@ -79,7 +79,7 @@ Shape and Access
 ``set(i, j, value)``
     Set the element at position ``(i, j)``.
 
----
+----
 
 Linear Algebra Operations
 -------------------------
@@ -105,7 +105,7 @@ Linear Algebra Operations
 ``norm()``
     Compute the Frobenius norm.
 
----
+----
 
 Vector Interoperability
 -----------------------
@@ -127,7 +127,7 @@ Vector Interoperability
     Notes
         - Matrix must have compatible shape (e.g. ``3×1`` or ``1×3``).
 
----
+----
 
 Conversion
 ----------
@@ -138,7 +138,7 @@ Conversion
 ``copy()``
     Create a deep copy of the matrix.
 
----
+----
 
 Comparison and Introspection
 ----------------------------
@@ -156,7 +156,7 @@ Comparison and Introspection
 ``_to_string()``
     Return a formatted string representation of the matrix.
 
----
+----
 
 Error Handling
 --------------
@@ -165,7 +165,7 @@ Error Handling
 - Invalid vector conversions are rejected.
 - No implicit broadcasting is performed.
 
----
+----
 
 Examples
 --------
@@ -183,7 +183,7 @@ Vector transformation:
    var R = Matrix.identity(3)
    var v2 = R.mul_vector3(v1)
 
----
+----
 
 Limitations
 -----------
@@ -194,7 +194,7 @@ Limitations
 - No GPU acceleration
 - Single-precision floating point only
 
----
+----
 
 See Also
 --------

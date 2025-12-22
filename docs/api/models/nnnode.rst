@@ -14,7 +14,7 @@ inside the Godot Engine over automation or convenience abstractions.
 The interface is inspired by low-level deep learning frameworks rather than
 high-level APIs such as ``sklearn`` or ``Keras``.
 
----
+----
 
 Overview
 --------
@@ -25,7 +25,7 @@ Overview
 - Configurable activation functions per layer
 - Designed for real-time and interactive learning scenarios
 
----
+----
 
 Model Definition
 ----------------
@@ -50,7 +50,7 @@ Example layer configuration:
 
 Setting the ``layers`` property automatically rebuilds the model.
 
----
+----
 
 Supported Activations
 ---------------------
@@ -68,7 +68,7 @@ Supported activations include:
 
 If an unknown activation name is provided, the layer defaults to ``relu``.
 
----
+----
 
 Parameters
 ----------
@@ -87,7 +87,7 @@ Parameters
 
 All parameters are inspector-visible and can be modified at runtime.
 
----
+----
 
 Methods
 -------
@@ -109,7 +109,7 @@ Model Construction
     Print a summary of the network architecture, including layer sizes and
     activation functions.
 
----
+----
 
 Forward Pass
 ^^^^^^^^^^^^
@@ -130,7 +130,7 @@ Forward Pass
         - No output activation is applied automatically.
         - ``forward`` must be called before ``backward``.
 
----
+----
 
 Backward Pass
 ^^^^^^^^^^^^^
@@ -148,7 +148,7 @@ Backward Pass
         - Global gradient norm clipping is applied for stability.
         - Weight updates occur immediately after backpropagation.
 
----
+----
 
 Utilities
 ^^^^^^^^^
@@ -156,7 +156,7 @@ Utilities
 ``copy_weights(source)``
     Copy weights and biases from another ``NNNode`` with identical architecture.
 
----
+----
 
 Algorithm Details
 -----------------
@@ -175,7 +175,7 @@ Algorithm Details
   - Analytical activation derivatives
   - No automatic loss computation
 
----
+----
 
 Design Philosophy
 -----------------
@@ -192,7 +192,7 @@ This makes ``NNNode`` suitable for:
 - Real-time adaptive behaviors
 - Educational and experimental workflows
 
----
+----
 
 Limitations
 -----------
@@ -203,7 +203,7 @@ Limitations
 - No serialization or checkpointing
 - No GPU acceleration
 
----
+----
 
 Examples
 --------
@@ -222,7 +222,7 @@ Minimal usage with an external loss:
    var error = output[0][0] - target
    nn.backward([[2.0 * error]])
 
----
+----
 
 See Also
 --------

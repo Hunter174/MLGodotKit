@@ -10,7 +10,7 @@ replay buffer, and performs gradient-based updates using sampled transitions.
 This trainer is designed to be driven by ``RLRunner`` and paired with
 ``DQNPolicy`` for action selection.
 
----
+----
 
 Overview
 --------
@@ -21,7 +21,7 @@ Overview
 - Polyak (soft) target updates
 - Explicit training step control
 
----
+----
 
 Core Components
 ---------------
@@ -39,7 +39,7 @@ Core Components
 ``action_size``
     Number of discrete actions.
 
----
+----
 
 Parameters
 ----------
@@ -64,7 +64,7 @@ Parameters
 
 All parameters are inspector-visible and can be modified at runtime.
 
----
+----
 
 Configuration
 -------------
@@ -89,7 +89,7 @@ Configuration
         - Both networks and the buffer must be non-null.
         - ``action_size`` must be greater than zero.
 
----
+----
 
 Trainer Interface
 -----------------
@@ -117,7 +117,7 @@ Trainer Interface
         - Backpropagates gradients through ``q_online``
         - Applies Polyak updates to ``q_target`` periodically
 
----
+----
 
 Algorithm Details
 -----------------
@@ -133,7 +133,7 @@ For each transition:
 
   ``y = r + γ · Q_target(s', a*)`` (if not terminal)
 
----
+----
 
 **Loss Function**
 
@@ -144,7 +144,7 @@ Huber loss per sample:
 
 Gradients are clipped implicitly by the Huber formulation.
 
----
+----
 
 **Target Network Update**
 

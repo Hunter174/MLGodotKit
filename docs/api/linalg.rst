@@ -13,7 +13,7 @@ optimization, and machine learning workflows inside the Godot Engine.
 The API is inspired by ``numpy.linalg`` and ``scipy.linalg``, with a simplified,
 engine-friendly interface.
 
----
+----
 
 Overview
 --------
@@ -24,7 +24,7 @@ Overview
 - Suitable for real-time and scripting use
 - No GPU acceleration
 
----
+----
 
 Solvers
 -------
@@ -47,7 +47,7 @@ Solvers
         - Uses LU decomposition with partial pivoting.
         - Raises an error if dimensions are incompatible.
 
----
+----
 
 ``least_squares(A, b)``
     Compute a least-squares solution to an overdetermined system.
@@ -67,7 +67,7 @@ Solvers
         - Uses column-pivoted QR decomposition.
         - Suitable for full-rank problems.
 
----
+----
 
 ``pinv(A)``
     Compute the Moore–Penrose pseudoinverse of a matrix.
@@ -84,7 +84,7 @@ Solvers
         - Computed via singular value decomposition (SVD).
         - Small singular values are thresholded for numerical stability.
 
----
+----
 
 Decompositions
 --------------
@@ -98,7 +98,7 @@ matrices.
     - ``Q``: orthonormal matrix
     - ``R``: upper triangular matrix
 
----
+----
 
 ``svd(A)`` → ``{"U", "S", "V"}``
     Singular value decomposition.
@@ -110,7 +110,7 @@ matrices.
     Notes
         - Thin SVD is used for efficiency.
 
----
+----
 
 ``eig(A)`` → ``{"values", "vectors"}``
     Eigenvalue decomposition of a symmetric matrix.
@@ -119,7 +119,7 @@ matrices.
         - ``A`` must be square and self-adjoint.
         - Eigenvalues are real-valued.
 
----
+----
 
 ``lu(A)`` → ``{"L", "U", "P"}``
     LU decomposition with partial pivoting.
@@ -128,7 +128,7 @@ matrices.
     - ``U``: upper triangular matrix
     - ``P``: permutation matrix
 
----
+----
 
 Error Handling
 --------------
@@ -137,7 +137,7 @@ Error Handling
 - Invalid inputs (e.g., null matrices) are rejected.
 - Decomposition failures are reported explicitly.
 
----
+----
 
 Examples
 --------
@@ -162,7 +162,7 @@ QR decomposition:
    var Q = res["Q"]
    var R = res["R"]
 
----
+----
 
 Limitations
 -----------
@@ -173,7 +173,7 @@ Limitations
 - No complex-valued matrices
 - Numerical stability depends on matrix conditioning
 
----
+----
 
 See Also
 --------

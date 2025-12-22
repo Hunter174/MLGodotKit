@@ -11,7 +11,7 @@ combined in practice.
 The API favors explicit control and composability over automated pipelines.
 Most components are designed to be orchestrated manually by user code.
 
----
+----
 
 Numerical Foundations
 ---------------------
@@ -27,7 +27,7 @@ Low-level numerical utilities used throughout the library.
 These components form the numerical backbone for learning models and
 reinforcement learning algorithms.
 
----
+----
 
 Machine Learning Models
 -----------------------
@@ -44,7 +44,7 @@ Included models:
 Models expose explicit training and inference interfaces and do not assume
 specific data pipelines or loss functions.
 
----
+----
 
 Reinforcement Learning
 ----------------------
@@ -62,7 +62,7 @@ Included components:
 The RL API is inspired by Gym-style design, while remaining engine-first and
 explicit.
 
----
+----
 
 Design Notes
 ------------
@@ -77,7 +77,7 @@ The API is intentionally:
 Users are encouraged to build their own workflows rather than rely on fixed
 pipelines.
 
----
+----
 
 .. toctree::
    :maxdepth: 2

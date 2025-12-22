@@ -11,7 +11,7 @@ to user-defined override methods.
 The design is inspired by OpenAI Gym environments, with explicit separation
 between **internal state** and **observations**.
 
----
+----
 
 Overview
 --------
@@ -22,7 +22,7 @@ Overview
 - Signal-driven interaction model
 - Designed for real-time and interactive RL
 
----
+----
 
 Core Concepts
 -------------
@@ -35,7 +35,7 @@ This state is never exposed directly to agents.
 Processed representation of the raw state, returned to the agent and emitted
 via signals. Observations are produced by ``_observe``.
 
----
+----
 
 Public API
 ----------
@@ -53,7 +53,7 @@ Public API
         - Converts raw state to observation via ``_observe``
         - Emits ``episode_reset`` signal
 
----
+----
 
 ``step(action)``
     Advance the environment by one step.
@@ -77,7 +77,7 @@ Public API
         - Emits ``step_completed`` signal
         - Emits ``episode_done`` when terminal
 
----
+----
 
 Override Points
 ---------------
@@ -91,7 +91,7 @@ Subclasses must implement the following methods.
         ``Array``
             Raw state representation.
 
----
+----
 
 ``_step(action)``
     Apply an action to the environment.
@@ -108,7 +108,7 @@ Subclasses must implement the following methods.
             - ``reward``: float
             - ``done``: bool
 
----
+----
 
 ``_observe(raw_state)``
     Convert raw internal state to an observation.
@@ -125,7 +125,7 @@ Subclasses must implement the following methods.
         - Default implementation returns the raw state unchanged.
         - Override to implement feature extraction or normalization.
 
----
+----
 
 Signals
 -------
@@ -139,7 +139,7 @@ Signals
 ``episode_done(total_reward)``
     Emitted when an episode terminates.
 
----
+----
 
 Configuration
 -------------
@@ -148,7 +148,7 @@ Configuration
     Maximum number of steps per episode.
     Episodes terminate automatically when exceeded.
 
----
+----
 
 Design Philosophy
 -----------------
@@ -166,7 +166,7 @@ This allows the environment to be used with:
 - Manual or scripted controllers
 - Online or offline learning loops
 
----
+----
 
 Example
 -------
@@ -188,7 +188,7 @@ Minimal custom environment:
            "done": false
        }
 
----
+----
 
 Limitations
 -----------
@@ -198,7 +198,7 @@ Limitations
 - No vectorized environments
 - No parallel execution
 
----
+----
 
 See Also
 --------

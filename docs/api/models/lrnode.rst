@@ -13,7 +13,7 @@ use inside the Godot Engine via GDExtension.
 The interface is loosely inspired by ``sklearn.linear_model.LinearRegression``,
 with explicit control over training and learning rate.
 
----
+----
 
 Overview
 --------
@@ -24,7 +24,7 @@ Overview
 - Deterministic training
 - No regularization
 
----
+----
 
 Parameters
 ----------
@@ -35,7 +35,7 @@ Parameters
 The learning rate can be modified at any time using
 ``set_learning_rate``.
 
----
+----
 
 Methods
 -------
@@ -55,7 +55,7 @@ Initialization
         - Bias is initialized to zero.
         - This method must be called before training or prediction.
 
----
+----
 
 Training
 ^^^^^^^^
@@ -78,7 +78,7 @@ Training
         - Loss is printed every 100 epochs.
         - Training is deterministic given identical inputs.
 
----
+----
 
 Prediction
 ^^^^^^^^^^
@@ -94,7 +94,7 @@ Prediction
         ``Array``
             Predicted values of shape ``(n_samples,)``.
 
----
+----
 
 Configuration
 ^^^^^^^^^^^^^
@@ -102,7 +102,7 @@ Configuration
 ``set_learning_rate(lr)``
     Set the learning rate used during training.
 
----
+----
 
 Algorithm Details
 -----------------
@@ -119,7 +119,7 @@ Algorithm Details
 - Gradient computation:
   Analytical gradient of MSE with respect to weights and bias
 
----
+----
 
 Limitations
 -----------
@@ -131,7 +131,7 @@ Limitations
 - No feature scaling
 - Single-output only
 
----
+----
 
 Examples
 --------
@@ -147,7 +147,7 @@ Minimal usage from GDScript:
    lr.train(X_train, y_train, 500)
    var predictions = lr.predict(X_test)
 
----
+----
 
 See Also
 --------

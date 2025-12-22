@@ -12,7 +12,7 @@ The design is inspired by OpenAI Gym and modern RL libraries, while remaining
 explicit, debuggable, and suitable for real-time execution inside the Godot
 Engine.
 
----
+----
 
 Core Abstractions
 -----------------
@@ -27,7 +27,7 @@ Environments
     - Separation of internal state and observations
     - Signal-driven lifecycle events
 
----
+----
 
 Policies
 ^^^^^^^^
@@ -42,7 +42,7 @@ Policies
     - NN-based Q-value inference
     - Episode-aware behavior
 
----
+----
 
 Execution
 ^^^^^^^^^
@@ -54,7 +54,7 @@ Execution
     - Optional rendering and step delays
     - Global step tracking
 
----
+----
 
 Training
 ^^^^^^^^
@@ -66,7 +66,7 @@ Training
     - Polyak (soft) target updates
     - Explicit gradient computation
 
----
+----
 
 Experience Buffers
 ^^^^^^^^^^^^^^^^^^
@@ -77,7 +77,7 @@ Experience Buffers
 ``RolloutBuffer``
     Trajectory-based storage for on-policy algorithms (e.g. PPO).
 
----
+----
 
 Design Philosophy
 -----------------
@@ -102,7 +102,7 @@ This makes the RL stack suitable for:
 - Game-integrated learning agents
 - Custom algorithm development
 
----
+----
 
 .. toctree::
    :maxdepth: 1
