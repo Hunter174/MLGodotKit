@@ -44,7 +44,7 @@ Core learning models implemented as native Godot nodes.
 
 See :doc:`models/index` for a complete overview.
 
-Included models:
+Supported Models (so far):
 - Linear regression
 - Decision tree classification
 - Feed-forward neural networks
@@ -52,22 +52,19 @@ Included models:
 Models expose explicit training and inference interfaces and do not assume
 specific data pipelines or loss functions.
 
+I really enjoy the Sklearn implementation design of models so if there is a model you see there that you would like added
+to the supported list please make an issue linking to the desired model for reference. I will try my best to expeditiously
+implement said model or tool.
+
 ----
 
 Reinforcement Learning
 ----------------------
 
-Composable components for building reinforcement learning systems.
-
-See :doc:`rl/index` for a conceptual overview.
-
-Included components:
-- Environment abstractions
-- Policies and action selection
-- Episode runners
-- Trainers and experience buffers
-
-The RL API is inspired by Gym-style design, while remaining engine-first and explicit.
+Composable components for building reinforcement learning systems. See :doc:`rl/index` for a conceptual overview. There
+are currently three components supported by this plugin. Those are: Environmental abstractions, policies and action selection
+episode runners, as well as trainers and experience buffers. Each designed with the purpose of building flexible reinforcement
+learning pipelines to build a Gym-style RL API, while remaining engine=first and explicit.
 
 ----
 
