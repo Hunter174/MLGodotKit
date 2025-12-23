@@ -106,3 +106,51 @@ div.highlight {
 .rst-content {
   padding: 2.5em 3em;
 }
+
+
+/* Center main content instead of left-locking it */
+.wy-nav-content {
+  max-width: 1100px;          /* try 1100–1300 */
+  margin: 0 auto;             /* center it */
+  background: #ffffff;
+}
+
+/* Give content more breathing room */
+.wy-nav-content-wrap {
+  background: #ffffff;
+}
+
+/* Improve spacing between sections */
+.rst-content section {
+  margin-bottom: 3em;
+}
+
+/* Paragraph spacing */
+.rst-content p {
+  margin-bottom: 1.2em;
+}
+
+.wy-nav-content {
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  padding: 3em 4em;
+}
+
+@media (min-width: 1400px) {
+  .wy-nav-content {
+    max-width: 1300px;
+  }
+}
+
+
+/* Right-side TOC block */
+.rst-content .contents {
+  float: right;
+  width: 260px;
+  margin-left: 2em;
+  margin-bottom: 2em;
+  padding: 1em;
+  border-left: 3px solid #498CBE;
+  background: #f9fafb;
+  border-radius: 8px;
+}
