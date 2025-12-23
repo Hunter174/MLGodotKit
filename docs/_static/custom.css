@@ -1,37 +1,108 @@
-/* Improve typography */
+/* -------------------------
+   Base typography
+-------------------------- */
 body {
   font-size: 16px;
-  line-height: 1.6;
+  line-height: 1.65;
+  color: #2b2b2b;
 }
 
-/* Stronger section headers */
-h1, h2, h3 {
+/* Headings */
+h1, h2, h3, h4 {
   font-weight: 600;
+  color: #384336;
 }
 
-/* Code blocks */
-div.highlight {
-  border-radius: 6px;
-  padding: 0.75em;
+/* Subtle divider under h1 */
+h1 {
+  border-bottom: 2px solid #498CBE;
+  padding-bottom: 0.3em;
 }
 
-/* Sidebar accent */
-.wy-side-nav-search {
-  background-color: #2b3a42;
-}
-
-.wy-nav-side {
-  background-color: #1f2933;
-}
-
-/* Link color */
+/* -------------------------
+   Links & accents
+-------------------------- */
 a {
-  color: #4fa3ff;
+  color: #498CBE;
+  text-decoration: none;
 }
 
-/* Control sidebar logo size */
+a:hover {
+  color: #DD7596;
+  text-decoration: underline;
+}
+
+/* Inline code */
+code {
+  background: #f3f4f6;
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+
+/* -------------------------
+   Code blocks
+-------------------------- */
+div.highlight {
+  background: #f7f7f7;
+  border-radius: 8px;
+  padding: 1em;
+  border-left: 4px solid #498CBE;
+}
+
+/* -------------------------
+   Sidebar
+-------------------------- */
+.wy-nav-side {
+  background-color: #384336;
+}
+
+.wy-side-nav-search {
+  background-color: #444344;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Sidebar links */
+.wy-menu-vertical a {
+  color: #e6e6e6;
+}
+
+.wy-menu-vertical a:hover {
+  background-color: rgba(73, 140, 190, 0.15);
+  color: #ffffff;
+}
+
+/* Active item */
+.wy-menu-vertical li.current > a {
+  background-color: rgba(221, 117, 150, 0.25);
+  color: #ffffff;
+  border-radius: 6px;
+}
+
+/* -------------------------
+   Logo
+-------------------------- */
+.wy-side-nav-search a.icon-home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
 .wy-side-nav-search a.icon-home img.logo {
-  width: 150px;
+  width: 140px;
   height: auto;
-  padding: 10px;
+  padding: 6px;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+/* -------------------------
+   Content card feel
+-------------------------- */
+.wy-nav-content {
+  background: #ffffff;
+}
+
+.rst-content {
+  padding: 2.5em 3em;
 }
