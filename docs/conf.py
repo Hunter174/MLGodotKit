@@ -29,6 +29,10 @@ language = "en"
 
 # -- HTML output -------------------------------------------------------------
 
+html_logo = "_static/MLGodotKit_logo.png"
+
+html_favicon = "_static/MLGodotKit_logo.png"
+
 html_theme = "sphinx_rtd_theme"
 
 html_static_path = ["_static"]

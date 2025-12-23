@@ -28,3 +28,9 @@ div.highlight {
 a {
   color: #4fa3ff;
 }
+
+/* Control sidebar logo size */
+.wy-side-nav-search img {
+  max-width: 160px;
+  padding: 10px;
+}
