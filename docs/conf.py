@@ -29,20 +29,16 @@ language = "en"
 
 # -- HTML output -------------------------------------------------------------
 
-html_logo = "_static/MLGodotKit_logo.png"
-
-html_favicon = "_static/MLGodotKit_logo.png"
-
 html_theme = "sphinx_rtd_theme"
+
+html_logo = "_static/MLGodotKit_logo.png"
+html_favicon = "_static/MLGodotKit_logo.png"
 
 html_static_path = ["_static"]
 
 html_css_files = [
     "custom.css",
 ]
-
-# RTD-friendly defaults
-html_theme = "sphinx_rtd_theme"
 
 html_theme_options = {
     "navigation_depth": 4,
@@ -51,4 +47,3 @@ html_theme_options = {
     "includehidden": True,
     "titles_only": False,
 }
-

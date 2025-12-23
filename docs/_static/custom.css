@@ -1,6 +1,6 @@
-/* -------------------------
-   Base typography
--------------------------- */
+/* =========================================================
+   Base typography (editorial, Crate-style)
+========================================================= */
 body {
   font-size: 16px;
   line-height: 1.65;
@@ -13,15 +13,16 @@ h1, h2, h3, h4 {
   color: #384336;
 }
 
-/* Subtle divider under h1 */
+/* Subtle divider under page title */
 h1 {
   border-bottom: 2px solid #498CBE;
-  padding-bottom: 0.3em;
+  padding-bottom: 0.4em;
+  margin-bottom: 1em;
 }
 
-/* -------------------------
+/* =========================================================
    Links & accents
--------------------------- */
+========================================================= */
 a {
   color: #498CBE;
   text-decoration: none;
@@ -35,27 +36,29 @@ a:hover {
 /* Inline code */
 code {
   background: #f3f4f6;
-  border-radius: 4px;
   padding: 2px 4px;
+  border-radius: 4px;
+  font-size: 0.95em;
 }
 
-/* -------------------------
-   Code blocks
--------------------------- */
+/* =========================================================
+   Code blocks (Crate-like, restrained)
+========================================================= */
 div.highlight {
   background: #f7f7f7;
-  border-radius: 8px;
-  padding: 1em;
+  padding: 1em 1.25em;
   border-left: 4px solid #498CBE;
+  border-radius: 0; /* structural, not card */
 }
 
-/* -------------------------
-   Sidebar
--------------------------- */
+/* =========================================================
+   Sidebar (flat, structural)
+========================================================= */
 .wy-nav-side {
   background-color: #384336;
 }
 
+/* Logo/search area */
 .wy-side-nav-search {
   background-color: #444344;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -71,16 +74,17 @@ div.highlight {
   color: #ffffff;
 }
 
-/* Active item */
+/* Active item — flat with left accent */
 .wy-menu-vertical li.current > a {
-  background-color: rgba(221, 117, 150, 0.25);
+  background-color: #444344;
   color: #ffffff;
-  border-radius: 6px;
+  border-radius: 0;
+  border-left: 4px solid #498CBE;
 }
 
-/* -------------------------
-   Logo
--------------------------- */
+/* =========================================================
+   Logo (centered, calm)
+========================================================= */
 .wy-side-nav-search a.icon-home {
   display: flex;
   flex-direction: column;
@@ -92,65 +96,64 @@ div.highlight {
   width: 140px;
   height: auto;
   padding: 6px;
-  border-radius: 8px;
   background: #ffffff;
+  border-radius: 6px;
 }
 
-/* -------------------------
-   Content card feel
--------------------------- */
-.wy-nav-content {
-  background: #ffffff;
-}
-
-.rst-content {
-  padding: 2.5em 3em;
-}
-
-
-/* Center main content instead of left-locking it */
-.wy-nav-content {
-  max-width: 1100px;          /* try 1100–1300 */
-  margin: 0 auto;             /* center it */
-  background: #ffffff;
-}
-
-/* Give content more breathing room */
+/* =========================================================
+   Main content layout (Crate-style distribution)
+========================================================= */
 .wy-nav-content-wrap {
   background: #ffffff;
 }
 
-/* Improve spacing between sections */
-.rst-content section {
-  margin-bottom: 3em;
-}
-
-/* Paragraph spacing */
-.rst-content p {
-  margin-bottom: 1.2em;
-}
-
+/* Centered editorial column */
 .wy-nav-content {
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 3em 4em;
+  background: #ffffff;
+
+  /* Remove card illusion */
+  border-radius: 0;
+  box-shadow: none;
 }
 
+/* Wider on large screens */
 @media (min-width: 1400px) {
   .wy-nav-content {
     max-width: 1300px;
   }
 }
 
+/* =========================================================
+   Content rhythm
+========================================================= */
+.rst-content section {
+  margin-bottom: 3em;
+}
 
-/* Right-side TOC block */
+.rst-content p {
+  margin-bottom: 1.25em;
+}
+
+/* =========================================================
+   Right-side TOC (explicit, structural)
+========================================================= */
 .rst-content .contents {
   float: right;
   width: 260px;
-  margin-left: 2em;
-  margin-bottom: 2em;
-  padding: 1em;
-  border-left: 3px solid #498CBE;
+  margin: 0 0 2em 2em;
+  padding: 0.75em 1em;
+
   background: #f9fafb;
-  border-radius: 8px;
+  border-left: 3px solid #498CBE;
+
+  border-radius: 0;  /* structural, not decorative */
+  font-size: 0.9em;
+}
+
+/* Keep TOC readable */
+.rst-content .contents ul {
+  margin-left: 0;
 }

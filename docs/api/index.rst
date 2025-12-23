@@ -9,6 +9,10 @@ API Reference
     models/index
     rl/index
 
+.. contents::
+   :local:
+   :depth: 2
+
 Public API documentation for MLGodotKit.
 
 This section provides detailed documentation for all public classes, nodes, and
