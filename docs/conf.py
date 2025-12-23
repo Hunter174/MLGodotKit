@@ -38,8 +38,13 @@ html_css_files = [
 ]
 
 # RTD-friendly defaults
+html_theme = "sphinx_rtd_theme"
+
 html_theme_options = {
-    "collapse_navigation": False,
     "navigation_depth": 4,
+    "collapse_navigation": False,
+    "sticky_navigation": True,
+    "includehidden": True,
     "titles_only": False,
 }
+
