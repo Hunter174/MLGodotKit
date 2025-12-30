@@ -32,7 +32,7 @@ language = "en"
 html_theme = "sphinx_rtd_theme"
 
 html_logo = "_static/MLGodotKit_logo.png"
-html_favicon = "_static/MLGodotKit_logo.png"
+html_favicon = "_static/Thumbnail_MLGodotKit_logo.png"
 
 html_static_path = ["_static"]
 
