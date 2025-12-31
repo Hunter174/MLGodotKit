@@ -9,7 +9,7 @@
 #include <vector>
 
 class LinearModelNode : public godot::Node {
-    GDCLASS(LinearModelNode, godot::Node);
+	GDCLASS(LinearModelNode, godot::Node);
 
 private:
     Eigen::VectorXf weights;

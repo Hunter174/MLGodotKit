@@ -6,7 +6,6 @@
 #include <string>
 #include <tuple>
 #include "utility/logger.h"
-#include "utility/godot_utility.h"
 #include <models/neural_network/activations/activations.h>
 
 class Layer {
