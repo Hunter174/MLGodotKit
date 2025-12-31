@@ -5,11 +5,12 @@ signal episode_reset(initial_obs)
 signal step_completed(obs, reward, done)
 signal episode_done(total_reward)
 
-var state := [] # RAW internal state (physics, game state, etc.)
-var step_count := 0
-var total_reward := 0.0
-@export var max_steps := 1000
+var state = []
+var step_count = 0
+var total_reward = 0.0
+@export var max_steps = 1000
 
+## This 
 func reset() -> Array:
 	step_count = 0
 	total_reward = 0.0
@@ -18,14 +19,14 @@ func reset() -> Array:
 	state = _reset()
 
 	# observation derived from raw state
-	var obs := _observe(state)
+	var obs = _observe(state)
 
 	emit_signal("episode_reset", obs)
 	return obs
 
 func step(action) -> Dictionary:
 	# _step returns {"state": raw_state, "reward": r, "done": d}
-	var result := _step(action)
+	var result = _step(action)
 
 	step_count += 1
 	total_reward += float(result.reward)

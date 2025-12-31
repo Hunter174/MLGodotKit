@@ -8,13 +8,15 @@ class_name DQNTrainer
 @export var polyak_tau := 0.005
 @export var huber_delta := 1.0
 
-var q_online: NNNode
-var q_target: NNNode
+var q_online: NeuralNetworkNode
+var q_target: NeuralNetworkNode
 var buffer: ReplayBuffer
 var action_size := 0
 var global_step := 0
 
-func configure(p_q_online: NNNode, p_q_target: NNNode, p_buffer: ReplayBuffer, p_action_size: int) -> void:
+func configure(p_q_online: NeuralNetworkNode, p_q_target: NeuralNetworkNode, 
+	p_buffer: ReplayBuffer, p_action_size: int) -> void:
+	
 	q_online = p_q_online
 	q_target = p_q_target
 	buffer = p_buffer

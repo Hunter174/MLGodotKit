@@ -5,11 +5,11 @@ class_name DQNPolicy
 @export var epsilon_decay := 0.995
 @export var epsilon_min := 0.05
 
-var q_online: NNNode
+var q_online: NeuralNetworkNode
 var action_size := 0
 var episode_count := 0
 
-func configure(p_q_online: NNNode, p_action_size: int, _train_batch_size: int) -> void:
+func configure(p_q_online: NeuralNetworkNode, p_action_size: int, _train_batch_size: int) -> void:
 	q_online = p_q_online
 	action_size = p_action_size
 	assert(q_online != null)
