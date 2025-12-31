@@ -1,7 +1,7 @@
 extends GutTest
 
 func test_lr_learns_simple_linear_function():
-	var lr := LinearRegressionNode.new()
+	var lr := LinearModelNode.new()
 	lr.set_learning_rate(0.01)
 	lr.initialize(1)
 

@@ -140,7 +140,7 @@ void NeuralNetworkNode::copy_weights(const NeuralNetworkNode* source) {
     }
     for (size_t i = 0; i < layers.size(); ++i)
         layers[i].copy_weights(source->layers[i]);
-    Logger::info("NeuralNetworkNode::copy_weights - success");
+    Logger::debug(1, "NeuralNetworkNode::copy_weights - success");
 }
 
 void NeuralNetworkNode::set_layers(const godot::Array &p_layers) {
@@ -162,7 +162,7 @@ void NeuralNetworkNode::build_model() {
         godot::String act = d.get("activation", "relu");
         add_layer(in_size, out_size, act);
     }
-    Logger::info("NeuralNetworkNode::build_model - model rebuilt");
+    Logger::debug(1, "NeuralNetworkNode::build_model - model rebuilt");
 }
 
 void NeuralNetworkNode::model_summary() {

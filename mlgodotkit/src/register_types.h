@@ -9,8 +9,9 @@
 #include "linalg/linalg.h"
 
 // Node Classes
+//#include "models/linear_regression/linear_regression_node.h"
 #include "models/neural_network/neural_network_node.h"
-#include "models/linear_regression/linear_regression_node.h"
+#include "models/linear_model/linear_model_node.h"
 #include "models/decision_tree/decision_tree_node.h"
 
 // Godot Classes

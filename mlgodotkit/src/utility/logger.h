@@ -7,7 +7,7 @@
 
 namespace Logger {
 
-	inline int global_verbosity = 0;
+	inline int global_verbosity = 1; // 0 is error, 1 is warning, 2 is info
 
 	// --- Verbosity control ---
 	inline void set_verbosity(int level) {

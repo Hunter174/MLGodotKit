@@ -8,7 +8,7 @@ func test_nn_learns_xor():
 	nn.add_layer(8, 1, "sigmoid")
 	nn.set_learning_rate(0.01)
 	nn.set_batch_size(1)
-	nn.set_verbosity(0)
+	nn.set_verbosity(1)
 
 	var inputs = [
 		[0.0, 0.0],
