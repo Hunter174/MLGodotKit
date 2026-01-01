@@ -7,64 +7,6 @@ MLGodotKit is a C++ GDExtension for Godot, enabling seamless integration of AI-d
   <img src="docs/_static/MLGodotKit_logo.png" alt="MLGodotKit Logo" width="1000"/>
 </p>
 
-
-## 🎉 New Feature: WebAssembly Support
-
-**WebAssembly (WASM) binaries** have been added to the project to enable web-based game development.  
-You can now build and run your game directly in the browser using Godot's Web export.
-
-**Play the Web Demo:**  
-Try it out! Play as red and beat the (Ai) Blue. It starts off as fairly dumb but learns
-to play pong and gets better the longer you play!
-[Launch Game in Browser](https://fastidious-biscochitos-90f618.netlify.app)
-
-📁 The exported web build is located at:  
-`examples/NNPong/web/`
-
-📘 Learn how to compile GDExtensions for the Web:  
-[Godot Docs – Compiling for Web](https://docs.godotengine.org/en/stable/contributing/development/compiling/compiling_for_web.html#gdextension)
-
-
-<p align="center">
-  <img src="assets/pong-example.gif" alt="Pong Example" width="600"/>
-</p>
-
----
-
-## Node Extensions in Progress
-- **Data Science Tooling**: Tools for preprocessing, analyzing, and visualizing data directly in Godot.
-- **Deep Learning Integration**: Simplified nodes for building and deploying neural networks.
-- **Cross-Platform Compatibility**: Fully supported on Windows, Linux, and macOS.
-
----
-
-## LIMITATIONS
-Please note that this is a work in process pet project of mine and as such will come with a few bugs. If you
-enjoy the project and want to support please open an issue for desired features or bug fixes! 
-
-# MLGodotKit Roadmap
-
-### Completed
-- [x] Linear Regression
-- [x] Classification Decision Tree
-- [x] Neural Network
-- [x] Simple Activation Functions
-    - [x] Linear
-    - [x] Sigmoid
-    - [x] ReLU
-
-### Near Future
-- [ ] Loss Functions (#8)
-- [ ] Model Batch Training Support (#10)
-- [ ] Local Model Store and Loading (#7)
-- [ ] UI Training & Development Tools (#9)
-- [ ] Model Evaluation Tools (#12)
-- [ ] Testing Suite for all Nodes (#4)
-
-### Documentation
-- [ ] Training Tutorials (#11)
-- [ ] API Reference
-
 > *If you'd like to see something else add an issue!*
 
 ## Getting Started
