@@ -14,6 +14,10 @@
 #include "models/linear_model/linear_model_node.h"
 #include "models/decision_tree/decision_tree_node.h"
 
+// Control Theory
+#include "pid_controller/pid_controller_node.h"
+
+
 // Godot Classes
 #include <gdextension_interface.h>
 #include <godot_cpp/core/class_db.hpp>
