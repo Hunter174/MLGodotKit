@@ -4,7 +4,7 @@ extends EditorInspectorPlugin
 const ACTIVATIONS := ["relu", "sigmoid", "linear", "leaky_relu"]
 
 func _can_handle(object: Object) -> bool:
-	return object.get_class() == "NNNode"
+	return object.get_class() == "NeuralNetworkNode"
 
 func _parse_property(object, type, name, hint_type, hint_string, usage_flags, wide):
 	if name == "layers":
