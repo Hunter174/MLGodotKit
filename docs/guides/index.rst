@@ -2,7 +2,7 @@ Guides
 ======
 
 .. toctree::
-    :maxdepth:
+    :maxdepth: 2
 
     getting_started
     web_assembly
