@@ -6,10 +6,17 @@ void initialize_mlgodotkit_module(ModuleInitializationLevel p_level) {
     if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE)
         return;
 
+
+    // Models
     GDREGISTER_CLASS(LinearRegressionNode);
     GDREGISTER_CLASS(NeuralNetworkNode);
     GDREGISTER_CLASS(LinearModelNode);
     GDREGISTER_CLASS(DecisionTreeNode);
+
+    //Control Theory
+    GDREGISTER_CLASS(PIDControllerNode);
+
+    // Utility
     GDREGISTER_CLASS(Linalg);
     GDREGISTER_CLASS(Matrix);
 }
