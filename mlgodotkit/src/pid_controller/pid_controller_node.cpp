@@ -9,6 +9,8 @@ PIDControllerNode::~PIDControllerNode() {}
 
 void PIDControllerNode::_bind_methods() {
     ClassDB::bind_method(D_METHOD("update", "setpoint", "measurement"), &PIDControllerNode::update);
+    ClassDB::bind_method(D_METHOD("update_dt", "setpoint", "measurement", "dt"), &PIDControllerNode::update_dt);
+
     ClassDB::bind_method(D_METHOD("reset"), &PIDControllerNode::reset);
 
     ClassDB::bind_method(D_METHOD("set_kp", "value"), &PIDControllerNode::set_kp);
@@ -90,6 +92,11 @@ float PIDControllerNode::update(float setpoint, float measurement) {
     prev_measurement = measurement;
 
     return out;
+}
+
+float PIDControllerNode::update_dt(float setpoint, float measurement, float dt) {
+    set_sample_time(dt);
+    return update(setpoint, measurement);
 }
 
 void PIDControllerNode::reset() {

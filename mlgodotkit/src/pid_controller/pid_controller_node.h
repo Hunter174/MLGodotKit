@@ -16,7 +16,7 @@ private:
     float kd = 0.0f;
 
     // Derivative filter time constant
-    float tau = 0.0f;
+    float tau = 0.02f;
 
     // Output limits
     float lim_min = -1.0f;
@@ -41,6 +41,7 @@ public:
     ~PIDControllerNode();
 
     float update(float setpoint, float measurement);
+    float update_dt(float setpoint, float measurement, float dt);
     void reset();
 
     // Getters / Setters
