@@ -68,8 +68,8 @@ func _setup_hyperparams():
 	trainer.target_update_period = 2000
 	trainer.polyak_tau = 0.005
 
-func _build_q_network() -> NNNode:
-	var nn := NNNode.new()
+func _build_q_network() -> NeuralNetworkNode:
+	var nn := NeuralNetworkNode.new()
 	nn.add_layer(4, 64, "leaky_relu")
 	nn.add_layer(64, 64, "leaky_relu")
 	nn.add_layer(64, 2, "linear")
