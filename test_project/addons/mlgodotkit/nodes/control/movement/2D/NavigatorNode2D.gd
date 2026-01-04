@@ -26,7 +26,7 @@ enum Behavior {
 # ─────────────────────────────────────────────
 # Behavior parameters
 # ─────────────────────────────────────────────
-@export var desired_range := 96.0
+@export var desired_range := 1000
 @export var range_tolerance := 12.0
 @export var orbit_direction := 1 # 1 = CCW, -1 = CW
 
@@ -69,12 +69,20 @@ func _compute_behavior_direction(pos: Vector2, target: Vector2) -> Vector2:
 			return (target - pos).normalized()
 
 		Behavior.MAINTAIN_RANGE:
-			var d := pos.distance_to(target)
-			if abs(d - desired_range) <= range_tolerance:
+			var to_agent := pos - target
+			var dist := to_agent.length()
+			if dist < 0.001:
 				return Vector2.ZERO
-			if d > desired_range:
-				return (target - pos).normalized()
-			return (pos - target).normalized()
+
+			var error := dist - desired_range
+
+			# deadband
+			if abs(error) <= range_tolerance:
+				return Vector2.ZERO
+
+			# outward direction is to_agent.normalized()
+			# too far -> go inward, too close -> go outward
+			return to_agent.normalized() * -sign(error)
 
 		Behavior.ORBIT:
 			var radial := (target - pos).normalized()
