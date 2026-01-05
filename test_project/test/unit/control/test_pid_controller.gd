@@ -87,6 +87,7 @@ func test_reset_clears_state():
 
 	var out = pid.update(1.0, 1.0)
 	assert_almost_eq(out, 0.0, 0.0001)
+	pid.free()
 
 
 func test_no_derivative_kick_on_setpoint_change():
