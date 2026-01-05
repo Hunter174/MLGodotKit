@@ -1,0 +1,40 @@
+[gd_scene load_steps=7 format=3 uid="uid://bhr646aabelqa"]
+
+[ext_resource type="Script" uid="uid://dm3pd275pdd7i" path="res://addons/mlgodotkit/nodes/control/movement/2D/NavigatorNode2D.gd" id="1_5iqow"]
+[ext_resource type="Script" uid="uid://bo627tl321fyt" path="res://scripts/movement/move_agent.gd" id="1_ofwdn"]
+[ext_resource type="Texture2D" uid="uid://bd5c6p1kvvaxh" path="res://icon.svg" id="2_in0n0"]
+[ext_resource type="Script" uid="uid://dnfk0fu3j0tjg" path="res://addons/mlgodotkit/nodes/control/movement/2D/MovementControllerNode2D.gd" id="2_qou7q"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j2w2l"]
+atlas = ExtResource("2_in0n0")
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_la10i"]
+
+[node name="MovementDemo" type="Node2D"]
+
+[node name="World" type="Node2D" parent="."]
+
+[node name="Walls" type="Node2D" parent="World"]
+
+[node name="Goal" type="Node2D" parent="World"]
+
+[node name="Agent" type="CharacterBody2D" parent="World"]
+script = ExtResource("1_ofwdn")
+
+[node name="Sprite2D" type="Sprite2D" parent="World/Agent"]
+texture = SubResource("AtlasTexture_j2w2l")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/Agent"]
+shape = SubResource("CircleShape2D_la10i")
+
+[node name="Navigator2D" type="Node2D" parent="World/Agent"]
+script = ExtResource("1_5iqow")
+behavior = 3
+range_tolerance = 10.0
+metadata/_custom_type_script = "uid://dm3pd275pdd7i"
+
+[node name="MovementControllerNode2D" type="Node" parent="World/Agent"]
+script = ExtResource("2_qou7q")
+metadata/_custom_type_script = "uid://dnfk0fu3j0tjg"
+
+[node name="UI" type="CanvasLayer" parent="."]
