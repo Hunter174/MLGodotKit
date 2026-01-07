@@ -11,9 +11,7 @@ func test_closed_form_lr_learns_simple_linear_function():
 	lr.fit(X, y)
 
 	# Verify predictions
-	print(lr.predict(X))
 	for i in X.size():
-		print(lr.predict([X[i]]))
 		var pred = lr.predict([X[i]])[0][0]
 		assert_true(
 			abs(pred - y[i][0]) < 0.001,
