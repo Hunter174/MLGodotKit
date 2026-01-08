@@ -1,5 +1,11 @@
 Models
 ======
+.. toctree::
+   :maxdepth: 1
+
+   lrnode
+   dtreenode
+   nnnode
 
 Machine learning models implemented as native Godot nodes.
 
@@ -27,10 +33,3 @@ This makes them well suited for:
 - Tight integration with gameplay logic
 
 ----
-
-.. toctree::
-   :maxdepth: 1
-
-   lrnode
-   dtreenode
-   nnnode
