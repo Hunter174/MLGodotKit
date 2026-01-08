@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import os
-import sys
 from datetime import datetime
 
 # -- Project information -----------------------------------------------------
@@ -9,22 +7,19 @@ from datetime import datetime
 project = "MLGodotKit"
 author = "Hunter Paxton"
 copyright = f"{datetime.now().year}, {author}"
-
-# The full version, including alpha/beta/rc tags
 release = "0.1.0"
 
 # -- General configuration ---------------------------------------------------
 
 extensions = [
-    "sphinx.ext.autodoc",      # Python autodoc (safe to keep)
-    "sphinx.ext.napoleon",     # Google / NumPy style docstrings
-    "sphinx.ext.mathjax",      # LaTeX math
-    "sphinx.ext.viewcode",     # Add links to source code
+    "sphinx.ext.autodoc",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.mathjax",
+    "sphinx.ext.viewcode",
 ]
 
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
-
 language = "en"
 
 # -- HTML output -------------------------------------------------------------
@@ -35,10 +30,7 @@ html_logo = "_static/MLGodotKit_logo.png"
 html_favicon = "_static/Thumbnail_MLGodotKit_logo.png"
 
 html_static_path = ["_static"]
-
-html_css_files = [
-    "custom.css",
-]
+html_css_files = ["custom.css"]
 
 html_theme_options = {
     "navigation_depth": 4,

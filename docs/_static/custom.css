@@ -1,5 +1,5 @@
 /* =========================================================
-   Base typography (editorial, Crate-style)
+   Base typography
 ========================================================= */
 body {
   font-size: 16px;
@@ -13,7 +13,7 @@ h1, h2, h3, h4 {
   color: #384336;
 }
 
-/* Subtle divider under page title */
+/* Page title divider */
 h1 {
   border-bottom: 2px solid #498CBE;
   padding-bottom: 0.4em;
@@ -42,23 +42,25 @@ code {
 }
 
 /* =========================================================
-   Code blocks (Crate-like, restrained)
+   Code blocks
 ========================================================= */
 div.highlight {
   background: #f7f7f7;
   padding: 1em 1.25em;
   border-left: 4px solid #498CBE;
-  border-radius: 0; /* structural, not card */
 }
 
 /* =========================================================
-   Sidebar (flat, structural)
+   Sidebar
 ========================================================= */
-.wy-nav-side {
-  background-color: rgba(255, 255, 255, 0.08);
+
+/* Sidebar containers */
+.wy-nav-side,
+.wy-side-scroll {
+  background-color: #2f2f2f;
 }
 
-/* Logo/search area */
+/* Logo / search area */
 .wy-side-nav-search {
   background-color: #444344;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -67,23 +69,36 @@ div.highlight {
 /* Sidebar links */
 .wy-menu-vertical a {
   color: #e6e6e6;
+  background: transparent;
 }
 
+/* Hover */
 .wy-menu-vertical a:hover {
   background-color: #444344;
   color: #ffffff;
 }
 
-/* Active item — flat with left accent */
+/* Active page */
 .wy-menu-vertical li.current > a {
   background-color: #444344;
   color: #ffffff;
-  border-radius: 0;
   border-left: 4px solid #498CBE;
 }
 
+/* Active parent sections */
+.wy-menu-vertical li.on > a {
+  background-color: #3a3a3a;
+  color: #ffffff;
+}
+
+/* Nested items under active sections */
+.wy-menu-vertical li.current ul li a {
+  background-color: #2f2f2f;
+  color: #cccccc;
+}
+
 /* =========================================================
-   Logo (centered, calm)
+   Logo
 ========================================================= */
 .wy-side-nav-search a.icon-home {
   display: flex;
@@ -101,25 +116,19 @@ div.highlight {
 }
 
 /* =========================================================
-   Main content layout (Crate-style distribution)
+   Main content layout
 ========================================================= */
-.wy-nav-content-wrap {
+.wy-nav-content-wrap,
+.wy-nav-content {
   background: #ffffff;
 }
 
-/* Centered editorial column */
 .wy-nav-content {
   max-width: 1200px;
   margin: 0 auto;
   padding: 3em 4em;
-  background: #ffffff;
-
-  /* Remove card illusion */
-  border-radius: 0;
-  box-shadow: none;
 }
 
-/* Wider on large screens */
 @media (min-width: 1400px) {
   .wy-nav-content {
     max-width: 1300px;
@@ -138,7 +147,7 @@ div.highlight {
 }
 
 /* =========================================================
-   Right-side TOC (explicit, structural)
+   Right-side TOC
 ========================================================= */
 .rst-content .contents {
   float: right;
@@ -148,12 +157,9 @@ div.highlight {
 
   background: #f9fafb;
   border-left: 3px solid #498CBE;
-
-  border-radius: 0;  /* structural, not decorative */
   font-size: 0.9em;
 }
 
-/* Keep TOC readable */
 .rst-content .contents ul {
   margin-left: 0;
 }
