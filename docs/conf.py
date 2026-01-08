@@ -24,14 +24,16 @@ language = "en"
 
 # -- HTML output -------------------------------------------------------------
 
-html_theme = "classic"
+html_theme = "sphinx_rtd_theme"
 
 html_logo = "_static/MLGodotKit_logo.png"
 html_favicon = "_static/Thumbnail_MLGodotKit_logo.png"
 
 html_static_path = ["_static"]
-html_css_files = ["custom.css"]
+# html_css_files = ["custom.css"]
 
-# Will expand later
 html_theme_options = {
+    "navigation_depth": 4,
+    "collapse_navigation": False,
+    "sticky_navigation": True,
 }
