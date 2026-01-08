@@ -3,22 +3,19 @@ DTreeNode
 
 Decision tree classifier based on Gini impurity.
 
-``DTreeNode`` implements a deterministic, binary decision tree for
+``DecisionTreeNode`` implements a deterministic, binary decision tree for
 classification tasks. The model recursively partitions the feature space
 using axis-aligned splits selected by minimizing weighted Gini impurity.
 
 This implementation is designed for educational use, real-time inference,
 and integration directly inside the Godot Engine via GDExtension.
 
-The interface and behavior are inspired by ``sklearn.tree.DecisionTreeClassifier``,
-with a deliberately reduced feature set.
-
 ----
 
 Overview
 --------
 
-- Classification only
+- Classification only (for now)
 - Binary splits using ``feature <= threshold``
 - Greedy, deterministic split selection
 - No pruning or ensemble support
@@ -29,7 +26,7 @@ Overview
 Parameters
 ----------
 
-``max_depth`` : int, default=10
+``set_max_depth`` : int, default=10
     The maximum depth of the tree. A depth of 1 corresponds to a single split.
 
 ``min_samples_split`` : int, default=2
@@ -131,13 +128,29 @@ Examples
 Minimal usage from GDScript:
 
 .. code-block:: gdscript
+    var tree := DecisionTreeNode.new()
+   	tree.set_min_samples_split(2)
+   	tree.set_max_depth(10)
 
-   var tree = DTreeNode.new()
-   tree.set_max_depth(5)
-   tree.set_min_samples_split(2)
+   	var X_train = [
+   		[1.0], [2.0], [3.0], [4.0], [5.0],
+   		[6.0], [7.0], [8.0], [9.0], [10.0],
+   		[11.0], [12.0], [13.0], [14.0], [15.0]
+   	]
+   	var y_train = [
+   		0,0,0,0,0,
+   		0,0,0,0,0,
+   		1,1,1,1,1
+   	]
 
-   tree.fit(X_train, y_train)
-   var predictions = tree.predict(X_test)
+   	tree.fit(X_train, y_train)
+
+   	var X_test = [[2.0], [5.0], [9.0], [11.0], [14.0]]
+   	var y_true = [0, 0, 0, 1, 1]
+   	var preds = tree.predict(X_test)
+
+   	for i in y_true.size():
+    		assert_eq(preds[i], y_true[i])
 
 ----
 
