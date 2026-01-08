@@ -4,8 +4,9 @@ API Reference
     :maxdepth: 2
     :hidden:
 
-    matrix
+    control/index
     linalg
+    matrix
     models/index
     rl/index
 

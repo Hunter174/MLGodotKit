@@ -184,21 +184,3 @@ Vector transformation:
    var v2 = R.mul_vector3(v1)
 
 ----
-
-Limitations
------------
-
-- Dense matrices only
-- No sparse matrix support
-- No complex numbers
-- No GPU acceleration
-- Single-precision floating point only
-
-----
-
-See Also
---------
-
-- ``Linalg`` for solvers and decompositions
-- ``LRNode`` for linear regression
-- ``NNNode`` for neural networks

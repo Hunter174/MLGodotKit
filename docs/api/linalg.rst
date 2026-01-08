@@ -163,21 +163,3 @@ QR decomposition:
    var R = res["R"]
 
 ----
-
-Limitations
------------
-
-- CPU-only
-- No sparse matrix support
-- No automatic batching
-- No complex-valued matrices
-- Numerical stability depends on matrix conditioning
-
-----
-
-See Also
---------
-
-- ``Matrix`` for matrix construction and manipulation
-- ``LRNode`` for regression models
-- ``NNNode`` for neural networks
