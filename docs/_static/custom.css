@@ -145,21 +145,3 @@ div.highlight {
 .rst-content p {
   margin-bottom: 1.25em;
 }
-
-/* =========================================================
-   Right-side TOC
-========================================================= */
-.rst-content .contents {
-  float: right;
-  width: 260px;
-  margin: 0 0 2em 2em;
-  padding: 0.75em 1em;
-
-  background: #f9fafb;
-  border-left: 3px solid #498CBE;
-  font-size: 0.9em;
-}
-
-.rst-content .contents ul {
-  margin-left: 0;
-}
