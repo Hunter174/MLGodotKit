@@ -13,45 +13,6 @@ user.
 
 ----
 
-Available Models
-----------------
-
-Linear Models
-^^^^^^^^^^^^^
-
-``LRNode``
-    Ordinary least squares linear regression trained via gradient descent.
-
-    - Regression only
-    - Mean squared error loss
-    - Deterministic batch training
-
-----
-
-Tree-Based Models
-^^^^^^^^^^^^^^^^^
-
-``DTreeNode``
-    Decision tree classifier using Gini impurity.
-
-    - Classification only
-    - Greedy, deterministic splits
-    - No pruning or ensembles
-
-----
-
-Neural Networks
-^^^^^^^^^^^^^^^
-
-``NNNode``
-    Fully connected feed-forward neural network with manual backpropagation.
-
-    - Explicit forward and backward passes
-    - Configurable layer architecture
-    - External loss and training control
-
-----
-
 Design Philosophy
 -----------------
 
