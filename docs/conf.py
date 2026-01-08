@@ -24,7 +24,7 @@ language = "en"
 
 # -- HTML output -------------------------------------------------------------
 
-html_theme = "basic"
+html_theme = "classic"
 
 html_logo = "_static/MLGodotKit_logo.png"
 html_favicon = "_static/Thumbnail_MLGodotKit_logo.png"
