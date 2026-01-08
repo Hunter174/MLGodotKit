@@ -3,9 +3,9 @@ Models
 .. toctree::
    :maxdepth: 1
 
-   lrnode
-   dtreenode
-   nnnode
+   LinearModelNode
+   DecisionTreeNode
+   NeuralNetworkNode
 
 Machine learning models implemented as native Godot nodes.
 

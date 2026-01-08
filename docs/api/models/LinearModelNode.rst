@@ -1,17 +1,14 @@
-LRNode
+LinearModelNode
 ======
 
 Linear regression model trained using batch gradient descent.
 
-``LRNode`` implements ordinary least squares linear regression with a mean
+``LinearModelNode`` implements ordinary least squares linear regression with a mean
 squared error (MSE) loss function. The model learns a linear mapping from input
 features to a continuous target variable using full-batch gradient descent.
 
 This implementation is designed for simplicity, transparency, and real-time
 use inside the Godot Engine via GDExtension.
-
-The interface is loosely inspired by ``sklearn.linear_model.LinearRegression``,
-with explicit control over training and learning rate.
 
 ----
 

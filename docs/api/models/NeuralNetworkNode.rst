@@ -1,18 +1,15 @@
-NNNode
+NeuralNetworkNode
 ======
 
 Feed-forward neural network with explicit forward and backward passes.
 
-``NNNode`` implements a fully-connected neural network composed of sequential
+``NeuralNetworkNode`` implements a fully-connected neural network composed of sequential
 layers with configurable activation functions. Training logic is intentionally
 left explicit: users are expected to compute loss functions externally and
 provide gradients directly to the network.
 
 This design prioritizes transparency, flexibility, and real-time integration
 inside the Godot Engine over automation or convenience abstractions.
-
-The interface is inspired by low-level deep learning frameworks rather than
-high-level APIs such as ``sklearn`` or ``Keras``.
 
 ----
 

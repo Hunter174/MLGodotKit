@@ -1,4 +1,4 @@
-DTreeNode
+DecisionTreeNode
 =========
 
 Decision tree classifier based on Gini impurity.
