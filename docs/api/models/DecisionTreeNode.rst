@@ -128,6 +128,7 @@ Examples
 Minimal usage from GDScript:
 
 .. code-block:: gdscript
+
     var tree := DecisionTreeNode.new()
    	tree.set_min_samples_split(2)
    	tree.set_max_depth(10)
@@ -153,10 +154,3 @@ Minimal usage from GDScript:
     		assert_eq(preds[i], y_true[i])
 
 ----
-
-See Also
---------
-
-- ``sklearn.tree.DecisionTreeClassifier``
-- ``NNNode`` for neural network-based classification
-- ``LRNode`` for linear models

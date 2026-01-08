@@ -3,9 +3,6 @@ Control
 .. toctree::
    :maxdepth: 1
 
-   lrnode
-   dtreenode
-   nnnode
 
 Control Theory implemented as nodes.
 
