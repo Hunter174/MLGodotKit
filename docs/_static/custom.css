@@ -55,7 +55,7 @@ div.highlight {
    Sidebar (flat, structural)
 ========================================================= */
 .wy-nav-side {
-  background-color: #384336;
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 /* Logo/search area */
