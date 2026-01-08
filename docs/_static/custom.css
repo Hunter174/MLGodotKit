@@ -50,15 +50,15 @@ div.highlight {
   border-left: 4px solid #498CBE;
 }
 
-/* =========================================================
-   Sidebar
-========================================================= */
+/*!* =========================================================*/
+/*   Sidebar*/
+/*========================================================= *!*/
 
-/* Sidebar containers */
-.wy-nav-side,
-.wy-side-scroll {
-  background-color: #2f2f2f;
-}
+/*!* Sidebar containers *!*/
+/*.wy-nav-side,*/
+/*.wy-side-scroll {*/
+/*  background-color: #2f2f2f;*/
+/*}*/
 
 /* Logo / search area */
 .wy-side-nav-search {
@@ -66,36 +66,36 @@ div.highlight {
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* Sidebar links */
-.wy-menu-vertical a {
-  color: #e6e6e6;
-  background: transparent;
-}
+/*!* Sidebar links *!*/
+/*.wy-menu-vertical a {*/
+/*  color: #e6e6e6;*/
+/*  background: transparent;*/
+/*}*/
 
-/* Hover */
-.wy-menu-vertical a:hover {
-  background-color: #444344;
-  color: #ffffff;
-}
+/*!* Hover *!*/
+/*.wy-menu-vertical a:hover {*/
+/*  background-color: #444344;*/
+/*  color: #ffffff;*/
+/*}*/
 
-/* Active page */
-.wy-menu-vertical li.current > a {
-  background-color: #444344;
-  color: #ffffff;
-  border-left: 4px solid #498CBE;
-}
+/*!* Active page *!*/
+/*.wy-menu-vertical li.current > a {*/
+/*  background-color: #444344;*/
+/*  color: #ffffff;*/
+/*  border-left: 4px solid #498CBE;*/
+/*}*/
 
-/* Active parent sections */
-.wy-menu-vertical li.on > a {
-  background-color: #3a3a3a;
-  color: #ffffff;
-}
+/*!* Active parent sections *!*/
+/*.wy-menu-vertical li.on > a {*/
+/*  background-color: #3a3a3a;*/
+/*  color: #ffffff;*/
+/*}*/
 
-/* Nested items under active sections */
-.wy-menu-vertical li.current ul li a {
-  background-color: #2f2f2f;
-  color: #cccccc;
-}
+/*!* Nested items under active sections *!*/
+/*.wy-menu-vertical li.current ul li a {*/
+/*  background-color: #2f2f2f;*/
+/*  color: #cccccc;*/
+/*}*/
 
 /* =========================================================
    Logo
