@@ -33,6 +33,7 @@ Have an idea? Just open an issue or pull request on the `GitHub repository <http
 Community feedback directly influences the project roadmap.
 
 .. toctree::
+    :hidden:
     :maxdepth: 2
     :caption: Contents:
 

@@ -1,18 +1,12 @@
 API Reference
 =============
 .. toctree::
-    :maxdepth: 2
-    :hidden:
 
     control/index
     linalg
     matrix
     models/index
     rl/index
-
-.. contents::
-   :local:
-   :depth: 2
 
 Public API documentation for MLGodotKit.
 
