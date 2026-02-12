@@ -15,7 +15,7 @@
 #include "models/decision_tree/decision_tree_node.h"
 
 // Control Theory
-#include "pid_controller/pid_controller_node.h"
+#include "control/pid_controller/pid_controller_node.h"
 
 
 // Godot Classes
