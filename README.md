@@ -110,15 +110,29 @@ will be implemented natively at a later date.*
 ```gdscript
 extends Node
 
-@onready var nn_model = NNNode.new()
+# Create a neural network instance.
+# This is our function approximator.
+@onready var nn_model := NeuralNetworkNode.new()
 
-# Simple XOR dataset (non-linear, good for testing)
+# Create a loss function.
+# We explicitly define the loss instead of hardcoding gradients.
+@onready var loss := MSELossNode.new()
+
+
+# ============================================================
+# XOR DATASET
+# ============================================================
+# XOR is a classic nonlinear problem.
+# It cannot be solved by a single linear layer,
+# which makes it a good test for neural networks.
+
 var inputs = [
 	[0.0, 0.0],
 	[0.0, 1.0],
 	[1.0, 0.0],
 	[1.0, 1.0]
 ]
+
 var targets = [
 	[0.0],  # 0 XOR 0 = 0
 	[1.0],  # 0 XOR 1 = 1
@@ -126,82 +140,146 @@ var targets = [
 	[0.0]   # 1 XOR 1 = 0
 ]
 
-# Hyperparameters
-var epochs = 5000
-var print_interval = epochs/10  # How often to print loss
+
+# ============================================================
+# TRAINING HYPERPARAMETERS
+# ============================================================
+
+var epochs := 5000
+var print_interval := epochs / 10
+
 
 func _ready():
-	# Initialize NN model
-	nn_model.set_verbosity(0)  # Set to 1 if you want to see all internal prints
+
+	print("========== Neural Network XOR Example ==========\n")
+
+	# ------------------------------------------------------------
+	# STEP 1 — Configure Model
+	# ------------------------------------------------------------
+
+	# Verbosity controls internal debug logging.
+	# Set to 1 to see detailed training information.
+	nn_model.set_verbosity(0)
+
+	# Learning rate controls how large weight updates are.
 	nn_model.set_learning_rate(0.1)
-	
-	# Add layers
+
+	# We train one sample at a time (stochastic gradient descent).
+	# Since batch size is explicitly enforced during training,
+	# we set it to 1.
+	nn_model.set_batch_size(1)
+
+	# ------------------------------------------------------------
+	# STEP 2 — Define Network Architecture
+	# ------------------------------------------------------------
+
+	# Input layer: 2 features
 	nn_model.add_layer(2, 4, "relu")
+
+	# Hidden layer
 	nn_model.add_layer(4, 4, "relu")
+
+	# Output layer: 1 neuron with sigmoid activation
+	# Sigmoid squashes output into [0, 1] for classification.
 	nn_model.add_layer(4, 1, "sigmoid")
-	
-	# Print model summary
+
 	nn_model.model_summary()
 
 	print("\nStarting training on XOR dataset...\n")
 
-	# Training loop
+
+	# ============================================================
+	# STEP 3 — TRAINING LOOP
+	# ============================================================
+
 	for epoch in range(1, epochs + 1):
-		var total_loss = 0.0
-		
+
+		var total_loss := 0.0
+
+		# Shuffle data each epoch for better learning
 		var indices = [0, 1, 2, 3]
 		indices.shuffle()
-		for i in indices:
-			var x = [inputs[i]]
-			var y_true = targets[i][0]
-			# then process x and y_true as before
 
-			
+		for i in indices:
+
+			# Wrap input into batch format (batch size = 1)
+			var x = [inputs[i]]
+
+			# Targets must match network output shape
+			var target = [[targets[i][0]]]
+
+			# -------------------------------
 			# Forward pass
-			var output = nn_model.forward(x)
-			var y_pred = output[0] 
-			
-			# Compute error (difference)
-			var error = y_pred - y_true
-			
-			# Compute simple squared loss
-			var loss = error * error
-			total_loss += loss
-			
-			# Backward pass (send gradient of loss w.r.t output)
-			var grad = [ [2.0 * error] ]  # d(Loss)/d(Prediction)
+			# -------------------------------
+			var prediction = nn_model.forward(x)
+
+			# -------------------------------
+			# Compute loss
+			# -------------------------------
+			# MSELossNode computes:
+			# L = mean((prediction - target)^2)
+			var loss_value = loss.forward(prediction, target)
+			total_loss += loss_value
+
+			# -------------------------------
+			# Backward pass
+			# -------------------------------
+			# loss.backward() returns dL/dOutput
+			var grad = loss.backward()
+
+			# Pass gradient into network
 			nn_model.backward(grad)
-		
-		# Print loss at intervals
+
+		# Print progress periodically
 		if epoch % print_interval == 0:
-			print("Epoch ", epoch, " | Avg Loss: ", total_loss / inputs.size())
-	
+			print("Epoch ", epoch,
+			      " | Avg Loss: ",
+			      total_loss / inputs.size())
+
 	print("\nTraining completed!\n")
 
-	# Inference and Evaluation
-	print("Testing trained model on XOR:")
-	for i in range(inputs.size()):
-		var x = [inputs[i]]
-		var output = nn_model.forward(x)
-		print("Input: ", x, " | Predicted: ", output, " | Expected: ", targets[i])
 
-	# Auto-check: classify and compare
-	var correct = 0
+	# ============================================================
+	# STEP 4 — INFERENCE (PREDICTION MODE)
+	# ============================================================
+
+	# IMPORTANT:
+	# We use predict() instead of forward().
+	#
+	# forward() enforces training batch size.
+	# predict() dynamically infers batch size
+	# and is meant for evaluation/inference.
+
+	print("Testing trained model on XOR:\n")
+
+	var correct := 0
+
 	for i in range(inputs.size()):
-		var x = [inputs[i]]
-		var output = nn_model.forward(x)
-		var prediction = 1 if output[0] >= 0.5 else 0
+
+		var output = nn_model.predict([inputs[i]])
+
+		# Output shape is [[value]]
+		var value = output[0][0]
+
+		print("Input: ", inputs[i],
+		      " | Predicted: ", value,
+		      " | Expected: ", targets[i][0])
+
+		# Convert probability to class label
+		var prediction = 1 if value >= 0.5 else 0
+
 		if prediction == int(targets[i][0]):
 			correct += 1
-	
-	var accuracy = float(correct) / inputs.size()
-	print("\n Final Accuracy: ", accuracy * 100.0, "%")
 
-	if accuracy >= 0.75:  # We expect at least 75% on XOR
+	var accuracy = float(correct) / inputs.size()
+
+	print("\nFinal Accuracy: ", accuracy * 100.0, "%")
+
+	if accuracy >= 0.75:
 		print("NNNode passes XOR test!")
 	else:
 		print("NNNode failed XOR test. Needs improvement.")
-	
+
 	nn_model.model_summary()
 ```
 ---
