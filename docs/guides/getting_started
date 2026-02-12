@@ -1,4 +1,16 @@
-User Guides and Walkthrough's
+Getting Started
 ======
 
-To get started either download the plugin directly from the asset store
+To get started either download the plugin directly from the
+`Asset Library <https://godotengine.org/asset-library/asset/4060>`_ or download the most recent release from the repos
+`releases page <https://github.com/Hunter174/MLGodotKit/releases>`_.
+
+Once downloaded locate the `mlgodotkit` folder and make sure that it is copied into you godot projects addon folder.
+
+Then to enable the plugin navigate to
+        Project-> Project settings -> Plugins
+
+And then make sure the Enabled toggle is set to `On`.
+
+After that the plugin should be working to make sure it is working we will make a little game!
+
