@@ -1,49 +1,103 @@
 #!/usr/bin/env python
 import os
-import sys
+import shutil
 
+#to build the binaries:> scons platform=windows
 env = SConscript("godot-cpp/SConstruct")
 
-# Append the include path for the 'src' directory and Eigen library
-env.Append(CPPPATH=["src/", "C:/libs/eigen-3.4.0"])
+# Absolute path to this SConstruct directory
+project_root = Dir("#").abspath
+parent_root = os.path.abspath(os.path.join(project_root, ".."))
 
-# For reference:
-# - CCFLAGS are compilation flags shared between C and C++
-# - CFLAGS are for C-specific compilation flags
-# - CXXFLAGS are for C++-specific compilation flags
-# - CPPFLAGS are for pre-processor flags
-# - CPPDEFINES are for pre-processor defines
-# - LINKFLAGS are for linking flags
+# Append include paths
+env.Append(CPPPATH=[
+    os.path.join(project_root, "src"),
+    "C:/libs/eigen-3.4.0"
+])
 
-# Point and link all of the node libraries
+# Destination directory inside test_project (one level up)
+addon_bin_path = os.path.join(
+    parent_root,
+    "test_project",
+    "addons",
+    "mlgodotkit",
+    "bin"
+)
+
+# Collect sources
 sources = []
-for root,_, files in os.walk("src"):
+for root, _, files in os.walk(os.path.join(project_root, "src")):
     for f in files:
-        if f.endswith("cpp"):
+        if f.endswith(".cpp"):
             sources.append(os.path.join(root, f))
 
+# Build library into local ./bin directory
 if env["platform"] == "macos":
     library = env.SharedLibrary(
-        "bin/mlgodotkit.{}.{}.framework/libmlgodotkit.{}.{}".format(
-            env["platform"], env["target"], env["platform"], env["target"]
+        os.path.join(
+            project_root,
+            "bin",
+            "mlgodotkit.{}.{}.framework/libmlgodotkit.{}.{}".format(
+                env["platform"], env["target"], env["platform"], env["target"]
+            ),
         ),
         source=sources,
     )
+
 elif env["platform"] == "ios":
     if env["ios_simulator"]:
         library = env.StaticLibrary(
-            "bin/mlgodotkit.{}.{}.simulator.a".format(env["platform"], env["target"]),
+            os.path.join(
+                project_root,
+                "bin",
+                "mlgodotkit.{}.{}.simulator.a".format(env["platform"], env["target"]),
+            ),
             source=sources,
         )
     else:
         library = env.StaticLibrary(
-            "bin/mlgodotkit.{}.{}.a".format(env["platform"], env["target"]),
+            os.path.join(
+                project_root,
+                "bin",
+                "mlgodotkit.{}.{}.a".format(env["platform"], env["target"]),
+            ),
             source=sources,
         )
+
 else:
     library = env.SharedLibrary(
-        "bin/mlgodotkit{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
+        os.path.join(
+            project_root,
+            "bin",
+            "mlgodotkit{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
+        ),
         source=sources,
     )
 
-Default([library])
+def clean_addon_bin(target, source, env):
+    built_path = str(source[0])
+
+    # Remove old bin folder
+    if os.path.exists(addon_bin_path):
+        shutil.rmtree(addon_bin_path)
+
+    os.makedirs(addon_bin_path)
+
+    # Copy framework directory (macOS) or single file
+    if os.path.isdir(built_path):
+        shutil.copytree(
+            built_path,
+            os.path.join(addon_bin_path, os.path.basename(built_path))
+        )
+    else:
+        shutil.copy2(built_path, addon_bin_path)
+
+    return None
+
+copy_cmd = env.Command(
+    target="copy_to_addon",
+    source=library,
+    action=clean_addon_bin
+)
+
+Default([library, copy_cmd])
