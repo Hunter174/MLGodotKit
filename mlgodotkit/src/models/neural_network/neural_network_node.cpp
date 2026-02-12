@@ -15,6 +15,7 @@ void NeuralNetworkNode::_bind_methods() {
     ClassDB::bind_method(D_METHOD("add_layer", "input_size", "output_size", "activation"), &NeuralNetworkNode::add_layer);
     ClassDB::bind_method(D_METHOD("forward", "input"), &NeuralNetworkNode::forward);
     ClassDB::bind_method(D_METHOD("backward", "error"), &NeuralNetworkNode::backward);
+    ClassDB::bind_method(D_METHOD("predict", "input"), &NeuralNetworkNode::predict);
     ClassDB::bind_method(D_METHOD("model_summary"), &NeuralNetworkNode::model_summary);
     ClassDB::bind_method(D_METHOD("copy_weights", "source"), &NeuralNetworkNode::copy_weights);
     ClassDB::bind_method(D_METHOD("set_learning_rate", "lr"), &NeuralNetworkNode::set_learning_rate);
@@ -118,6 +119,29 @@ void NeuralNetworkNode::backward(godot::Array error) {
     // 4. Update weights (weight decay handled inside layer)
     for (auto &layer : layers)
         layer.apply_update();
+}
+
+godot::Array NeuralNetworkNode::predict(godot::Array input) {
+
+    if (layers.empty()) {
+        Logger::error_raise("NeuralNetworkNode::predict() - no layers defined");
+        return godot::Array();
+    }
+
+    if (input.is_empty()) {
+        Logger::error_raise("NeuralNetworkNode::predict() - empty input");
+        return godot::Array();
+    }
+
+    // Infer batch dynamically
+    int actual_batch = input.size();
+
+    Eigen::MatrixXf x = godot_to_eigen(input, actual_batch);
+
+    for (auto &layer : layers)
+        x = layer.forward(x);
+
+    return eigen_to_godot(x);
 }
 
 void NeuralNetworkNode::set_learning_rate(double lr) {

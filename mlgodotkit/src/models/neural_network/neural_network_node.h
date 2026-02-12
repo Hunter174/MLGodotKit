@@ -26,6 +26,7 @@ public:
     void add_layer(int input_size, int output_size, godot::String activation);
     godot::Array forward(godot::Array input);
     void backward(godot::Array error);
+    godot::Array predict(godot::Array input);
 
     // Utilities
     void model_summary();

@@ -16,6 +16,10 @@ void initialize_mlgodotkit_module(ModuleInitializationLevel p_level) {
     //Control Theory
     GDREGISTER_CLASS(PIDControllerNode);
 
+    //Loss Functions
+    GDREGISTER_CLASS(LossNode);
+    GDREGISTER_CLASS(MSELossNode);
+
     // Utility
     GDREGISTER_CLASS(Linalg);
     GDREGISTER_CLASS(Matrix);

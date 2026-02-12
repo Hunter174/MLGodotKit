@@ -8,11 +8,15 @@
 #include "utility/utils.h"
 #include "linalg/linalg.h"
 
-// Node Classes
+// Model Classes
 #include "models/linear_regression/linear_regression_node.h"
 #include "models/neural_network/neural_network_node.h"
 #include "models/linear_model/linear_model_node.h"
 #include "models/decision_tree/decision_tree_node.h"
+
+// Loss Fucntions
+#include "losses/loss_node/loss_node.h"
+#include "losses/mse_loss_node/mse_loss_node.h"
 
 // Control Theory
 #include "control/pid_controller/pid_controller_node.h"
