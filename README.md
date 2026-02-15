@@ -14,10 +14,10 @@ from agentic Ai to reinforcement learning and everything in between.
 ## Getting Started
 
 To install the plugin in your Godot project:
-    - Download the *addons* package from the official [Godot Asset Library](https://godotengine.org/asset-library/asset/4060).
-    - Extract the downloaded archive.
-    - Locate the `mlgodotkit` folder inside the extracted contents.
-    - Copy the `mlgodotkit` folder into your project directory under a folder named `addons`:
+- Download the *addons* package from the official [Godot Asset Library](https://godotengine.org/asset-library/asset/4060).
+- Extract the downloaded archive.
+- Locate the `mlgodotkit` folder inside the extracted contents.
+- Copy the `mlgodotkit` folder into your project directory under a folder named `addons`:
 
 ```
 your_project/
