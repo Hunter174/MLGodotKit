@@ -1,13 +1,11 @@
 #include "neural_network_node.h"
-#include "utility/logger.h"
-#include "utility/utils.h"
-#include <sstream>
-#include <iomanip>
-#include <cmath>
 
 using namespace Utils;
 
-NeuralNetworkNode::NeuralNetworkNode() {}
+NeuralNetworkNode::NeuralNetworkNode() {
+    optimizer = std::make_unique<Adam>();
+}
+
 NeuralNetworkNode::~NeuralNetworkNode() {}
 
 void NeuralNetworkNode::_bind_methods() {
@@ -27,12 +25,16 @@ void NeuralNetworkNode::_bind_methods() {
     ClassDB::bind_method(D_METHOD("set_batch_size", "batch_size"), &NeuralNetworkNode::set_batch_size);
     ClassDB::bind_method(D_METHOD("get_batch_size"), &NeuralNetworkNode::get_batch_size);
     ClassDB::bind_method(D_METHOD("build_model"), &NeuralNetworkNode::build_model);
+    ClassDB::bind_method(D_METHOD("set_optimizer", "name"), &NeuralNetworkNode::set_optimizer);
+	ClassDB::bind_method(D_METHOD("get_optimizer"), &NeuralNetworkNode::get_optimizer);
+
 
     // Inspector-visible properties
     ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "layers",
         PROPERTY_HINT_NONE, "",
         PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_EDITOR),
         "set_layers", "get_layers");
+
 
     ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "learning_rate",
         PROPERTY_HINT_RANGE, "0.0,1.0,0.0001,precision:6"),
@@ -45,11 +47,17 @@ void NeuralNetworkNode::_bind_methods() {
     ADD_PROPERTY(PropertyInfo(Variant::INT, "verbosity",
         PROPERTY_HINT_RANGE, "0,3,1"),
         "set_verbosity", "get_verbosity");
+
+    ADD_PROPERTY(
+    	PropertyInfo(Variant::STRING, "optimizer"),
+    	"set_optimizer",
+    	"get_optimizer"
+	);
 }
 
 void NeuralNetworkNode::add_layer(int input_size, int output_size, godot::String activation) {
     std::string act_type = activation.utf8().get_data();
-    Layer layer(input_size, output_size, learning_rate, act_type);
+    Layer layer(input_size, output_size, act_type);
     layer.set_verbosity(verbosity);
     layers.push_back(layer);
 }
@@ -89,36 +97,42 @@ godot::Array NeuralNetworkNode::forward(godot::Array input) {
 }
 
 void NeuralNetworkNode::backward(godot::Array error) {
+
     Eigen::MatrixXf grad = godot_to_eigen(error, batch_size);
+
     if (grad.size() == 0 || !grad.allFinite()) {
         Logger::warn("NeuralNetworkNode::backward() - invalid gradient input");
         return;
     }
 
-    // 1. Backprop through layers
     for (int i = static_cast<int>(layers.size()) - 1; i >= 0; --i)
         grad = layers[i].backward_compute(grad);
 
-    // 2. Compute global gradient norm (for clipping)
     float global_norm = 0.0f;
     for (auto &layer : layers)
-        global_norm += layer.get_dW().squaredNorm() + layer.get_db().squaredNorm();
+        global_norm += layer.get_dW().squaredNorm() +
+                       layer.get_db().squaredNorm();
+
     global_norm = std::sqrt(global_norm);
 
     const float max_norm = 2.5f;
     float scale = 1.0f;
-    if (global_norm > max_norm && global_norm > 0.0f) {
-        scale = max_norm / global_norm;
-        Logger::warn("⚠️ Gradient clip applied, norm = " + std::to_string(global_norm));
-    }
 
-    // 3. Scale gradients (no extra per-layer normalization)
+    if (global_norm > max_norm && global_norm > 0.0f)
+        scale = max_norm / global_norm;
+
     for (auto &layer : layers)
         layer.normalize_gradients(scale);
 
-    // 4. Update weights (weight decay handled inside layer)
-    for (auto &layer : layers)
-        layer.apply_update();
+    if (!optimizer) return;
+
+    optimizer->begin_step();
+
+    int param_index = 0;
+    for (auto& layer : layers) {
+        optimizer->update(layer.get_weights(), layer.get_dW(), param_index++);
+        optimizer->update(layer.get_biases(), layer.get_db(), param_index++);
+    }
 }
 
 godot::Array NeuralNetworkNode::predict(godot::Array input) {
@@ -144,10 +158,27 @@ godot::Array NeuralNetworkNode::predict(godot::Array input) {
     return eigen_to_godot(x);
 }
 
+void NeuralNetworkNode::set_optimizer(godot::String name) {
+
+    name = name.to_lower();
+    optimizer_name = name;
+
+    if (name == "adam") {
+        optimizer = std::make_unique<Adam>();
+        optimizer->set_learning_rate(learning_rate);
+        Logger::info("Optimizer set to Adam");
+    } else {
+        Logger::error_raise("Unknown optimizer");
+    }
+}
+
+
 void NeuralNetworkNode::set_learning_rate(double lr) {
     learning_rate = lr;
-    for (auto &layer : layers)
-        layer.set_learning_rate(lr);
+
+    if (optimizer) {
+        optimizer->set_learning_rate(lr);
+    }
 }
 
 void NeuralNetworkNode::set_verbosity(int level) {

@@ -3,14 +3,10 @@
 
 using namespace Activations;
 
-Layer::Layer(int input_size, int out_features, float learning_rate, const std::string& activation)
-    : lr(learning_rate), activation_type(activation) {
+Layer::Layer(int input_size, int out_features, const std::string& activation)
+    : activation_type(activation) {
 
     std::tie(weights, biases) = init_weights(input_size, out_features, activation);
-
-    // Initialize momentum buffers
-    mW = Eigen::MatrixXf::Zero(input_size, out_features);
-    mb = Eigen::MatrixXf::Zero(1, out_features);
 
     // Select activation
     if (activation == "sigmoid") {
@@ -107,24 +103,11 @@ void Layer::normalize_gradients(float scale) {
     db *= scale;
 }
 
-void Layer::apply_update() {
-    const float beta = 0.9f;           // momentum
-    const float weight_decay = 1e-4f;  // L2 regularization
-
-    // Momentum update (per layer)
-    mW = beta * mW + (1.0f - beta) * dW;
-    mb = beta * mb + (1.0f - beta) * db;
-
-    weights -= lr * (mW + weight_decay * weights);
-    biases  -= lr * (mb + 1e-6f * biases);
-}
-
 void Layer::copy_weights(const Layer& src) {
     weights = src.weights;
     biases  = src.biases;
 }
 
-void Layer::set_learning_rate(float learning_rate) { lr = learning_rate; }
 void Layer::set_verbosity(int v) { verbosity = v; }
 void Layer::set_output_squash(bool enabled, float scale_in, float scale_out) {
     squash_enabled   = enabled;
