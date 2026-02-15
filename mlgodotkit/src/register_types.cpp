@@ -19,6 +19,8 @@ void initialize_mlgodotkit_module(ModuleInitializationLevel p_level) {
     //Loss Functions
     GDREGISTER_CLASS(LossNode);
     GDREGISTER_CLASS(MSELossNode);
+    GDREGISTER_CLASS(BCELossNode);
+    GDREGISTER_CLASS(CELossNode);
 
     // Utility
     GDREGISTER_CLASS(Linalg);

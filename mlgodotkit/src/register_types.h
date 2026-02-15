@@ -17,6 +17,8 @@
 // Loss Fucntions
 #include "losses/loss_node/loss_node.h"
 #include "losses/mse_loss_node/mse_loss_node.h"
+#include "losses/bce_loss_node/bce_loss_node.h"
+#include "losses/ce_loss_node/ce_loss_node.h"
 
 // Control Theory
 #include "control/pid_controller/pid_controller_node.h"
