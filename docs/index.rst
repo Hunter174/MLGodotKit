@@ -3,7 +3,6 @@ MLGodotKit Documentation
 
 .. toctree::
    :hidden:
-   :maxdepth: 2
 
    api/index
    guides/index
