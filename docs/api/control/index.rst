@@ -1,7 +1,6 @@
 Control
 =======
 .. toctree::
-   :maxdepth: 2
 
    motion/index
    navigation/index
