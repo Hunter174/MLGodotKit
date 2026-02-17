@@ -2,7 +2,6 @@ API Reference
 =============
 
 .. toctree::
-   :hidden:
    :maxdepth: 2
 
     control/index
