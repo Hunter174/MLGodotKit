@@ -77,22 +77,17 @@ Thumbs.db
 
 # Linux files
 *~
-# SCons metadata
+# SCons metadata and build directories
 .sconsign.dblite
 **/build/
 
-# Binary outputs
-**/bin/*.dll
-**/bin/*.lib
-**/bin/*.exp
-**/bin/*.exe
-
-# SCons metadata
-.sconsign.dblite
-**/build/
-
-# Binary outputs
-**/bin/*.dll
-**/bin/*.lib
-**/bin/*.exp
-**/bin/*.exe
+# Native build outputs
+*.a
+*.dll
+*.dylib
+*.exp
+*.framework/
+*.lib
+*.so
+*.wasm
+*.xcframework/

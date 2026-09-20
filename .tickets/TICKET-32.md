@@ -1,7 +1,7 @@
 # TICKET-32: Parameterize Eigen include path and document native build setup
 **Roadmap Phase:** v0.1 - Hygiene and Direction
 **GitHub Issue:** #32
-**Status:** TODO
+**Status:** VERIFIED
 
 ## 🎯 Objective
 Enable the project to be built on any machine without manually editing `SConstruct` to fix Eigen paths.
@@ -19,4 +19,5 @@ Enable the project to be built on any machine without manually editing `SConstru
 5. Verify the build succeeds.
 
 ## 📝 Agent Notes
-(Record decisions here)
+
+Implemented and verified on the repository-hardening branch. `SConstruct` accepts `eigen_path=...` or `EIGEN_PATH`, validates `Eigen/Core`, and emits a clear configuration error. Native build documentation was added under `docs/guides/native_build.rst`.

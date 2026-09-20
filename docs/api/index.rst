@@ -4,11 +4,11 @@ API Reference
 .. toctree::
    :maxdepth: 2
 
-    control/index
-    linalg
-    matrix
-    models/index
-    rl/index
+   control/index
+   linalg
+   matrix
+   models/index
+   rl/index
 
 Public API documentation for MLGodotKit.
 
@@ -77,4 +77,4 @@ The API is intentionally:
 - **Engine-integrated** — designed for real-time Godot execution
 
 Users are encouraged to build their own workflows rather than rely on fixed
-pipelines. That being said examples and recommendations can be found at :doc:`guides/index`
+pipelines. That being said examples and recommendations can be found at :doc:`../guides/index`

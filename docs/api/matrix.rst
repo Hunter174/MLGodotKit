@@ -54,13 +54,10 @@ Static Methods
 ``from_array(A)``
     Construct a matrix from a 2D Godot ``Array``.
 
-``from_vector2(v, column=true)``
-``from_vector3(v, column=true)``
-``from_vector4(v, column=true)``
-    Construct a matrix from a Godot vector.
+Supported vector constructors are ``from_vector2(v, column=true)``,
+``from_vector3(v, column=true)``, and ``from_vector4(v, column=true)``.
 
-    If ``column`` is ``true``, the result is a column vector.
-    Otherwise, a row vector is created.
+The ``column`` argument controls whether the result is a column or row vector.
 
 ----
 
@@ -93,8 +90,7 @@ Linear Algebra Operations
 ``inverse()``
     Return the matrix inverse.
 
-    Notes
-        - The matrix must be square and invertible.
+    Note: The matrix must be square and invertible.
 
 ``det()``
     Compute the determinant.
@@ -110,22 +106,13 @@ Linear Algebra Operations
 Vector Interoperability
 -----------------------
 
-``mul_vector2(v)``
-``mul_vector3(v)``
-``mul_vector4(v)``
-    Multiply the matrix by a Godot vector.
+The ``mul_vector2(v)``, ``mul_vector3(v)``, and ``mul_vector4(v)`` methods
+multiply the matrix by a Godot vector. Matrix dimensions must match the vector
+size; shape mismatches raise an error.
 
-    Notes
-        - Matrix dimensions must match the vector size.
-        - Raises an error on shape mismatch.
-
-``to_vector2()``
-``to_vector3()``
-``to_vector4()``
-    Convert a row or column matrix into a Godot vector.
-
-    Notes
-        - Matrix must have compatible shape (e.g. ``3×1`` or ``1×3``).
+The ``to_vector2()``, ``to_vector3()``, and ``to_vector4()`` methods convert a
+row or column matrix into a Godot vector. The matrix must have a compatible
+shape, such as ``3×1`` or ``1×3``.
 
 ----
 
@@ -182,5 +169,3 @@ Vector transformation:
 
    var R = Matrix.identity(3)
    var v2 = R.mul_vector3(v1)
-
-----

@@ -2,27 +2,49 @@
 import os
 import shutil
 
-#to build the binaries:> scons platform=windows
+from SCons.Script import ARGUMENTS, Exit
+
+# Build example: scons platform=windows eigen_path=C:/libs/eigen-3.4.0
+# Consume this project-specific option before invoking godot-cpp's SConstruct.
+eigen_path_argument = ARGUMENTS.pop("eigen_path", None)
 env = SConscript("godot-cpp/SConstruct")
 
 # Absolute path to this SConstruct directory
 project_root = Dir("#").abspath
 parent_root = os.path.abspath(os.path.join(project_root, ".."))
 
+# Eigen is an external dependency. It can be supplied through the SCons
+# command line or the EIGEN_PATH environment variable:
+#   scons platform=windows eigen_path=C:/path/to/eigen
+#   EIGEN_PATH=C:/path/to/eigen scons platform=windows
+eigen_path = eigen_path_argument or os.environ.get("EIGEN_PATH")
+if not eigen_path:
+    print("ERROR: Eigen was not configured. Set EIGEN_PATH or pass eigen_path=... to scons.")
+    Exit(2)
+
+eigen_path = os.path.abspath(os.path.expanduser(eigen_path))
+eigen_core = os.path.join(eigen_path, "Eigen", "Core")
+if not os.path.isfile(eigen_core):
+    print("ERROR: Eigen was not found at: {}".format(eigen_path))
+    print("Install Eigen 3.x and set EIGEN_PATH or pass eigen_path=... to scons.")
+    Exit(2)
+
 # Append include paths
 env.Append(CPPPATH=[
     os.path.join(project_root, "src"),
-    "C:/libs/eigen-3.4.0"
+    eigen_path,
 ])
 
-# Destination directory inside test_project (one level up)
-addon_bin_path = os.path.join(
-    parent_root,
-    "test_project",
-    "addons",
-    "mlgodotkit",
-    "bin"
+# The addon is authored here and deployed to the test project by the build.
+addon_source_path = os.path.join(project_root, "addon")
+addon_destination_path = os.path.join(
+    parent_root, "test_project", "addons", "mlgodotkit"
 )
+addon_bin_path = os.path.join(addon_destination_path, "bin")
+
+if not os.path.isdir(addon_source_path):
+    print("ERROR: Addon source directory is missing: {}".format(addon_source_path))
+    Exit(2)
 
 # Collect sources
 sources = []
@@ -77,13 +99,13 @@ else:
 def clean_addon_bin(target, source, env):
     built_path = str(source[0])
 
-    # Remove old bin folder
-    if os.path.exists(addon_bin_path):
-        shutil.rmtree(addon_bin_path)
-
+    # Deploy the canonical addon source and replace its generated binaries.
+    if os.path.exists(addon_destination_path):
+        shutil.rmtree(addon_destination_path)
+    shutil.copytree(addon_source_path, addon_destination_path)
     os.makedirs(addon_bin_path)
 
-    # Copy framework directory (macOS) or single file
+    # Copy framework directory (macOS) or single file.
     if os.path.isdir(built_path):
         shutil.copytree(
             built_path,

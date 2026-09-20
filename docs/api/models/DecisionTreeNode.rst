@@ -1,5 +1,5 @@
 DecisionTreeNode
-=========
+================
 
 Decision tree classifier based on Gini impurity.
 
@@ -152,5 +152,3 @@ Minimal usage from GDScript:
 
    	for i in y_true.size():
     		assert_eq(preds[i], y_true[i])
-
-----

@@ -1,5 +1,5 @@
 Filters and Limiters
-===================
+====================
 .. toctree::
    :maxdepth: 1
 

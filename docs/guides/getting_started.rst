@@ -1,5 +1,5 @@
 Getting Started
-======
+===============
 
 To get started either download the plugin directly from the
 `Asset Library <https://godotengine.org/asset-library/asset/4060>`_ or download the most recent release from the repos
