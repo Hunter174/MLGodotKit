@@ -22,7 +22,7 @@ jobs:
 
       - name: Install Eigen
         run: |
-          git clone https://gitlab.com/eigen-git/eigen.git C:/eigen
+          git clone https://github.com/eigen-team/eigen.git C:/eigen
           # The project expects a specific structure or path. 
           # We will set the EIGEN_PATH environment variable.
 
