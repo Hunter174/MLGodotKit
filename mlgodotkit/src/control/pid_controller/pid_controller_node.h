@@ -2,35 +2,15 @@
 #define PID_CONTROLLER_NODE_H
 
 #include <godot_cpp/classes/node.hpp>
+#include "control/pid_controller/pid_controller_core.h"
 
 class PIDControllerNode : public godot::Node {
     GDCLASS(PIDControllerNode, godot::Node);
 
 private:
-    // Must not derive and integrate in first update
+    std::unique_ptr<PIDControllerCore> core;
     bool initialized = false;
-
-    // Gains
-    float kp = 0.0f;
-    float ki = 0.0f;
-    float kd = 0.0f;
-
-    // Derivative filter time constant
-    float tau = 0.02f;
-
-    // Output limits
-    float lim_min = -1.0f;
-    float lim_max =  1.0f;
-
-    // Sample time
     float T = 0.0f;
-
-    // State
-    float integrator = 0.0f;
-    float prev_error = 0.0f;
-    float differentiator = 0.0f;
-    float prev_measurement = 0.0f;
-
     float out = 0.0f;
 
 protected:
@@ -44,7 +24,6 @@ public:
     float update_dt(float setpoint, float measurement, float dt);
     void reset();
 
-    // Getters / Setters
     void set_kp(float v);
     float get_kp() const;
 
