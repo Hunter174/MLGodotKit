@@ -1,0 +1,40 @@
+name: MLGodotKit CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Python & SCons
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install SCons
+        run: pip install scons
+
+      - name: Install Eigen
+        run: |
+          git clone https://gitlab.com/eigen-git/eigen.git C:/eigen
+          # The project expects a specific structure or path. 
+          # We will set the EIGEN_PATH environment variable.
+
+      - name: Build GDExtension
+        env:
+          EIGEN_PATH: C:/eigen
+        run: |
+          cd mlgodotkit
+          scons platform=windows
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: mlgodotkit-windows
+          path: mlgodotkit/bin/
