@@ -4,18 +4,17 @@
 #include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
+#include "models/linear_model/linear_model_core.h"
 #include "utility/utils.h"
 #include <Eigen/Dense>
 #include <vector>
+#include <memory>
 
 class LinearModelNode : public godot::Node {
 	GDCLASS(LinearModelNode, godot::Node);
 
 private:
-    Eigen::VectorXf weights;
-    double bias;
-    double learning_rate;
-    int num_features;
+    std::unique_ptr<LinearModelCore> core;
 
 protected:
     static void _bind_methods();
@@ -27,9 +26,7 @@ public:
     void initialize(int input_size);
     godot::Array predict(godot::Array input);
     void train(godot::Array inputs, godot::Array targets, int epochs);
-    double compute_loss(const Eigen::VectorXf &predictions, const Eigen::VectorXf &targets);
-    Eigen::VectorXf compute_gradient(const Eigen::VectorXf &predictions, const Eigen::VectorXf &targets, const Eigen::MatrixXf &inputs);
-
+    
     void set_learning_rate(double lr);
 };
 
