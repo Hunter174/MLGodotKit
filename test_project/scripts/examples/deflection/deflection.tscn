@@ -1,0 +1,34 @@
+[gd_scene load_steps=6 format=3 uid="uid://dy7kk7o7qedn7"]
+
+[ext_resource type="Script" uid="uid://dvonsfi2bn8ky" path="res://scripts/examples/deflection/lead_target.gd" id="1_p7med"]
+[ext_resource type="Texture2D" uid="uid://bd5c6p1kvvaxh" path="res://icon.svg" id="2_0paa2"]
+[ext_resource type="Script" uid="uid://bwakmo3agvtub" path="res://scripts/examples/deflection/target.gd" id="3_0paa2"]
+[ext_resource type="Script" uid="uid://dlkd4b6h6xula" path="res://scripts/examples/deflection/no_ml.gd" id="4_6yo0i"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6yo0i"]
+atlas = ExtResource("2_0paa2")
+
+[node name="Deflection" type="Node2D"]
+
+[node name="Player" type="Node2D" parent="."]
+position = Vector2(200, 450)
+script = ExtResource("1_p7med")
+
+[node name="NeuralNetworkNode" type="Node" parent="Player"]
+
+[node name="Sprite2D" type="Sprite2D" parent="Player"]
+texture = SubResource("AtlasTexture_6yo0i")
+
+[node name="Target" type="Node2D" parent="."]
+position = Vector2(800, 300)
+script = ExtResource("3_0paa2")
+
+[node name="Sprite2D" type="Sprite2D" parent="Target"]
+texture = SubResource("AtlasTexture_6yo0i")
+
+[node name="Adversary" type="Node2D" parent="."]
+position = Vector2(200, 250)
+script = ExtResource("4_6yo0i")
+
+[node name="Sprite2D" type="Sprite2D" parent="Adversary"]
+texture = SubResource("AtlasTexture_6yo0i")

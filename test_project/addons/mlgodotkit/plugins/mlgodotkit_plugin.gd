@@ -2,11 +2,33 @@
 extends EditorInspectorPlugin
 
 const ACTIVATIONS := ["relu", "sigmoid", "linear", "leaky_relu"]
+const OPTIMIZERS := ["adam"]
 
 func _can_handle(object: Object) -> bool:
 	return object.get_class() == "NeuralNetworkNode"
 
-func _parse_property(object, type, name, hint_type, hint_string, usage_flags, wide):
+func _parse_property(object, type, name, hint_type, hint_string, usage_flags, wide):	
+	if name == "optimizer":
+		var row = HBoxContainer.new()
+
+		var opt_select = OptionButton.new()
+		for opt in OPTIMIZERS:
+			opt_select.add_item(opt)
+
+		var current_opt = str(object.get("optimizer")).to_lower()
+		for j in range(opt_select.item_count):
+			if opt_select.get_item_text(j) == current_opt:
+				opt_select.select(j)
+				break
+
+		opt_select.item_selected.connect(func(idx):
+			object.set("optimizer", opt_select.get_item_text(idx))
+		)
+
+		row.add_child(opt_select)
+		add_property_editor(name, row)
+		return true
+	
 	if name == "layers":
 		var layers: Array = object.get("layers")
 		var vbox = VBoxContainer.new()
@@ -65,6 +87,7 @@ func _parse_property(object, type, name, hint_type, hint_string, usage_flags, wi
 				_sync_layers(object, name, layers)
 			)
 			row.add_child(act_opt)
+			
 
 			# Remove layer button
 			var rm_btn = Button.new()

@@ -1,7 +1,48 @@
-[gd_scene load_steps=2 format=3 uid="uid://x5q157yqoikp"]
+[gd_scene load_steps=8 format=3 uid="uid://x5q157yqoikp"]
 
-[ext_resource type="Script" uid="uid://bk36noap3tap5" path="res://main.gd" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://2n4whklxyahw" path="res://addons/mlgodotkit/nodes/rl/core/enviornment.gd" id="1_h2yge"]
+[ext_resource type="Script" uid="uid://ccgpl65mqmmwu" path="res://agent_1.gd" id="2_h2yge"]
+[ext_resource type="Script" uid="uid://orkjn2ydhj1p" path="res://agent_2.gd" id="3_1bvp3"]
+[ext_resource type="Script" uid="uid://dpin2hqi7w7d6" path="res://target.gd" id="4_1bvp3"]
+[ext_resource type="Texture2D" uid="uid://bd5c6p1kvvaxh" path="res://icon.svg" id="4_lquwl"]
 
-[node name="main" type="Node2D"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_lquwl"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_7mycd"]
+
+[node name="Enviornment" type="Node2D"]
 z_index = 86
-script = ExtResource("1_ig7tw")
+script = ExtResource("1_h2yge")
+
+[node name="Target" type="Node2D" parent="."]
+position = Vector2(559, 300)
+
+[node name="Observable" type="Node" parent="Target"]
+script = ExtResource("4_1bvp3")
+
+[node name="Body" type="Sprite2D" parent="Target"]
+texture = ExtResource("4_lquwl")
+
+[node name="BlueAgent" type="CharacterBody2D" parent="."]
+position = Vector2(1067, 567)
+
+[node name="Agent 1" type="Node" parent="BlueAgent"]
+script = ExtResource("2_h2yge")
+
+[node name="Body" type="Sprite2D" parent="BlueAgent"]
+texture = ExtResource("4_lquwl")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BlueAgent"]
+shape = SubResource("CircleShape2D_lquwl")
+
+[node name="AgentRed" type="CharacterBody2D" parent="."]
+position = Vector2(77, 79)
+
+[node name="Agent 2" type="Node" parent="AgentRed"]
+script = ExtResource("3_1bvp3")
+
+[node name="Body" type="Sprite2D" parent="AgentRed"]
+texture = ExtResource("4_lquwl")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AgentRed"]
+shape = SubResource("CircleShape2D_7mycd")

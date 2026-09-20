@@ -7,6 +7,7 @@ MLGodotKit Documentation
    api/index
    guides/index
    introduction/index
+   roadmap
 
 Welcome to the official `MLGodotKit <https://github.com/Hunter174/MLGodotKit>`_ documentation!
 
