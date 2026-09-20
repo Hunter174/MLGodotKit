@@ -4,7 +4,7 @@ Welcome! This project is designed to be maintained by a mix of human developers 
 
 ## 🚀 The Agent Execution Workflow
 
-If you are an AI agent, you **must** follow the "Isolated Execution" protocol:
+All contributors and AI agents **must** follow the "Isolated Execution" protocol. Never commit directly to `main`:
 
 1. **Branch**: Create a feature branch from `main` named `ticket/TICKET-XX`.
 2. **Locate Task**: Read the corresponding ticket in `.tickets/TICKET-XX.md`.

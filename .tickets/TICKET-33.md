@@ -1,7 +1,7 @@
 # TICKET-33: Establish canonical addon source layout outside test_project
 **Roadmap Phase:** v0.1 - Hygiene and Direction
 **GitHub Issue:** #33
-**Status:** TODO
+**Status:** VERIFIED
 
 ## 🎯 Objective
 Separate the reusable addon source from the test/demo project.
@@ -19,4 +19,5 @@ Separate the reusable addon source from the test/demo project.
 4. Verify the plugin is detectable and functional.
 
 ## 📝 Agent Notes
-(Record decisions here)
+
+Implemented and verified on the repository-hardening branch. Reusable addon files now live under `mlgodotkit/addon/`; SCons deploys that source plus the compiled extension into `test_project/addons/mlgodotkit`. The test project starts successfully headlessly after deployment.

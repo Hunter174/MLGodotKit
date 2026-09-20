@@ -1,5 +1,5 @@
 LinearModelNode
-======
+===============
 
 Linear regression model trained using batch gradient descent.
 

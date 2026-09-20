@@ -1,4 +1,4 @@
-[submodule "mlgodotkit/mlgodotkit/godot-cpp"]
-	path = mlgodotkit/mlgodotkit/godot-cpp
+[submodule "mlgodotkit/godot-cpp"]
+	path = mlgodotkit/godot-cpp
 	url = https://github.com/godotengine/godot-cpp.git
 	branch = 4.4

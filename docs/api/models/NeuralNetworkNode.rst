@@ -1,5 +1,5 @@
 NeuralNetworkNode
-======
+=================
 
 Feed-forward neural network with explicit forward and backward passes.
 

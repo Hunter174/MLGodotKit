@@ -1,7 +1,7 @@
 # TICKET-31: Clean generated native build artifacts and update .gitignore
 **Roadmap Phase:** v0.1 - Hygiene and Direction
 **GitHub Issue:** #31
-**Status:** TODO
+**Status:** VERIFIED
 
 ## 🎯 Objective
 Ensure the source tree remains clean after a build and no generated binary artifacts are tracked by Git.
@@ -19,4 +19,5 @@ Ensure the source tree remains clean after a build and no generated binary artif
 4. Result: No `.o`, `.obj`, or `.dll` files should appear as untracked/modified.
 
 ## 📝 Agent Notes
-(Record decisions here)
+
+Verified on the repository-hardening branch. Generated native outputs are no longer tracked; the SCons build succeeds with an explicit Eigen path, and generated outputs remain ignored after deployment. The original ticket verification was insufficient because `.gitignore` alone did not remove already tracked artifacts.

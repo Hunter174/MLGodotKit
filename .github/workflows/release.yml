@@ -7,29 +7,48 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-release:
-    runs-on: ubuntu-latest
+  build-windows-release:
+    runs-on: windows-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-
-      - name: Prepare addons folder structure
-        run: |
-          mkdir -p addons/mlgodotkit
-          cp mlgodotkit/bin/*.dll addons/mlgodotkit/
-          cp mlgodotkit/bin/*.a addons/mlgodotkit/
-          cp mlgodotkit/mlgodotkit.gdextension addons/mlgodotkit/
-          cp LICENSE addons/mlgodotkit/
-          cp README.md addons/mlgodotkit/
-
-      - name: Zip into correct structure
-        run: |
-          zip -r mlgodotkit.zip addons LICENSE README.md project.godot icon.png
-
-      - name: Upload to GitHub Releases
-        uses: softprops/action-gh-release@v1
+      - name: Checkout repository and dependencies
+        uses: actions/checkout@v4
         with:
-          files: ./mlgodotkit.zip
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install build tools
+        run: python -m pip install scons
+
+      - name: Download Eigen
+        shell: pwsh
+        run: |
+          Invoke-WebRequest `
+            -Uri "https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.zip" `
+            -OutFile eigen.zip
+          Expand-Archive eigen.zip -DestinationPath third_party
+          "EIGEN_PATH=$((Resolve-Path 'third_party/eigen-3.4.0').Path)" >> $env:GITHUB_ENV
+
+      - name: Build release extension
+        working-directory: mlgodotkit
+        run: scons platform=windows target=template_release eigen_path="$env:EIGEN_PATH"
+
+      - name: Package addon
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path package/addons | Out-Null
+          Copy-Item -Recurse test_project/addons/mlgodotkit package/addons/mlgodotkit
+          Copy-Item LICENSE package/LICENSE
+          Copy-Item README.md package/README.md
+          Compress-Archive -Path package/* -DestinationPath mlgodotkit-windows.zip
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: mlgodotkit-windows.zip
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
