@@ -28,6 +28,8 @@ mono_crash.*.json
 # Addon Specific
 # -----------------------------------------
 test_project/addons/gut/
+# The reusable addon is authored in mlgodotkit/addon and deployed here by SCons.
+test_project/addons/mlgodotkit/
 
 # -----------------------------------------
 # C/C++ build artifacts
