@@ -12,7 +12,8 @@ All contributors and AI agents **must** follow the "Isolated Execution" protocol
 4. **Verify**: Execute the **Verification Plan** strictly. Record the output.
 5. **PR**: Create a Pull Request to `main`.
 6. **Handoff**: Update **Agent Notes** with decisions made, blockers encountered, and the exact next step for the next session.
-7. **Merge**: Once verified, merge the PR into `main`.
+7. **Archive**: Once the ticket status is updated to `VERIFIED` and merged, move the ticket file from `.tickets/` to `.tickets/completed/` to keep the active queue clean.
+8. **Merge**: Once verified, merge the PR into `main`.
 
 ## 🛠 Development Standards
 
