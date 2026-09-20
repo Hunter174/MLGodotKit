@@ -1,4 +1,4 @@
-class_name DQNLearner
+class_name DQNTrainer
 extends RefCounted
 
 var q_network

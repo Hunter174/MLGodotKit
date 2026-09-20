@@ -1,4 +1,4 @@
-class_name NeuralPolicy
+class_name DQNPolicy
 extends Policy
 
 var model = NeuralNetworkNode.new()

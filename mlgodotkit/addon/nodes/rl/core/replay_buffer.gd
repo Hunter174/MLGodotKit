@@ -1,4 +1,4 @@
-class_name MemoryBuffer extends RefCounted
+class_name ReplayBuffer extends RefCounted
 
 var capacity : int
 var buffer := []
