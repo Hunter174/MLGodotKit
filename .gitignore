@@ -1,5 +1,9 @@
 # -----------------------------------------
-# Godot-specific ignores
+# Project Management
+# -----------------------------------------
+# We keep .tickets/ in the repo for audit trails, 
+# but we ignore local agent session logs if any are created.
+*.session_log
 # -----------------------------------------
 # Godot 4+ specific ignores
 .godot/
