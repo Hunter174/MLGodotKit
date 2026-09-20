@@ -6,6 +6,7 @@ extends VBoxContainer
 
 var target_runner = null
 var update_timer: Timer
+var runner_select: OptionButton
 
 func _init():
 	# Setup UI Layout
@@ -15,7 +16,7 @@ func _init():
 	var header = Label.new()
 	header.text = "🧠 ML Training Command Center"
 	header.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	add_theme_font_override("font_size", 16)
+	header.add_theme_font_size_override("font_size", 16)
 	add_child(header)
 	
 	add_separator()
@@ -25,13 +26,10 @@ func _init():
 	target_label.text = "Active RL Runner:"
 	add_child(target_label)
 	
-	var runner_select = OptionButton.new()
+	runner_select = OptionButton.new()
 	runner_select.custom_minimum_size.y = 30
-	runner_select.item_added.connect(_on_runner_selected)
+	runner_select.item_selected.connect(_on_runner_selected)
 	add_child(runner_select)
-	
-	# Populate runners from the scene
-	refresh_runners(runner_select)
 	
 	add_separator()
 	
@@ -48,7 +46,7 @@ func _init():
 	add_separator()
 	
 	# --- Training Controls ---
-	var ctrl_container = HStackBox.new()
+	var ctrl_container = HBoxContainer.new()
 	
 	var start_btn = Button.new()
 	start_btn.text = "▶ Start"
@@ -79,6 +77,10 @@ func _init():
 	update_timer.autostart = true
 	update_timer.timeout.connect(_update_ui)
 	add_child(update_timer)
+
+func _ready() -> void:
+	# The editor tree is not available during _init().
+	refresh_runners(runner_select)
 
 func add_separator():
 	var sep = HSeparator.new()
