@@ -6,12 +6,13 @@ Welcome! This project is designed to be maintained by a mix of human developers 
 
 If you are an AI agent, you **must** follow the "Isolated Execution" protocol:
 
-1. **Locate Task**: Find your assigned ticket in `.tickets/TICKET-XX.md`.
-2. **Read Requirements**: Ensure you understand the **Objective** and **Requirements**.
+1. **Branch**: Create a feature branch from `main` named `ticket/TICKET-XX`.
+2. **Locate Task**: Read the corresponding ticket in `.tickets/TICKET-XX.md`.
 3. **Execute**: Implement the change. Keep commits atomic and focused.
 4. **Verify**: Execute the **Verification Plan** strictly. Record the output.
-5. **Handoff**: Update **Agent Notes** with decisions made, blockers encountered, and the exact next step for the next session.
-6. **Commit**: Commit both the code changes AND the updated ticket.
+5. **PR**: Create a Pull Request to `main`.
+6. **Handoff**: Update **Agent Notes** with decisions made, blockers encountered, and the exact next step for the next session.
+7. **Merge**: Once verified, merge the PR into `main`.
 
 ## 🛠 Development Standards
 
