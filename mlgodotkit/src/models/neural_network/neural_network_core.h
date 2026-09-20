@@ -5,9 +5,9 @@
 #include <vector>
 #include <memory>
 #include <string>
-#include "models/neural_network/layer/layer.h"
-#include "optimizers/optimizer/optimizer.h"
-#include "optimizers/adam/adam.h"
+#include "models/neural_network/layer/layer_core.h"
+#include "optimizers/optimizer/optimizer_core.h"
+#include "optimizers/adam/adam_core.h"
 
 class NeuralNetworkCore {
 public:

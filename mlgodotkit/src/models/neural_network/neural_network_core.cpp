@@ -4,7 +4,7 @@
 using namespace Utils;
 
 NeuralNetworkCore::NeuralNetworkCore() {
-    optimizer = std::make_unique<Adam>();
+    optimizer = std::make_unique<AdamCore>();
 }
 
 Eigen::MatrixXf NeuralNetworkCore::forward(const Eigen::MatrixXf& input) {
@@ -96,7 +96,7 @@ void NeuralNetworkCore::copy_weights_from(const NeuralNetworkCore& other) {
 }
 
 void NeuralNetworkCore::add_layer(int input_size, int output_size, const std::string& activation) {
-    Layer layer(input_size, output_size, activation);
+    LayerCore layer(input_size, output_size, activation);
     layer.set_verbosity(verbosity);
     layers.push_back(layer);
 }
@@ -111,7 +111,7 @@ void NeuralNetworkCore::set_learning_rate(double lr) {
 void NeuralNetworkCore::set_optimizer(const std::string& name) {
     optimizer_name = name;
     if (name == "adam") {
-        optimizer = std::make_unique<Adam>();
+        optimizer = std::make_unique<AdamCore>();
         optimizer->set_learning_rate(learning_rate);
     } else {
         Logger::error_raise("Unknown optimizer: " + name);
