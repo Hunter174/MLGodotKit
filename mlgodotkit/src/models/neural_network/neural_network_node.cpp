@@ -3,7 +3,7 @@
 using namespace Utils;
 
 NeuralNetworkNode::NeuralNetworkNode() {
-    optimizer = std::make_unique<Adam>();
+    core = std::make_unique<NeuralNetworkCore>();
 }
 
 NeuralNetworkNode::~NeuralNetworkNode() {}
@@ -56,14 +56,11 @@ void NeuralNetworkNode::_bind_methods() {
 }
 
 void NeuralNetworkNode::add_layer(int input_size, int output_size, godot::String activation) {
-    std::string act_type = activation.utf8().get_data();
-    Layer layer(input_size, output_size, act_type);
-    layer.set_verbosity(verbosity);
-    layers.push_back(layer);
+    core->add_layer(input_size, output_size, activation.utf8().get_data());
 }
 
 godot::Array NeuralNetworkNode::forward(godot::Array input) {
-    if (layers.empty()) {
+    if (core->get_layers().empty()) {
         Logger::error_raise("NeuralNetworkNode::forward() - no layers defined");
         return godot::Array();
     }
@@ -72,8 +69,7 @@ godot::Array NeuralNetworkNode::forward(godot::Array input) {
         return godot::Array();
     }
 
-    // Validate dimensions
-    const int expected_dim = layers.front().get_input_size();
+    const int expected_dim = core->get_layers().front().get_input_size();
     int provided_dim = (input[0].get_type() == godot::Variant::ARRAY)
         ? ((godot::Array)input[0]).size()
         : input.size();
@@ -85,19 +81,12 @@ godot::Array NeuralNetworkNode::forward(godot::Array input) {
         return godot::Array();
     }
 
-    // Convert to Eigen
     Eigen::MatrixXf x = godot_to_eigen(input, batch_size);
-
-    // Forward pass
-    for (auto &layer : layers)
-        x = layer.forward(x);
-
-    // Output: no artificial squashing
-    return eigen_to_godot(x);
+    Eigen::MatrixXf output = core->forward(x);
+    return eigen_to_godot(output);
 }
 
 void NeuralNetworkNode::backward(godot::Array error) {
-
     Eigen::MatrixXf grad = godot_to_eigen(error, batch_size);
 
     if (grad.size() == 0 || !grad.allFinite()) {
@@ -105,39 +94,11 @@ void NeuralNetworkNode::backward(godot::Array error) {
         return;
     }
 
-    for (int i = static_cast<int>(layers.size()) - 1; i >= 0; --i)
-        grad = layers[i].backward_compute(grad);
-
-    float global_norm = 0.0f;
-    for (auto &layer : layers)
-        global_norm += layer.get_dW().squaredNorm() +
-                       layer.get_db().squaredNorm();
-
-    global_norm = std::sqrt(global_norm);
-
-    const float max_norm = 2.5f;
-    float scale = 1.0f;
-
-    if (global_norm > max_norm && global_norm > 0.0f)
-        scale = max_norm / global_norm;
-
-    for (auto &layer : layers)
-        layer.normalize_gradients(scale);
-
-    if (!optimizer) return;
-
-    optimizer->begin_step();
-
-    int param_index = 0;
-    for (auto& layer : layers) {
-        optimizer->update(layer.get_weights(), layer.get_dW(), param_index++);
-        optimizer->update(layer.get_biases(), layer.get_db(), param_index++);
-    }
+    core->backward(grad);
 }
 
 godot::Array NeuralNetworkNode::predict(godot::Array input) {
-
-    if (layers.empty()) {
+    if (core->get_layers().empty()) {
         Logger::error_raise("NeuralNetworkNode::predict() - no layers defined");
         return godot::Array();
     }
@@ -147,55 +108,38 @@ godot::Array NeuralNetworkNode::predict(godot::Array input) {
         return godot::Array();
     }
 
-    // Infer batch dynamically
     int actual_batch = input.size();
-
     Eigen::MatrixXf x = godot_to_eigen(input, actual_batch);
-
-    for (auto &layer : layers)
-        x = layer.forward(x);
-
-    return eigen_to_godot(x);
+    Eigen::MatrixXf output = core->predict(x);
+    return eigen_to_godot(output);
 }
 
 void NeuralNetworkNode::set_optimizer(godot::String name) {
-
-    name = name.to_lower();
-    optimizer_name = name;
-
-    if (name == "adam") {
-        optimizer = std::make_unique<Adam>();
-        optimizer->set_learning_rate(learning_rate);
-        Logger::info("Optimizer set to Adam");
-    } else {
-        Logger::error_raise("Unknown optimizer");
-    }
+    core->set_optimizer(name.to_lower().utf8().get_data());
 }
 
+godot::String NeuralNetworkNode::get_optimizer() const {
+    return core->get_optimizer_name();
+}
 
 void NeuralNetworkNode::set_learning_rate(double lr) {
-    learning_rate = lr;
+    core->set_learning_rate(lr);
+}
 
-    if (optimizer) {
-        optimizer->set_learning_rate(lr);
-    }
+double NeuralNetworkNode::get_learning_rate() const {
+    return core->get_learning_rate();
 }
 
 void NeuralNetworkNode::set_verbosity(int level) {
-    verbosity = level;
-    Logger::set_verbosity(level);
-    for (auto &layer : layers)
-        layer.set_verbosity(level);
+    core->set_verbosity(level);
 }
 
 void NeuralNetworkNode::copy_weights(const NeuralNetworkNode* source) {
-    if (!source || source->layers.size() != layers.size()) {
-        Logger::error("NeuralNetworkNode::copy_weights - incompatible network sizes");
+    if (!source) {
+        Logger::error("NeuralNetworkNode::copy_weights - null source");
         return;
     }
-    for (size_t i = 0; i < layers.size(); ++i)
-        layers[i].copy_weights(source->layers[i]);
-    Logger::debug(1, "NeuralNetworkNode::copy_weights - success");
+    core->copy_weights_from(*source->core);
 }
 
 void NeuralNetworkNode::set_layers(const godot::Array &p_layers) {
@@ -209,20 +153,21 @@ godot::Array NeuralNetworkNode::get_layers() const {
 }
 
 void NeuralNetworkNode::build_model() {
-    layers.clear();
+    core = std::make_unique<NeuralNetworkCore>();
     for (int i = 0; i < layers_config.size(); ++i) {
         godot::Dictionary d = layers_config[i];
         int in_size = (int)d.get("input_size", 1);
         int out_size = (int)d.get("output_size", 1);
         godot::String act = d.get("activation", "relu");
-        add_layer(in_size, out_size, act);
+        core->add_layer(in_size, out_size, act.utf8().get_data());
     }
     Logger::debug(1, "NeuralNetworkNode::build_model - model rebuilt");
 }
 
 void NeuralNetworkNode::model_summary() {
     Logger::info("----------- Model Summary -----------");
-    for (int i = 0; i < layers.size(); ++i) {
+    const auto &layers = core->get_layers();
+    for (int i = 0; i < (int)layers.size(); ++i) {
         const auto &layer = layers[i];
         std::ostringstream ss;
         ss << "Layer " << i << " | in=" << layer.get_input_size()
