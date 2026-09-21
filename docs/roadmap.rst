@@ -483,18 +483,18 @@ Immediate Backlog
 
 The next useful work items, in order:
 
-1. Clean GitHub issues and labels to match this roadmap.
-2. Add or update ``.gitignore`` for native build artifacts.
-3. Decide canonical addon source location.
-4. Parameterize Eigen include path in ``SConstruct``.
-5. Create a compatibility-preserving design for replacing ``NeuralNetworkNode``.
-6. Fix Adam timestep behavior.
-7. Add model clone/copy API needed by DQN.
-8. Move RL scripts out of ``test_project`` once addon layout is decided.
-9. Rename ``enviornment.gd`` to ``environment.gd`` with compatibility handling if
-   needed.
-10. Create one minimal supervised neural network example and one minimal RL
-    example.
+1. Finalize the public ``NeuralNetworkCore``/``NeuralNetworkNode`` API (issue
+   ``#34``).
+2. Define model serialization and reset/config lifecycle behavior (issue
+   ``#35``).
+3. Separate optimizer stepping and add the reference SGD optimizer (issue
+   ``#36``).
+4. Stabilize RL contracts and DQN target-network behavior (issue ``#37``).
+5. Add native Catch2 and headless Godot verification to CI.
+6. Create minimal supervised and RL tutorials (issue ``#11``).
+7. Define a focused runtime model-evaluation API (issue ``#12``).
+8. Keep deferred control/editor ideas out of the critical path until the core
+   APIs and examples are stable.
 
 GitHub Issue Triage Plan
 ------------------------
