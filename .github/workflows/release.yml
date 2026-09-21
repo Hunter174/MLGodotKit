@@ -27,14 +27,14 @@ jobs:
       - name: Validate release version
         shell: pwsh
         run: |
-          $version = (Get-Content VERSION -Raw).Trim()
+          $version = (Get-Content MLGODOTKIT_VERSION -Raw).Trim()
           $tag = "${{ github.ref_name }}" -replace '^v', ''
           if ($version -ne $tag) {
-            throw "Release tag v$tag does not match VERSION ($version)."
+            throw "Release tag v$tag does not match MLGODOTKIT_VERSION ($version)."
           }
           $plugin = Get-Content mlgodotkit/addon/plugins/plugin.cfg -Raw
           if ($plugin -notmatch "version=\"$([regex]::Escape($version))\"") {
-            throw "plugin.cfg version does not match VERSION ($version)."
+            throw "plugin.cfg version does not match MLGODOTKIT_VERSION ($version)."
           }
           "MLGodotKit version: $version"
 
@@ -58,8 +58,8 @@ jobs:
           Copy-Item -Recurse test_project/addons/mlgodotkit package/addons/mlgodotkit
           Copy-Item LICENSE package/LICENSE
           Copy-Item README.md package/README.md
-          Copy-Item VERSION package/VERSION
-          $version = (Get-Content VERSION -Raw).Trim()
+          Copy-Item MLGODOTKIT_VERSION package/MLGODOTKIT_VERSION
+          $version = (Get-Content MLGODOTKIT_VERSION -Raw).Trim()
           $archive = "mlgodotkit-v$version-windows.zip"
           Compress-Archive -Path package/* -DestinationPath $archive
           "RELEASE_ARCHIVE=$archive" >> $env:GITHUB_ENV

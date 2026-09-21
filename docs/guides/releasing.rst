@@ -2,7 +2,7 @@ Releasing MLGodotKit
 =====================
 
 MLGodotKit uses `Semantic Versioning <https://semver.org/>`_. The version in
-``VERSION`` is the single source of truth for releases.
+``MLGODOTKIT_VERSION`` is the single source of truth for releases.
 
 Before 1.0.0, minor releases may include API changes:
 
@@ -13,7 +13,7 @@ Before 1.0.0, minor releases may include API changes:
 Release checklist
 -----------------
 
-1. Update ``VERSION`` and ``mlgodotkit/addon/plugins/plugin.cfg`` together.
+1. Update ``MLGODOTKIT_VERSION`` and ``mlgodotkit/addon/plugins/plugin.cfg`` together.
 2. Run the native build and relevant tests from a clean checkout.
 3. Update documentation and migration notes for API changes.
 4. Commit the version change on ``main``.
@@ -22,8 +22,8 @@ Release checklist
        git tag v0.1.0
        git push origin v0.1.0
 
-The release workflow rejects tags that do not match ``VERSION``. It builds a
-release extension, packages the addon, includes ``VERSION`` in the archive, and
+The release workflow rejects tags that do not match ``MLGODOTKIT_VERSION``. It builds a
+release extension, packages the addon, includes ``MLGODOTKIT_VERSION`` in the archive, and
 publishes the archive as a GitHub Release asset.
 
 Release artifacts
