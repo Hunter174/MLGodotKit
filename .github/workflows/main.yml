@@ -26,8 +26,7 @@ jobs:
         run: |
           powershell -Command "Invoke-WebRequest -Uri 'https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.zip' -OutFile 'eigen.zip'"
           powershell -Command "Expand-Archive -Path 'eigen.zip' -DestinationPath '${{ github.workspace }}/eigen_tmp' -Force"
-          powershell -Command "New-Item -ItemType Directory -Force -Path '${{ github.workspace }}/eigen'"
-          powershell -Command "Get-ChildItem -Path '${{ github.workspace }}/eigen_tmp' | Select-Object -First 1 | ForEach-Object { Copy-Item -Path \"$($_.FullName)\*\" -Destination '${{ github.workspace }}/eigen' -Recurse -Force }"
+          powershell -Command "$folder = Get-ChildItem -Path '${{ github.workspace }}/eigen_tmp' -Directory | Select-Object -First 1; Move-Item -Path $folder.FullName -Destination '${{ github.workspace }}/eigen' -Force"
           Remove-Item -Path "eigen.zip"
           Remove-Item -Path "${{ github.workspace }}/eigen_tmp" -Recurse
 
@@ -35,6 +34,7 @@ jobs:
         env:
           EIGEN_PATH: ${{ github.workspace }}/eigen
         run: |
+          dir ${{ github.workspace }}/eigen
           cd mlgodotkit
           scons platform=windows
 
