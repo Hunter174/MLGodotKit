@@ -45,10 +45,10 @@ Examples
 The repository's ``test_project/examples`` directory contains standalone
 scenes for common workflows:
 
-* ``matrix_basics.tscn`` for matrix construction and multiplication.
-* ``linear_regression.tscn`` for fitting and prediction.
-* ``neural_network_xor.tscn`` for an explicit forward/loss/backward loop.
-* ``pid_control.tscn`` for feedback control and tuning.
+* ``matrix_basics.tscn`` for an animated 2D matrix transform.
+* ``linear_regression.tscn`` for a live data stream and fitted prediction line.
+* ``neural_network_xor.tscn`` for a visual learned decision field.
+* ``pid_control.tscn`` for a moving-target feedback simulation.
 
 Open these scenes in Godot and use **Play Current Scene** after building the
 local addon. The example scripts are intentionally short and can be copied

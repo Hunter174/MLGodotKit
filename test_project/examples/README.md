@@ -11,10 +11,10 @@ connection between Godot and the native classes is visible.
 
 | Scene | Demonstrates |
 | --- | --- |
-| `matrix_basics.tscn` | Constructing matrices, multiplication, and conversion back to arrays |
-| `linear_regression.tscn` | Fitting a continuous model and making predictions |
-| `neural_network_xor.tscn` | Building a network, computing loss, and applying gradients |
-| `pid_control.tscn` | Driving a measured value toward a setpoint with feedback control |
+| `matrix_basics.tscn` | An animated 2D matrix transform applied to a square |
+| `linear_regression.tscn` | A live data stream with a continuously refit prediction line |
+| `neural_network_xor.tscn` | An animated XOR decision field learned from labeled points |
+| `pid_control.tscn` | A moving-target simulation with visible PID tracking |
 
 These examples are educational fixtures, not benchmarks. RL scenes remain
 experimental and are documented separately until the RL API is stabilized.
