@@ -368,7 +368,7 @@ Goal:
 Current issues:
 
 * RL code exists under ``test_project/addons``.
-* ``enviornment.gd`` has a typo and should become ``environment.gd``.
+* The RL environment script was renamed to ``environment.gd``.
 * DQN currently needs real model cloning/copying.
 * Agent/environment contracts need documentation.
 
