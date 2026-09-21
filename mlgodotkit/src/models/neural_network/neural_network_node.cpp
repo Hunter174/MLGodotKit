@@ -119,7 +119,7 @@ void NeuralNetworkNode::set_optimizer(godot::String name) {
 }
 
 godot::String NeuralNetworkNode::get_optimizer() const {
-    return core->get_optimizer_name();
+    return godot::String(core->get_optimizer_name().c_str());
 }
 
 void NeuralNetworkNode::set_learning_rate(double lr) {
