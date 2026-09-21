@@ -18,8 +18,8 @@ public:
     LossNode();
     ~LossNode();
 
-    float forward(Array prediction, Array target);
-    Array backward();
+    virtual float forward(Array prediction, Array target);
+    virtual Array backward();
 
     // Core Access
     void set_core(std::unique_ptr<LossCore> p_core) { core = std::move(p_core); }
