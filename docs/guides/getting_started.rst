@@ -39,12 +39,27 @@ Source builds are intended for contributors. See :doc:`native_build` for
 Eigen installation, SCons commands, and native tests. A source build must use
 the repository's pinned ``godot-cpp`` revision and the matching Godot version.
 
+Examples
+--------
+
+The repository's ``test_project/examples`` directory contains standalone
+scenes for common workflows:
+
+* ``matrix_basics.tscn`` for matrix construction and multiplication.
+* ``linear_regression.tscn`` for fitting and prediction.
+* ``neural_network_xor.tscn`` for an explicit forward/loss/backward loop.
+* ``pid_control.tscn`` for feedback control and tuning.
+
+Open these scenes in Godot and use **Play Current Scene** after building the
+local addon. The example scripts are intentionally short and can be copied
+into a user's project.
+
 Next steps
 ----------
 
 The API reference is available in the :doc:`../api/index` documentation.
-Examples and experimental RL code are included in the repository but are not
-part of the stable API promise for this pre-1.0 release.
+Experimental RL code is included in the repository but is not part of the
+stable API promise for this pre-1.0 release.
 
 Troubleshooting
 ---------------
