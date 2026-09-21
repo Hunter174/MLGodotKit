@@ -458,6 +458,29 @@ Exit criteria:
 * A new user can install the addon, create a tiny model, run inference, and run
   one RL example without reading source code.
 
+Runtime Inference and Model Distribution
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Runtime model distribution is a first-class product concern: users should be
+able to bundle model artifacts with exported games and run inference without
+Python or a training environment.
+
+The runtime plan is deliberately split into optional backends:
+
+* Native MLCore models for the smallest Godot-integrated models.
+* ONNX Runtime for portable tensor-model inference (issue ``#44``).
+* GGUF through an optional llama.cpp backend for local LLM inference (issue
+  ``#45``).
+
+A backend-neutral loading and inference contract must be designed before adding
+integrations (issue ``#43``). Packaging, artifact discovery, compatibility
+metadata, licensing, and smoke tests are tracked in issue ``#46``.
+
+The ONNX and GGUF integrations must remain optional. Projects should not pay
+the binary-size or platform-support cost of a backend they do not use. LLM
+execution must also be asynchronous or worker-thread based so generation does
+not block the Godot main thread.
+
 Phase 8 — Release Hardening
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -495,6 +518,11 @@ The next useful work items, in order:
 7. Define a focused runtime model-evaluation API (issue ``#12``).
 8. Keep deferred control/editor ideas out of the critical path until the core
    APIs and examples are stable.
+9. Design the backend-neutral runtime and artifact-loading contract (issue
+   ``#43``).
+10. Add optional ONNX Runtime and GGUF/llama.cpp integrations (issues ``#44``
+    and ``#45``).
+11. Add model bundling and runtime smoke tests (issue ``#46``).
 
 GitHub Issue Triage Plan
 ------------------------
