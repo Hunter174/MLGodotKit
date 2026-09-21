@@ -18,8 +18,45 @@ if ($null -eq $godot) {
     throw "Godot executable was not found under $cache"
 }
 
-$project = Join-Path $root "test_project"
-& $godot.FullName --headless --path $project --editor --quit-after 5
+$project = Join-Path $root ".ci/godot-smoke-$version"
+if (Test-Path $project) {
+    Remove-Item $project -Recurse -Force
+}
+New-Item -ItemType Directory -Force -Path (Join-Path $project "addons") | Out-Null
+Copy-Item -Recurse (Join-Path $root "test_project/addons/mlgodotkit") (Join-Path $project "addons/mlgodotkit")
+
+@"
+; Generated headless smoke-test project.
+config_version=5
+
+[application]
+config/name="MLGodotKit Smoke Test"
+
+[display]
+window/size/viewport_width=320
+window/size/viewport_height=240
+
+[rendering]
+renderer/rendering_method="gl_compatibility"
+"@ | Set-Content (Join-Path $project "project.godot")
+
+@"
+extends SceneTree
+
+func _init():
+    var extension = load("res://addons/mlgodotkit/mlgodotkit.gdextension")
+    if extension == null:
+        quit(1)
+        return
+    var matrix = ClassDB.instantiate("Matrix")
+    if matrix == null:
+        quit(1)
+        return
+    matrix.free()
+    quit(0)
+"@ | Set-Content (Join-Path $project "smoke.gd")
+
+& $godot.FullName --headless --path $project --script smoke.gd
 $exit_code = $LASTEXITCODE
 if ($exit_code -ne 0) {
     throw "Godot headless smoke test failed with exit code $exit_code"
