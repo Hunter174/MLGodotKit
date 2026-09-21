@@ -18,9 +18,11 @@ if ($null -eq $godot) {
     throw "Godot executable was not found under $cache"
 }
 
-& $godot.FullName --headless --path (Join-Path $root "test_project") --editor --quit
-if ($LASTEXITCODE -ne 0) {
-    throw "Godot headless smoke test failed with exit code $LASTEXITCODE"
+$project = Join-Path $root "test_project"
+& $godot.FullName --headless --path $project --editor --quit-after 5
+$exit_code = $LASTEXITCODE
+if ($exit_code -ne 0) {
+    throw "Godot headless smoke test failed with exit code $exit_code"
 }
 
 Write-Host "Godot $version headless smoke test passed."
