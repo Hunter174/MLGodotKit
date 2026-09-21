@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://x5q157yqoikp"]
 
-[ext_resource type="Script" uid="uid://2n4whklxyahw" path="res://addons/mlgodotkit/nodes/rl/core/enviornment.gd" id="1_h2yge"]
+[ext_resource type="Script" uid="uid://2n4whklxyahw" path="res://addons/mlgodotkit/nodes/rl/framework/environment.gd" id="1_h2yge"]
 [ext_resource type="Script" uid="uid://ccgpl65mqmmwu" path="res://agent_1.gd" id="2_h2yge"]
 [ext_resource type="Script" uid="uid://orkjn2ydhj1p" path="res://agent_2.gd" id="3_1bvp3"]
 [ext_resource type="Script" uid="uid://dpin2hqi7w7d6" path="res://target.gd" id="4_1bvp3"]
