@@ -42,6 +42,10 @@ jobs:
           scons platform=windows tests=1
           .\\test\\bin\\mlgodotkit_core_tests.exe
 
+      - name: Run Godot headless smoke test
+        shell: pwsh
+        run: powershell -File scripts/run_godot_smoke.ps1
+
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
