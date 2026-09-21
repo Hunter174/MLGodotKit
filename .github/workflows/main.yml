@@ -42,8 +42,17 @@ jobs:
           scons platform=windows tests=1
           .\\test\\bin\\mlgodotkit_core_tests.exe
 
-      - name: Run Godot headless smoke test
+      - name: Run Godot 4.1 compatibility smoke test
         shell: pwsh
+        env:
+          GODOT_VERSION: 4.1.4
+        run: powershell -File scripts/run_godot_smoke.ps1
+
+      - name: Run current Godot smoke test
+        shell: pwsh
+        env:
+          GODOT_VERSION: 4.3
+          GODOT_RELEASE_TAG: 4.3-stable
         run: powershell -File scripts/run_godot_smoke.ps1
 
       - name: Upload Artifacts

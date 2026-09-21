@@ -1,7 +1,7 @@
 $ErrorActionPreference = "Stop"
 
-$version = "4.3"
-$release_tag = "4.3-stable"
+$version = if ($env:GODOT_VERSION) { $env:GODOT_VERSION } else { "4.3" }
+$release_tag = if ($env:GODOT_RELEASE_TAG) { $env:GODOT_RELEASE_TAG } else { "$version-stable" }
 $root = $env:GITHUB_WORKSPACE
 $cache = Join-Path $root ".ci/godot-$version"
 $archive = Join-Path $env:RUNNER_TEMP "godot-$version.zip"

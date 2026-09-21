@@ -35,8 +35,9 @@ substitute for testing: it declares the minimum engine version, while the
 bundled ``godot-cpp`` headers determine what the extension was compiled
 against.
 
-Until the compatibility matrix is automated (issue ``#47``), releases should
-be conservative: test the declared minimum version and the current supported
+The CI smoke tests currently cover Godot 4.1.4 as the minimum supported patch
+release and Godot 4.3 as the current validation target. Releases should remain
+conservative: test the declared minimum version and the current supported
 Godot version before publishing. New Godot versions should be treated as
 unsupported until a build and smoke test pass. Compatibility-breaking API
 changes require migration notes and an appropriate pre-1.0 minor-version bump
