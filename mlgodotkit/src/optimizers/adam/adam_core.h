@@ -1,6 +1,6 @@
 #pragma once
 
-#include "optimizers/optimizer/optimizer.h"
+#include "optimizers/optimizer/optimizer_core.h"
 #include <vector>
 #include <cmath>
 
