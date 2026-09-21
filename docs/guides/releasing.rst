@@ -15,7 +15,7 @@ Release checklist
 
 1. Update ``MLGODOTKIT_VERSION`` and ``mlgodotkit/addon/plugins/plugin.cfg`` together.
 2. Run the native build and relevant tests from a clean checkout.
-3. Update documentation and migration notes for API changes.
+3. Update ``CHANGELOG.md`` and migration notes for API changes.
 4. Commit the version change on ``main``.
 5. Create a matching tag, for example::
 

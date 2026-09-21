@@ -4,7 +4,6 @@ on:
   push:
     tags:
       - 'v*'
-  workflow_dispatch:
 
 jobs:
   build-windows-release:
@@ -58,11 +57,37 @@ jobs:
           Copy-Item -Recurse test_project/addons/mlgodotkit package/addons/mlgodotkit
           Copy-Item LICENSE package/LICENSE
           Copy-Item README.md package/README.md
+          Copy-Item CHANGELOG.md package/CHANGELOG.md
           Copy-Item MLGODOTKIT_VERSION package/MLGODOTKIT_VERSION
           $version = (Get-Content MLGODOTKIT_VERSION -Raw).Trim()
           $archive = "mlgodotkit-v$version-windows.zip"
           Compress-Archive -Path package/* -DestinationPath $archive
           "RELEASE_ARCHIVE=$archive" >> $env:GITHUB_ENV
+
+      - name: Validate release package
+        shell: pwsh
+        run: |
+          $archive = $env:RELEASE_ARCHIVE
+          if (-not (Test-Path $archive)) { throw "Release archive was not created: $archive" }
+          $temp = Join-Path $env:RUNNER_TEMP "mlgodotkit-package"
+          if (Test-Path $temp) { Remove-Item $temp -Recurse -Force }
+          Expand-Archive -Path $archive -DestinationPath $temp
+          $addon = Join-Path $temp "addons/mlgodotkit"
+          $releaseDll = Join-Path $addon "bin/mlgodotkit.windows.template_release.x86_64.dll"
+          $debugDll = Join-Path $addon "bin/mlgodotkit.windows.template_debug.x86_64.dll"
+          foreach ($required in @(
+            $releaseDll,
+            (Join-Path $addon "mlgodotkit.gdextension"),
+            (Join-Path $addon "plugins/plugin.cfg"),
+            (Join-Path $temp "MLGODOTKIT_VERSION"),
+            (Join-Path $temp "LICENSE"),
+            (Join-Path $temp "README.md"),
+            (Join-Path $temp "CHANGELOG.md")
+          )) {
+            if (-not (Test-Path $required)) { throw "Required release file is missing: $required" }
+          }
+          if (Test-Path $debugDll) { throw "Debug binary must not be included in a release package." }
+          "Validated release package: $archive"
 
       - name: Publish release
         uses: softprops/action-gh-release@v2
