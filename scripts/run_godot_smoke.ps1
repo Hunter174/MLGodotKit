@@ -3,21 +3,24 @@ $ErrorActionPreference = "Stop"
 $version = if ($env:GODOT_VERSION) { $env:GODOT_VERSION } else { "4.3" }
 $release_tag = if ($env:GODOT_RELEASE_TAG) { $env:GODOT_RELEASE_TAG } else { "$version-stable" }
 $library_configuration = if ($env:GODOT_LIBRARY_CONFIGURATION) { $env:GODOT_LIBRARY_CONFIGURATION } else { "debug" }
-$root = $env:GITHUB_WORKSPACE
+$root = if ($env:GITHUB_WORKSPACE) { $env:GITHUB_WORKSPACE } else { (Resolve-Path ".").Path }
+$temp = if ($env:RUNNER_TEMP) { $env:RUNNER_TEMP } else { Join-Path $root ".ci/tmp" }
 $cache = Join-Path $root ".ci/godot-$version"
-$archive = Join-Path $env:RUNNER_TEMP "godot-$version.zip"
+$archive = Join-Path $temp "godot-$version.zip"
+$godot_path = Join-Path $cache "Godot_v$version-stable_win64.exe"
 $download = "https://github.com/godotengine/godot/releases/download/$release_tag/Godot_v$version-stable_win64.exe.zip"
 
-if (-not (Test-Path $cache)) {
+if (-not (Test-Path $godot_path)) {
+    if (Test-Path $cache) {
+        Remove-Item $cache -Recurse -Force
+    }
     New-Item -ItemType Directory -Force -Path $cache | Out-Null
+    New-Item -ItemType Directory -Force -Path $temp | Out-Null
     Invoke-WebRequest -Uri $download -OutFile $archive
     Expand-Archive -Path $archive -DestinationPath $cache -Force
 }
 
-$godot = Get-ChildItem -Path $cache -Filter "Godot_v$version-stable_win64.exe" -Recurse | Select-Object -First 1
-if ($null -eq $godot) {
-    throw "Godot executable was not found under $cache"
-}
+$godot = Get-Item $godot_path
 
 $project = Join-Path $root ".ci/godot-smoke-$version"
 if (Test-Path $project) {
@@ -47,6 +50,9 @@ window/size/viewport_height=240
 
 [rendering]
 renderer/rendering_method="gl_compatibility"
+
+[editor_plugins]
+enabled=PackedStringArray("res://addons/mlgodotkit/plugins/plugin.cfg")
 "@ | Set-Content (Join-Path $project "project.godot")
 
 @"
@@ -73,4 +79,19 @@ if ($exit_code -ne 0) {
     throw "Godot headless smoke test failed with exit code $exit_code"
 }
 
-Write-Host "Godot $version headless smoke test passed."
+$stdout = Join-Path $temp "godot-editor-$version.stdout.log"
+$stderr = Join-Path $temp "godot-editor-$version.stderr.log"
+$editor_process = Start-Process -FilePath $godot.FullName `
+    -ArgumentList @("--headless", "--editor", "--path", $project, "--quit-after", "5") `
+    -RedirectStandardOutput $stdout -RedirectStandardError $stderr `
+    -Wait -PassThru
+$editor_output = ((Get-Content $stdout -Raw), (Get-Content $stderr -Raw)) -join "`n"
+Write-Host $editor_output
+if ($editor_process.ExitCode -ne 0) {
+    throw "Godot editor smoke test failed with exit code $($editor_process.ExitCode)"
+}
+if ($editor_output -match "SCRIPT ERROR|Failed to load|ERROR:") {
+    throw "Godot editor smoke test reported script or resource errors"
+}
+
+Write-Host "Godot $version runtime and editor smoke tests passed."

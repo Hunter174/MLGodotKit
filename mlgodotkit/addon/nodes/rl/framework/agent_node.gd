@@ -1,4 +1,4 @@
-@abstract class_name AgentNode extends Node
+class_name AgentNode extends Node
 
 var last_snapshot : Dictionary
 var last_state
@@ -14,14 +14,15 @@ func _ready():
 	parent_node = get_parent()
 	add_to_group("rl_agents")
 	add_to_group("rl_observables")
-	memory_buffer = MemoryBuffer.new(10000)
+	memory_buffer = ReplayBuffer.new(10000)
 
 # --- Core API ---
 func decide(state_t):
 	last_state = state_t
 	action = policy.select_action(state_t)
 
-@abstract func act()
+func act():
+	push_error("AgentNode.act() must be overridden")
 
 # Optional override if agent exposes state as observable
 func get_observables():
@@ -47,9 +48,17 @@ func observe(state_t, state_t1):
 		learner.learn(batch)
 
 # --- Reward / Done Logic (override per agent) ---
-@abstract func get_reward(state_t, state_t1)
-@abstract func process_state(state)
-@abstract func get_done(state_t1)
+func get_reward(_state_t, _state_t1):
+	push_error("AgentNode.get_reward() must be overridden")
+	return 0.0
+
+func process_state(state):
+	push_error("AgentNode.process_state() must be overridden")
+	return state
+
+func get_done(_state_t1):
+	push_error("AgentNode.get_done() must be overridden")
+	return false
 
 func reset():
 	last_state = {}
