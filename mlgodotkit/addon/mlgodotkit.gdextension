@@ -1,6 +1,6 @@
 [configuration]
 entry_symbol = "mlgodotkit_library_init"
-compatibility_minimum = "4.1"
+compatibility_minimum = "4.4.1"
 reloadable = true
 
 [libraries]

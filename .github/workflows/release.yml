@@ -53,8 +53,8 @@ jobs:
       - name: Run release Godot smoke test
         shell: pwsh
         env:
-          GODOT_VERSION: 4.3
-          GODOT_RELEASE_TAG: 4.3-stable
+          GODOT_VERSION: 4.4.1
+          GODOT_RELEASE_TAG: 4.4.1-stable
         run: powershell -File scripts/run_godot_smoke.ps1
 
       - name: Package addon

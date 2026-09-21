@@ -32,7 +32,8 @@ All notable changes to MLGodotKit are documented here.
 
 ### Compatibility
 
-- Minimum declared Godot version: 4.1.
+- Minimum supported Godot version: 4.4.1, matching the godot-cpp headers used
+  to build the extension.
 - This release currently publishes a Windows x86_64 native artifact.
 - Other platforms are present in the extension manifest but are not release
   validated yet.
