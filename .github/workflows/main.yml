@@ -24,11 +24,13 @@ jobs:
 
       - name: Install Eigen
         run: |
-          curl -L https://github.com/eigen-team/eigen3/archive/3.4.0.zip -o eigen.zip
+          powershell -Command "(New-Object System.Net.WebClient).DownloadFile('https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.zip', 'eigen.zip')"
           powershell -Command "Expand-Archive -Path 'eigen.zip' -DestinationPath 'C:/eigen_tmp' -Force"
-          powershell -Command "Get-ChildItem -Path 'C:/eigen_tmp' | Select-Object -First 1 | ForEach-Object { Move-Item -Path \"$($_.FullName)\*\" -Destination 'C:/eigen' -Force }"
+          powershell -Command "New-Item -ItemType Directory -Force -Path 'C:/eigen'"
+          powershell -Command "$folder = Get-ChildItem -Path 'C:/eigen_tmp' | Select-Object -First 1; Copy-Item -Path \"$($folder.FullName)\*\" -Destination 'C:/eigen' -Recurse -Force"
+          powershell -Command "Get-ChildItem -Path 'C:/eigen'"
           Remove-Item -Path "eigen.zip"
-          Remove-Item -Pth "C:/eigen_tmp" -Recurse
+          Remove-Item -Path "C:/eigen_tmp" -Recurse
 
       - name: Build GDExtension
         env:
