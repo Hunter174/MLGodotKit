@@ -151,4 +151,4 @@ See Also
 
 - ``sklearn.linear_model.LinearRegression``
 - ``DTreeNode`` for classification
-- ``NNNode`` for nonlinear regression
+- ``NeuralNetworkNode`` for nonlinear regression

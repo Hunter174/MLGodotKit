@@ -162,7 +162,7 @@ Design Philosophy
 
 This allows the environment to be used with:
 - Custom RL agents
-- ``NNNode``-based policies
+- ``NeuralNetworkNode``-based policies
 - Manual or scripted controllers
 - Online or offline learning loops
 
@@ -203,5 +203,5 @@ Limitations
 See Also
 --------
 
-- ``NNNode`` for policy and value networks
+- ``NeuralNetworkNode`` for policy and value networks
 - Reinforcement learning agents and trainers

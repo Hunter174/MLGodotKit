@@ -94,7 +94,7 @@ Design Philosophy
 
 This allows the same environment to be paired with:
 - Random or scripted policies
-- ``NNNode``-based policies
+- ``NeuralNetworkNode``-based policies
 - Reinforcement learning agents
 - Evaluation-only controllers
 
@@ -114,4 +114,4 @@ See Also
 --------
 
 - ``RLEnvironment`` for environment interaction
-- ``NNNode`` for neural-network-based policies
+- ``NeuralNetworkNode`` for neural-network-based policies

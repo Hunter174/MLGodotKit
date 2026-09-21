@@ -151,7 +151,7 @@ Utilities
 ^^^^^^^^^
 
 ``copy_weights(source)``
-    Copy weights and biases from another ``NNNode`` with identical architecture.
+    Copy weights and biases from another ``NeuralNetworkNode`` with identical architecture.
 
 ----
 
@@ -177,14 +177,14 @@ Algorithm Details
 Design Philosophy
 -----------------
 
-``NNNode`` deliberately avoids high-level training abstractions. This allows:
+``NeuralNetworkNode`` deliberately avoids high-level training abstractions. This allows:
 
 - Custom loss functions
 - Reinforcement learning–style updates
 - Online and non-epoch-based training
 - Tight control over learning dynamics
 
-This makes ``NNNode`` suitable for:
+This makes ``NeuralNetworkNode`` suitable for:
 - Reinforcement learning agents
 - Real-time adaptive behaviors
 - Educational and experimental workflows
@@ -209,7 +209,7 @@ Minimal usage with an external loss:
 
 .. code-block:: gdscript
 
-   var nn = NNNode.new()
+   var nn = NeuralNetworkNode.new()
    nn.set_learning_rate(0.01)
 
    nn.add_layer(2, 4, "relu")

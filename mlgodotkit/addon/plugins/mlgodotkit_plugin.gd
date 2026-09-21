@@ -109,7 +109,7 @@ func _parse_property(object, type, name, hint_type, hint_string, usage_flags, wi
 	return false
 
 
-# --- Helper to sync inspector -> NNNode ---
+# --- Helper to sync inspector -> NeuralNetworkNode ---
 func _sync_layers(object: Object, name: String, layers: Array) -> void:
 	object.set(name, layers)
 	object.notify_property_list_changed()

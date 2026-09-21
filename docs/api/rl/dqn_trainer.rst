@@ -27,10 +27,10 @@ Core Components
 ---------------
 
 ``q_online``
-    Online Q-network (``NNNode``) updated via backpropagation.
+    Online Q-network (``NeuralNetworkNode``) updated via backpropagation.
 
 ``q_target``
-    Target Q-network (``NNNode``) updated via Polyak averaging.
+    Target Q-network (``NeuralNetworkNode``) updated via Polyak averaging.
 
 ``buffer``
     Replay buffer storing experience tuples
@@ -73,10 +73,10 @@ Configuration
     Configure the trainer.
 
     Parameters
-        ``q_online`` : NNNode
+        ``q_online`` : NeuralNetworkNode
             Online Q-network.
 
-        ``q_target`` : NNNode
+        ``q_target`` : NeuralNetworkNode
             Target Q-network.
 
         ``buffer``

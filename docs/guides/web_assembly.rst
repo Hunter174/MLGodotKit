@@ -1,49 +1,23 @@
-WebAssembly Support
-===================
+WebAssembly Status
+==================
 
-MLGodotKit provides **WebAssembly (WASM) support**, allowing projects that use the toolkit
-to run directly in the browser using Godot’s Web export pipeline.
+WebAssembly is not a release-validated target for MLGodotKit ``0.1.0``. The
+``0.1.0`` package contains only the Windows x86_64 native library.
 
-This enables:
-- Interactive AI demos without native builds
-- Easy sharing of experiments and examples
-- Real-time, in-browser learning demonstrations
+The GDExtension manifest reserves Web library entries for future builds, but a
+Web binary is not included in the release archive. Do not assume that the
+Windows package can be exported to the Web.
 
-Building for Web
-----------------
+Future Web support
+------------------
 
-MLGodotKit includes prebuilt **WASM-compatible GDExtension binaries**.
-When exporting a Godot project for the Web, these binaries allow models
-and learning logic to execute entirely in the browser.
+A supported Web release will require all of the following:
 
-The exported web build for the included demo can be found at::
+* Building MLGodotKit and its pinned ``godot-cpp`` revision for Web.
+* Packaging the resulting WASM library with the addon.
+* Exporting a clean example project with the matching Godot version.
+* Running browser and package smoke tests in CI.
 
-   examples/NNPong/web/
-
-Web Demo
---------
-
-A live WebAssembly demo is available showcasing real-time learning:
-
-- Play as the **red paddle**
-- Compete against the **blue AI paddle**
-- The AI starts with poor performance and improves over time
-
-`Launch Game in Browser <https://fastidious-biscochitos-90f618.netlify.app>`_
-
-This example demonstrates:
-- Neural network inference in the browser
-- Online learning during gameplay
-- Practical use of MLGodotKit in a web environment
-
-Reference
----------
-
-For details on compiling and exporting GDExtensions for the web, see the official Godot documentation:
-
-`Godot Docs – Compiling GDExtensions for Web <https://docs.godotengine.org/en/stable/contributing/development/compiling/compiling_for_web.html#gdextension>`_
-
-.. image:: ../../assets/pong-example.gif
-   :align: center
-   :width: 600px
-   :alt: Pong WebAssembly Demo
+Generated Godot Web exports are intentionally excluded from source control.
+For details about building GDExtensions for Web, see the official
+`Godot documentation <https://docs.godotengine.org/en/stable/contributing/development/compiling/compiling_for_web.html#gdextension>`_.

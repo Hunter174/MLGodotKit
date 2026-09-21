@@ -1,6 +1,6 @@
 extends Node
 
-@onready var nn = NNNode.new()
+@onready var nn = NeuralNetworkNode.new()
 @onready var ball = $"../Ball"
 @onready var paddle = $"../PaddleAI"
 

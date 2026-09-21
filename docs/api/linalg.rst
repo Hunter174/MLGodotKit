@@ -161,5 +161,3 @@ QR decomposition:
    var res = Linalg.qr(A)
    var Q = res["Q"]
    var R = res["R"]
-
-----

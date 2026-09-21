@@ -7,7 +7,7 @@ DQNPolicy
 produced by a neural network. It selects random actions with probability
 ``epsilon`` and greedy actions otherwise, using the maximum predicted Q-value.
 
-This policy is designed to be used with ``NNNode`` as the online Q-network and
+This policy is designed to be used with ``NeuralNetworkNode`` as the online Q-network and
 integrates naturally with ``RLRunner`` and ``RLEnvironment``.
 
 ----
@@ -17,7 +17,7 @@ Overview
 
 - ε-greedy exploration strategy
 - Discrete action spaces only
-- Uses ``NNNode`` for Q-value inference
+- Uses ``NeuralNetworkNode`` for Q-value inference
 - Episode-based epsilon decay
 - Stateless action selection
 
@@ -46,7 +46,7 @@ Configuration
     Configure the policy with a Q-network and action space size.
 
     Parameters
-        ``q_online`` : NNNode
+        ``q_online`` : NeuralNetworkNode
             Neural network producing Q-values for each action.
 
         ``action_size`` : int
@@ -102,7 +102,7 @@ Algorithm Details
 - Exploration strategy: ε-greedy
 - Action selection: ``argmax_a Q(s, a)``
 - Epsilon decay: episode-based, post-warmup
-- Q-value computation: forward pass through ``NNNode``
+- Q-value computation: forward pass through ``NeuralNetworkNode``
 
 ----
 
