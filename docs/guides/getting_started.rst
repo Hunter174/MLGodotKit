@@ -1,16 +1,57 @@
 Getting Started
 ===============
 
-To get started either download the plugin directly from the
-`Asset Library <https://godotengine.org/asset-library/asset/4060>`_ or download the most recent release from the repos
-`releases page <https://github.com/Hunter174/MLGodotKit/releases>`_.
+Requirements
+------------
 
-Once downloaded locate the `mlgodotkit` folder and make sure that it is copied into you godot projects addon folder.
+MLGodotKit ``0.1.0`` currently provides a validated native release for:
 
-Then to enable the plugin navigate to
-        Project-> Project settings -> Plugins
+* Godot 4.4.1
+* Windows x86_64
 
-And then make sure the Enabled toggle is set to `On`.
+Other platforms and Godot versions are not release-validated yet. The RL APIs
+and future ONNX/GGUF integrations are experimental or planned.
 
-After that the plugin should be working to make sure it is working we will make a little game!
+Installing a release
+--------------------
 
+1. Download ``mlgodotkit-v<version>-windows.zip`` from the
+   `GitHub Releases page <https://github.com/Hunter174/MLGodotKit/releases>`_.
+2. Extract the archive into your Godot project so the layout is::
+
+       your-project/
+       \- addons/
+          \- mlgodotkit/
+             \- mlgodotkit.gdextension
+             \- bin/
+
+3. Open the project in Godot and enable **mlgodotkit** under
+   **Project > Project Settings > Plugins**.
+4. Restart the editor if the native classes do not appear immediately.
+
+The release archive already contains the platform-specific native library; do
+not copy files from the repository's build directories into a user project.
+
+Building from source
+--------------------
+
+Source builds are intended for contributors. See :doc:`native_build` for
+Eigen installation, SCons commands, and native tests. A source build must use
+the repository's pinned ``godot-cpp`` revision and the matching Godot version.
+
+Next steps
+----------
+
+The API reference is available in the :doc:`../api/index` documentation.
+Examples and experimental RL code are included in the repository but are not
+part of the stable API promise for this pre-1.0 release.
+
+Troubleshooting
+---------------
+
+* If Godot reports that the extension was built for a newer engine, use Godot
+  4.4.1 for the ``0.1.0`` Windows package.
+* If no native classes appear, check that ``addons/mlgodotkit/bin`` contains
+  the Windows x86_64 DLL and that the plugin is enabled.
+* Report reproducible problems through a
+  `GitHub Issue <https://github.com/Hunter174/MLGodotKit/issues>`_.

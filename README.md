@@ -1,42 +1,47 @@
 # MLGodotKit
 
-**Empower your Godot projects with the power of machine learning!**  
-Given the recent advancements in Ai this plugin aims to take a stab at integrating core 
-machine learning fundamentals directly inside godot to power large scale Ai work flows
-from agentic Ai to reinforcement learning and everything in between.
+MLGodotKit brings machine-learning building blocks and experimental
+reinforcement-learning tools to Godot through a native GDExtension.
 
-<p align="center">
-  <img src="docs/_static/MLGodotKit_logo.png" alt="MLGodotKit Logo" width="1000"/>
-</p>
+## 0.1.0 support
 
-> *If you'd like to see something else add an issue!*
+The first release is validated for:
 
-## Getting Started
+- Godot 4.4.1
+- Windows x86_64
 
-To install the plugin in your Godot project:
-- Download the *addons* package from the official [Godot Asset Library](https://godotengine.org/asset-library/asset/4060).
-- Extract the downloaded archive.
-- Locate the `mlgodotkit` folder inside the extracted contents.
-- Copy the `mlgodotkit` folder into your project directory under a folder named `addons`:
+Other platforms and Godot versions are not release-validated. RL APIs are
+experimental, and ONNX/GGUF runtime integrations are planned rather than
+included in this release.
 
-```
-your_project/
-└── addons/
-    └── mlgodotkit/
-```
+## Install the release
 
-If the `addons` folder does not exist, create it at the root of your project.
+1. Download `mlgodotkit-v0.1.0-windows.zip` from the
+   [GitHub Releases](https://github.com/Hunter174/MLGodotKit/releases) page.
+2. Extract `addons/mlgodotkit` into your Godot project's `addons/` directory.
+3. Enable **mlgodotkit** under **Project > Project Settings > Plugins**.
+4. Restart the editor if the native classes do not appear immediately.
 
-Enable the plugin in Godot:
-- Open your project in Godot.
-- Navigate to **Project $\rightarrow$ Project Settings $\rightarrow$ Plugins**.
-- Find the plugin in the list and click **Enable**.
+The archive contains the Windows x86_64 native library required by the
+GDExtension. Do not use the repository's debug build as a release dependency.
 
-The plugin is now installed and ready to use.
+See the [Getting Started guide](https://mlgodotkit.readthedocs.io/en/latest/guides/getting_started.html)
+and [API reference](https://mlgodotkit.readthedocs.io/en/latest/api/index.html)
+for details.
 
-See the full documentation [here](https://mlgodotkit.readthedocs.io/en/latest/).
+## Build from source
 
----
+Source builds are intended for contributors. See the
+[native build guide](docs/guides/native_build.rst). The release build uses the
+repository's pinned `godot-cpp` revision, Eigen 3.4.0, and SCons.
 
-## Credits
-Built on the powerful [Eigen C++ library](https://eigen.tuxfamily.org/).
+## Contributing
+
+Use [GitHub Issues](https://github.com/Hunter174/MLGodotKit/issues) and pull
+requests for bug reports, feature requests, and development work. See
+[CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License and credits
+
+MLGodotKit is built on the [Eigen C++ library](https://eigen.tuxfamily.org/).
+See [LICENSE](LICENSE) for license terms.
