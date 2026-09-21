@@ -35,11 +35,33 @@ substitute for testing: it declares the minimum engine version, while the
 bundled ``godot-cpp`` headers determine what the extension was compiled
 against.
 
-The CI smoke tests currently cover Godot 4.4.1, matching the godot-cpp
-4.4.1 headers used to build the extension. Releases should remain
-conservative: test the declared minimum version and the current supported
-Godot version before publishing. New Godot versions should be treated as
-unsupported until a build and smoke test pass. Compatibility-breaking API
+The CI smoke tests currently cover Godot 4.4.1, matching the pinned
+``godot-cpp`` revision ``b0e3b1e4b78a606f48d162898afb5eeda533d2a9`` and its
+4.4.1 headers. The ``0.1.0`` compatibility matrix is:
+
+.. list-table::
+   :header-rows: 1
+
+   * - Godot
+     - Platform
+     - Architecture
+     - Status
+   * - 4.4.1
+     - Windows
+     - x86_64
+     - Supported and CI-validated
+   * - Other versions
+     - Any
+     - Any
+     - Unsupported until build and smoke tests pass
+   * - 4.4.1
+     - Non-Windows
+     - Any
+     - Not release-validated
+
+Releases should remain conservative: test the declared minimum version and
+the current supported Godot version before publishing. New Godot versions
+should be treated as unsupported until a build and smoke test pass. Compatibility-breaking API
 changes require migration notes and an appropriate pre-1.0 minor-version bump
 or post-1.0 major-version bump.
 
