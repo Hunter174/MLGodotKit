@@ -20,14 +20,16 @@ void LinearModelNode::initialize(int input_size) {
 }
 
 Array LinearModelNode::predict(Array input) {
-    Eigen::VectorXf x = godot_to_eigen(input, 1);
+    Eigen::VectorXf x = Utils::godot_to_eigen_vector(input);
     float p = core->predict_single(x);
-    return Array::from(p);
+    Array result;
+    result.push_back(p);
+    return result;
 }
 
 void LinearModelNode::train(Array inputs_arr, Array targets_arr, int epochs) {
-    Eigen::MatrixXf inputs = godot_to_eigen(inputs_arr, inputs_arr.size());
-    Eigen::VectorXf targets = godot_to_eigen(targets_arr, targets_arr.size());
+    Eigen::MatrixXf inputs = Utils::godot_to_eigen(inputs_arr, inputs_arr.size());
+    Eigen::VectorXf targets = Utils::godot_to_eigen_vector(targets_arr);
     core->train(inputs, targets, epochs);
 }
 
