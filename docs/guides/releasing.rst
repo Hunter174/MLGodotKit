@@ -26,6 +26,22 @@ The release workflow rejects tags that do not match ``MLGODOTKIT_VERSION``. It b
 release extension, packages the addon, includes ``MLGODOTKIT_VERSION`` in the archive, and
 publishes the archive as a GitHub Release asset.
 
+Compatibility policy
+---------------------
+
+Every release must document its Godot version, platform, and architecture
+matrix. ``compatibility_minimum`` in the GDExtension manifest is not a
+substitute for testing: it declares the minimum engine version, while the
+bundled ``godot-cpp`` headers determine what the extension was compiled
+against.
+
+Until the compatibility matrix is automated (issue ``#47``), releases should
+be conservative: test the declared minimum version and the current supported
+Godot version before publishing. New Godot versions should be treated as
+unsupported until a build and smoke test pass. Compatibility-breaking API
+changes require migration notes and an appropriate pre-1.0 minor-version bump
+or post-1.0 major-version bump.
+
 Release artifacts
 -----------------
 
