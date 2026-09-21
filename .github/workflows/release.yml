@@ -55,6 +55,7 @@ jobs:
         env:
           GODOT_VERSION: 4.4.1
           GODOT_RELEASE_TAG: 4.4.1-stable
+          GODOT_LIBRARY_CONFIGURATION: release
         run: powershell -File scripts/run_godot_smoke.ps1
 
       - name: Package addon

@@ -2,6 +2,7 @@ $ErrorActionPreference = "Stop"
 
 $version = if ($env:GODOT_VERSION) { $env:GODOT_VERSION } else { "4.3" }
 $release_tag = if ($env:GODOT_RELEASE_TAG) { $env:GODOT_RELEASE_TAG } else { "$version-stable" }
+$library_configuration = if ($env:GODOT_LIBRARY_CONFIGURATION) { $env:GODOT_LIBRARY_CONFIGURATION } else { "debug" }
 $root = $env:GITHUB_WORKSPACE
 $cache = Join-Path $root ".ci/godot-$version"
 $archive = Join-Path $env:RUNNER_TEMP "godot-$version.zip"
@@ -23,7 +24,15 @@ if (Test-Path $project) {
     Remove-Item $project -Recurse -Force
 }
 New-Item -ItemType Directory -Force -Path (Join-Path $project "addons") | Out-Null
-Copy-Item -Recurse (Join-Path $root "test_project/addons/mlgodotkit") (Join-Path $project "addons/mlgodotkit")
+$addon = Join-Path $project "addons/mlgodotkit"
+Copy-Item -Recurse (Join-Path $root "test_project/addons/mlgodotkit") $addon
+if ($library_configuration -eq "release") {
+    $manifest = Join-Path $addon "mlgodotkit.gdextension"
+    (Get-Content $manifest -Raw).Replace(
+        'windows.debug.x86_64 = "res://addons/mlgodotkit/bin/mlgodotkit.windows.template_debug.x86_64.dll"',
+        'windows.debug.x86_64 = "res://addons/mlgodotkit/bin/mlgodotkit.windows.template_release.x86_64.dll"') |
+        Set-Content $manifest
+}
 
 @"
 ; Generated headless smoke-test project.
