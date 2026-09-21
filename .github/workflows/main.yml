@@ -26,12 +26,10 @@ jobs:
         run: |
           curl -L https://github.com/eigen-team/eigen3/archive/3.4.0.zip -o eigen.zip
           powershell -Command "Expand-Archive -Path eigen.zip -DestinationPath C:/eigen_tmp"
-          # Find the folder inside eigen_tmp (it might be eigen-3.4.0 or similar)
-          powershell -Command "Get-ChildItem -Path C:/eigen_tmp | Select-Object -First 1 | Move-Item -Destination 'C:/eigen' -Force"
+          powershell -Command "$folder = Get-ChildItem -Path C:/eigen_tmp | Select-Object -First 1; Move-Item -Path \"$($folder.FullName)\*\" -Destination 'C:/eigen' -Force"
+          dir C:/eigen
           Remove-Item -Path "eigen.zip"
           Remove-Item -Path "C:/eigen_tmp" -Recurse
-          # The project expects a specific structure or path. 
-          # We will set the EIGEN_PATH environment variable.
 
       - name: Build GDExtension
         env:
