@@ -54,6 +54,14 @@ jobs:
         working-directory: mlgodotkit
         run: scons platform=windows target=template_release eigen_path="$env:EIGEN_PATH"
 
+      - name: Build debug extension for editor compatibility
+        working-directory: mlgodotkit
+        run: scons platform=windows target=template_debug eigen_path="$env:EIGEN_PATH"
+
+      - name: Restore release binary alongside debug binary
+        shell: pwsh
+        run: Copy-Item mlgodotkit/bin/mlgodotkit.windows.template_release.x86_64.dll test_project/addons/mlgodotkit/bin/
+
       - name: Run release Godot smoke test
         shell: pwsh
         env:
@@ -89,6 +97,7 @@ jobs:
           $debugDll = Join-Path $addon "bin/mlgodotkit.windows.template_debug.x86_64.dll"
           foreach ($required in @(
             $releaseDll,
+            $debugDll,
             (Join-Path $addon "mlgodotkit.gdextension"),
             (Join-Path $addon "plugins/plugin.cfg"),
             (Join-Path $temp "MLGODOTKIT_VERSION"),
@@ -98,7 +107,6 @@ jobs:
           )) {
             if (-not (Test-Path $required)) { throw "Required release file is missing: $required" }
           }
-          if (Test-Path $debugDll) { throw "Debug binary must not be included in a release package." }
           "Validated release package: $archive"
 
       - name: Publish release

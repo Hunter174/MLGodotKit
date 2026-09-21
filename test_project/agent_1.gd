@@ -32,7 +32,13 @@ func _ready():
 	var target_q = NeuralQFunction.new(target_nn)
 
 	policy = EpsilonGreedyPolicy.new([0,1,2,3], q)
-	learner = DQNLearner.new(q, target_q)
+	# DQNLearner is not implemented in the current experimental API.
+	# Keep this fixture inference-only until the DQN learner contract lands.
+	learner = null
+
+func observe(_state_t, _state_t1):
+	# Training is intentionally disabled for this experimental fixture.
+	pass
 
 # -------------------------------------------------
 # Observables (what the environment sees)
