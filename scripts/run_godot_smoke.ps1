@@ -52,12 +52,14 @@ func _init():
     if matrix == null:
         quit(1)
         return
-    matrix.free()
+    matrix = null
     quit(0)
 "@ | Set-Content (Join-Path $project "smoke.gd")
 
-& $godot.FullName --headless --path $project --script smoke.gd
-$exit_code = $LASTEXITCODE
+$process = Start-Process -FilePath $godot.FullName `
+    -ArgumentList @("--headless", "--path", $project, "--script", "smoke.gd") `
+    -Wait -PassThru
+$exit_code = $process.ExitCode
 if ($exit_code -ne 0) {
     throw "Godot headless smoke test failed with exit code $exit_code"
 }
