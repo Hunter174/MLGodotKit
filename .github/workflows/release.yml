@@ -50,6 +50,13 @@ jobs:
         working-directory: mlgodotkit
         run: scons platform=windows target=template_release eigen_path="$env:EIGEN_PATH"
 
+      - name: Run release Godot smoke test
+        shell: pwsh
+        env:
+          GODOT_VERSION: 4.3
+          GODOT_RELEASE_TAG: 4.3-stable
+        run: powershell -File scripts/run_godot_smoke.ps1
+
       - name: Package addon
         shell: pwsh
         run: |
