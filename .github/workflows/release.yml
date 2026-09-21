@@ -35,7 +35,8 @@ jobs:
             throw "Release tag v$tag does not match MLGODOTKIT_VERSION ($version)."
           }
           $plugin = Get-Content mlgodotkit/addon/plugins/plugin.cfg -Raw
-          if ($plugin -notmatch "version=\"$([regex]::Escape($version))\"") {
+          $version_pattern = 'version="' + [regex]::Escape($version) + '"'
+          if ($plugin -notmatch $version_pattern) {
             throw "plugin.cfg version does not match MLGODOTKIT_VERSION ($version)."
           }
           "MLGodotKit version: $version"
