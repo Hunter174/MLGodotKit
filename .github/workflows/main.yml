@@ -22,9 +22,10 @@ jobs:
 
       - name: Install Eigen
         run: |
-          curl -L https://github.com/eigen-team/eigen3/archive/refs/tags/3.4.0.zip -o eigen.zip
+          curl -L https://github.com/eigen-team/eigen3/archive/3.4.0.zip -o eigen.zip
           powershell -Command "Expand-Archive -Path eigen.zip -DestinationPath C:/eigen_tmp"
-          Move-Item -Path "C:/eigen_tmp/eigen-3.4.0" -Destination "C:/eigen" -Force
+          # Find the folder inside eigen_tmp (it might be eigen-3.4.0 or similar)
+          powershell -Command "Get-ChildItem -Path C:/eigen_tmp | Select-Object -First 1 | Move-Item -Destination 'C:/eigen' -Force"
           Remove-Item -Path "eigen.zip"
           Remove-Item -Path "C:/eigen_tmp" -Recurse
           # The project expects a specific structure or path. 
