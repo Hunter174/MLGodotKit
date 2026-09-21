@@ -24,11 +24,11 @@ jobs:
 
       - name: Install Eigen
         run: |
-          powershell -Command "Invoke-WebRequest -Uri 'https://github.com/eigen-team/eigen3/archive/refs/tags/3.4.0.zip' -OutFile 'eigen.zip'"
+          curl -L https://github.com/eigen-team/eigen3/archive/3.4.0.zip -o eigen.zip
           powershell -Command "Expand-Archive -Path 'eigen.zip' -DestinationPath 'C:/eigen_tmp' -Force"
-          powershell -Command "$folder = Get-ChildItem -Path 'C:/eigen_tmp' | Select-Object -First 1; Move-Item -Path \"$($folder.FullName)\*\" -Destination 'C:/eigen' -Force"
+          powershell -Command "Get-ChildItem -Path 'C:/eigen_tmp' | Select-Object -First 1 | ForEach-Object { Move-Item -Path \"$($_.FullName)\*\" -Destination 'C:/eigen' -Force }"
           Remove-Item -Path "eigen.zip"
-          Remove-Item -Path "C:/eigen_tmp" -Recurse
+          Remove-Item -Pth "C:/eigen_tmp" -Recurse
 
       - name: Build GDExtension
         env:
