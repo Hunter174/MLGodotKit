@@ -7,6 +7,7 @@ from SCons.Script import ARGUMENTS, Exit
 # Build example: scons platform=windows eigen_path=C:/libs/eigen-3.4.0
 # Consume this project-specific option before invoking godot-cpp's SConstruct.
 eigen_path_argument = ARGUMENTS.pop("eigen_path", None)
+tests_enabled = ARGUMENTS.pop("tests", "0")
 env = SConscript("godot-cpp/SConstruct")
 
 # Absolute path to this SConstruct directory
@@ -122,4 +123,29 @@ copy_cmd = env.Command(
     action=clean_addon_bin
 )
 
-Default([library, copy_cmd])
+targets = [library, copy_cmd]
+
+# Optional Godot-independent test executable. The core sources currently use
+# godot-cpp logging symbols, so it links against the same godot-cpp environment
+# as the extension while keeping test execution independent of the editor.
+if tests_enabled == "1":
+    test_dir = os.path.join(project_root, "test", "cpp")
+    test_sources = [
+        os.path.join(test_dir, "extern", "catch_amalgamated.cpp"),
+        os.path.join(test_dir, "test_core.cpp"),
+        os.path.join(project_root, "src", "control", "pid_controller", "pid_controller_core.cpp"),
+        os.path.join(project_root, "src", "models", "neural_network", "neural_network_core.cpp"),
+        os.path.join(project_root, "src", "models", "neural_network", "layer", "layer_core.cpp"),
+        os.path.join(project_root, "src", "models", "neural_network", "activations", "activations.cpp"),
+        os.path.join(project_root, "src", "optimizers", "adam", "adam_core.cpp"),
+    ]
+    test_env = env.Clone()
+    test_env.Append(CPPPATH=[parent_root, test_dir])
+    test_binary = test_env.Program(
+        os.path.join(project_root, "test", "bin", "mlgodotkit_core_tests"),
+        source=test_sources,
+        LIBS=test_env.get("LIBS", []),
+    )
+    targets.append(test_binary)
+
+Default(targets)
