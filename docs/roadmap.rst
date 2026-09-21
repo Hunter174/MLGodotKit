@@ -383,7 +383,7 @@ Deliverables:
   * ``Policy``
   * ``ValueFunction``
   * ``Learner``
-  * ``MemoryBuffer``
+  * ``ReplayBuffer``
 
 * Update DQN to use independent online and target networks.
 * Add one small, documented DQN example.
