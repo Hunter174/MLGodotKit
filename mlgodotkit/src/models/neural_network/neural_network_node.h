@@ -1,5 +1,5 @@
-#ifndef NeuralNetworkNode_H
-#define NeuralNetworkNode_H
+#ifndef NEURAL_NETWORK_NODE_H
+#define NEURAL_NETWORK_NODE_H
 
 #include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/core/class_db.hpp>
@@ -28,17 +28,14 @@ public:
     NeuralNetworkNode();
     ~NeuralNetworkNode();
 
-    // Core
     void add_layer(int input_size, int output_size, godot::String activation);
     godot::Array forward(godot::Array input);
     void backward(godot::Array error);
     godot::Array predict(godot::Array input);
 
-    // Utilities
     void model_summary();
     void copy_weights(const NeuralNetworkNode* source);
 
-    // Getters / Setters
     void set_verbosity(int level);
     int get_verbosity() const { return verbosity; }
     void set_learning_rate(double lr);
@@ -49,21 +46,9 @@ public:
     void set_optimizer(godot::String name);
     godot::String get_optimizer() const;
 
-    // Inspector (Godot)
     void set_layers(const godot::Array &p_layers);
     godot::Array get_layers() const;
     void build_model();
-
 };
 
-#endif // NeuralNetworkNode_H
-
-
-    // Inspector (Godot)
-    void set_layers(const godot::Array &p_layers);
-    godot::Array get_layers() const;
-    void build_model();
-
-};
-
-#endif // NeuralNetworkNode_H
+#endif // NEURAL_NETWORK_NODE_H
