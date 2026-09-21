@@ -1,5 +1,5 @@
-#ifndef LINALG_H
-#define LINALG_H
+#ifndef LINALG_CORE_H
+#define LINALG_CORE_H
 
 #include <godot_cpp/classes/object.hpp>
 #include <godot_cpp/variant/dictionary.hpp>
@@ -26,4 +26,4 @@ public:
 
 } // namespace godot
 
-#endif
+#endif // LINALG_CORE_H

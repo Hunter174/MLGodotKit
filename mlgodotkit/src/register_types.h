@@ -31,8 +31,7 @@
 #include <godot_cpp/godot.hpp>
 
 using namespace godot;
-void register_mlgogodot_types();
-void initialize_example_module(ModuleInitializationLevel p_level);
-void uninitialize_example_module(ModuleInitializationLevel p_level);
+void initialize_mlgodotkit_module(ModuleInitializationLevel p_level);
+void uninitialize_mlgodotkit_module(ModuleInitializationLevel p_level);
 
-#endif // GDEXAMPLE_REGISTER_TYPES_H
+#endif // ML_GODOT_KIT_REGISTER_TYPES_H
