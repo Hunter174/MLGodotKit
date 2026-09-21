@@ -26,7 +26,7 @@ jobs:
         run: |
           powershell -Command "Invoke-WebRequest -Uri 'https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.zip' -OutFile 'eigen.zip'"
           powershell -Command "Expand-Archive -Path 'eigen.zip' -DestinationPath '${{ github.workspace }}/eigen_tmp' -Force"
-          powershell -Command "$folder = Get-ChildItem -Path '${{ github.workspace }}/eigen_tmp' -Directory | Select-Object -First 1; Move-Item -Path $folder.FullName -Destination '${{ github.workspace }}/eigen' -Force"
+          powershell -Command \"$$folder = Get-ChildItem -Path '${{ github.workspace }}/eigen_tmp' -Directory | Select-Object -First 1; Move-Item -Path $$folder.FullName -Destination '${{ github.workspace }}/eigen' -Force\"
           Remove-Item -Path "eigen.zip"
           Remove-Item -Path "${{ github.workspace }}/eigen_tmp" -Recurse
 
