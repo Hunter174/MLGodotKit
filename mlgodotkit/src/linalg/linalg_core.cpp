@@ -1,4 +1,4 @@
-#include "linalg.h"
+#include "linalg_core.h"
 #include "utility/logger.h"
 #include "utility/utils.h"
 #include <godot_cpp/core/class_db.hpp>

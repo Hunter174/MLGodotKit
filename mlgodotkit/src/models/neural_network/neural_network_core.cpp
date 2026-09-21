@@ -1,8 +1,6 @@
 #include "neural_network_core.h"
 #include "utility/logger.h"
 
-using namespace Utils;
-
 NeuralNetworkCore::NeuralNetworkCore() {
     optimizer = std::make_unique<AdamCore>();
 }
@@ -67,7 +65,7 @@ Eigen::MatrixXf NeuralNetworkCore::predict(const Eigen::MatrixXf& input) const {
 
     Eigen::MatrixXf x = input;
     for (const auto &layer : layers) {
-        x = layer.forward(x);
+        x = layer.predict(x);
     }
     return x;
 }

@@ -204,6 +204,10 @@ void DecisionTreeNode::fit(godot::Array inputs, godot::Array targets) {
 	// Convert Godot arrays to Eigen matrices
 	Eigen::MatrixXf X = Utils::godot_to_eigen(inputs);
 	Eigen::VectorXf y = Utils::godot_to_eigen_vector(targets);
+    if (X.rows() == 0 || y.size() == 0 || X.rows() != y.size()) {
+        ERR_PRINT("DecisionTreeNode.fit(): inputs and targets must be non-empty and have matching sample counts.");
+        return;
+    }
 
     // Free tree if it was initialized
 	if(root){
@@ -224,6 +228,10 @@ godot::Array DecisionTreeNode::predict(godot::Array inputs) {
 
     // Convert Godot array to Eigen matrix
     Eigen::MatrixXf X = Utils::godot_to_eigen(inputs);
+    if (X.rows() == 0) {
+        ERR_PRINT("DecisionTreeNode.predict(): inputs must not be empty.");
+        return godot::Array();
+    }
     int num_samples = X.rows();
 
     // Initialize output array

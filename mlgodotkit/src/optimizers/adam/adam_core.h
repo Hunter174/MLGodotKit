@@ -4,7 +4,7 @@
 #include <vector>
 #include <cmath>
 
-class Adam : public Optimizer {
+class AdamCore : public OptimizerCore {
 private:
     float lr = 0.001f;
     float beta1 = 0.9f;

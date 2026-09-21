@@ -1,5 +1,5 @@
-#ifndef LAYER_H
-#define LAYER_H
+#ifndef LAYER_CORE_H
+#define LAYER_CORE_H
 
 #include <Eigen/Dense>
 #include <functional>
@@ -8,7 +8,7 @@
 #include "utility/logger.h"
 #include <models/neural_network/activations/activations.h>
 
-class Layer {
+class LayerCore {
 private:
     // Parameters
     Eigen::MatrixXf weights;
@@ -36,16 +36,17 @@ private:
 public:
     int verbosity = 0;
 
-    Layer(int input_size, int out_features, const std::string& activation);
-    ~Layer();
+    LayerCore(int input_size, int out_features, const std::string& activation);
+    ~LayerCore();
 
     // Core
     Eigen::MatrixXf forward(const Eigen::MatrixXf& X);
+    Eigen::MatrixXf predict(const Eigen::MatrixXf& X) const;
     Eigen::MatrixXf backward_compute(const Eigen::MatrixXf& loss_grad);
     void normalize_gradients(float scale);
 
     // Utilities
-    void copy_weights(const Layer& source);
+    void copy_weights(const LayerCore& source);
     void set_verbosity(int v);
     void set_output_squash(bool enabled, float scale_in, float scale_out);
 
@@ -63,4 +64,4 @@ private:
     std::tuple<Eigen::MatrixXf, Eigen::MatrixXf> init_weights(int in, int out, const std::string& activation);
 };
 
-#endif // LAYER_H
+#endif // LAYER_CORE_H

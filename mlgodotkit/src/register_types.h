@@ -2,11 +2,11 @@
 #define ML_GODOT_KIT_REGISTER_TYPES_H
 
 //Primative Classes
-#include "matrix/matrix.h"
+#include "matrix/matrix_node.h"
 
 // Utility Classes
 #include "utility/utils.h"
-#include "linalg/linalg.h"
+#include "linalg/linalg_core.h"
 
 // Model Classes
 #include "models/linear_regression/linear_regression_node.h"

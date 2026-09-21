@@ -1,9 +1,9 @@
-#include "layer.h"
+#include "layer_core.h"
 #include <cmath>
 
 using namespace Activations;
 
-Layer::Layer(int input_size, int out_features, const std::string& activation)
+LayerCore::LayerCore(int input_size, int out_features, const std::string& activation)
     : activation_type(activation) {
 
     std::tie(weights, biases) = init_weights(input_size, out_features, activation);
@@ -27,9 +27,9 @@ Layer::Layer(int input_size, int out_features, const std::string& activation)
         ") weights=" + std::to_string(input_size) + "x" + std::to_string(out_features));
 }
 
-Layer::~Layer() {}
+LayerCore::~LayerCore() {}
 
-std::tuple<Eigen::MatrixXf, Eigen::MatrixXf> Layer::init_weights(int in, int out, const std::string& activation) {
+std::tuple<Eigen::MatrixXf, Eigen::MatrixXf> LayerCore::init_weights(int in, int out, const std::string& activation) {
     Eigen::MatrixXf W;
     Eigen::MatrixXf b = Eigen::MatrixXf::Zero(1, out);
 
@@ -43,7 +43,7 @@ std::tuple<Eigen::MatrixXf, Eigen::MatrixXf> Layer::init_weights(int in, int out
     return std::make_tuple(W, b);
 }
 
-Eigen::MatrixXf Layer::forward(const Eigen::MatrixXf& X) {
+Eigen::MatrixXf LayerCore::forward(const Eigen::MatrixXf& X) {
     input = X;
 
     // z = XW + b (bias broadcast)
@@ -66,7 +66,7 @@ Eigen::MatrixXf Layer::forward(const Eigen::MatrixXf& X) {
     return output;
 }
 
-Eigen::MatrixXf Layer::backward_compute(const Eigen::MatrixXf& loss_grad) {
+Eigen::MatrixXf LayerCore::backward_compute(const Eigen::MatrixXf& loss_grad) {
     if (loss_grad.size() == 0 || !loss_grad.allFinite()) {
         Logger::warn("Layer::backward_compute - invalid gradient input");
         return Eigen::MatrixXf::Zero(input.rows(), weights.rows());
@@ -98,22 +98,31 @@ Eigen::MatrixXf Layer::backward_compute(const Eigen::MatrixXf& loss_grad) {
     return delta * weights.transpose();
 }
 
-void Layer::normalize_gradients(float scale) {
+void LayerCore::normalize_gradients(float scale) {
     dW *= scale;
     db *= scale;
 }
 
-void Layer::copy_weights(const Layer& src) {
+void LayerCore::copy_weights(const LayerCore& src) {
     weights = src.weights;
     biases  = src.biases;
 }
 
-void Layer::set_verbosity(int v) { verbosity = v; }
-void Layer::set_output_squash(bool enabled, float scale_in, float scale_out) {
+void LayerCore::set_verbosity(int v) { verbosity = v; }
+Eigen::MatrixXf LayerCore::predict(const Eigen::MatrixXf& X) const {
+    Eigen::MatrixXf z = (X * weights).rowwise() + biases.row(0);
+    Eigen::MatrixXf a = activation_func(z);
+    if (!squash_enabled) {
+        return a;
+    }
+    return (z / squash_scale_in).array().tanh() * squash_scale_out;
+}
+
+void LayerCore::set_output_squash(bool enabled, float scale_in, float scale_out) {
     squash_enabled   = enabled;
     squash_scale_in  = (scale_in  <= 0.0f ? 10.0f : scale_in);
     squash_scale_out = (scale_out <= 0.0f ? 10.0f : scale_out);
 }
 
-int Layer::get_input_size() const { return weights.rows(); }
-int Layer::get_output_size() const { return weights.cols(); }
+int LayerCore::get_input_size() const { return weights.rows(); }
+int LayerCore::get_output_size() const { return weights.cols(); }

@@ -21,14 +21,11 @@ Eigen::MatrixXf Utils::godot_to_eigen(godot::Array array) {
         return out;
     }
 
-    // Handle 1D array case (e.g., 1x2 or n×1)
-    cols = rows; // A single 1D array will be treated as one row
-    rows = 1;    // Force 1 row for 1D array inputs
-
-    // Handle 1D array case (treat as Nx1 column vector)
-    Eigen::MatrixXf out(rows, 1);
-    for (int i = 0; i < rows; i++) {
-        out(i, 0) = static_cast<float>(array[i]);
+    // Treat a flat array as one row, preserving every value.
+    cols = rows;
+    Eigen::MatrixXf out(1, cols);
+    for (int i = 0; i < cols; i++) {
+        out(0, i) = static_cast<float>(array[i]);
     }
 
     return out;

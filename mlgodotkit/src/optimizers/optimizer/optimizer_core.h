@@ -1,9 +1,9 @@
 #pragma once
 #include <Eigen/Dense>
 
-class Optimizer {
+class OptimizerCore {
 public:
-    virtual ~Optimizer() = default;
+    virtual ~OptimizerCore() = default;
 
     virtual void update(
         Eigen::MatrixXf& param,

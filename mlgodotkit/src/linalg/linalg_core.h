@@ -3,7 +3,7 @@
 
 #include <godot_cpp/classes/object.hpp>
 #include <godot_cpp/variant/dictionary.hpp>
-#include "matrix/matrix.h"
+#include "matrix/matrix_node.h"
 
 namespace godot {
 
