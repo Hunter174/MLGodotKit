@@ -1,0 +1,1 @@
+{"version":1,"optimizer":"adam","learning_rate":0.01,"layers":[{"input_size":2,"output_size":2,"activation":"linear","weights":[[1.0,2.0],[3.0,4.0]],"biases":[[0.5,-1.0]]}]}

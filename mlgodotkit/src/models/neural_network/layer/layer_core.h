@@ -56,6 +56,8 @@ public:
     std::string get_activation_type() const { return activation_type; }
     Eigen::MatrixXf& get_weights() { return weights; }
     Eigen::MatrixXf& get_biases()  { return biases; }
+    const Eigen::MatrixXf& get_weights() const { return weights; }
+    const Eigen::MatrixXf& get_biases() const { return biases; }
 
     Eigen::MatrixXf& get_dW() { return dW; }
     Eigen::MatrixXf& get_db() { return db; }

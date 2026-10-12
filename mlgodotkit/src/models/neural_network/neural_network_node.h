@@ -2,6 +2,7 @@
 #define NEURAL_NETWORK_NODE_H
 
 #include <godot_cpp/classes/node.hpp>
+#include <godot_cpp/variant/dictionary.hpp>
 #include <godot_cpp/core/class_db.hpp>
 #include "models/neural_network/neural_network_core.h"
 #include "utility/logger.h"
@@ -35,6 +36,8 @@ public:
 
     void model_summary();
     void copy_weights(const NeuralNetworkNode* source);
+    godot::Dictionary get_snapshot() const;
+    bool load_snapshot(const godot::Dictionary &snapshot);
 
     void set_verbosity(int level);
     int get_verbosity() const { return verbosity; }

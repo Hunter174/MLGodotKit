@@ -31,6 +31,8 @@ public:
 
     // Accessors
     const std::vector<LayerCore>& get_layers() const { return layers; }
+    // Used only while assembling and validating a replacement snapshot.
+    std::vector<LayerCore>& mutable_layers() { return layers; }
     double get_learning_rate() const { return learning_rate; }
     std::string get_optimizer_name() const { return optimizer_name; }
     int get_verbosity() const { return verbosity; }

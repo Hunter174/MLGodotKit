@@ -153,6 +153,18 @@ Utilities
 ``copy_weights(source)``
     Copy weights and biases from another ``NeuralNetworkNode`` with identical architecture.
 
+``get_snapshot()``
+    Export a versioned architecture, optimizer configuration and finite inference
+    weights as a Dictionary. Returns an empty Dictionary for an unsupported or
+    oversized network.
+
+``load_snapshot(snapshot)``
+    Atomically replace the model after validating every layer, shape, activation,
+    finite number and parameter limit; returns ``bool``. Bad input leaves the
+    existing model unchanged. It does **not** resume optimizer state. See
+    :doc:`../../guides/neural_artifacts` for the schema, file roundtrip and
+    security boundaries.
+
 ----
 
 Algorithm Details

@@ -1,4 +1,6 @@
 #include "neural_network_node.h"
+#include <cmath>
+#include <limits>
 
 using namespace Utils;
 
@@ -16,6 +18,8 @@ void NeuralNetworkNode::_bind_methods() {
     ClassDB::bind_method(D_METHOD("predict", "input"), &NeuralNetworkNode::predict);
     ClassDB::bind_method(D_METHOD("model_summary"), &NeuralNetworkNode::model_summary);
     ClassDB::bind_method(D_METHOD("copy_weights", "source"), &NeuralNetworkNode::copy_weights);
+    ClassDB::bind_method(D_METHOD("get_snapshot"), &NeuralNetworkNode::get_snapshot);
+    ClassDB::bind_method(D_METHOD("load_snapshot", "snapshot"), &NeuralNetworkNode::load_snapshot);
     ClassDB::bind_method(D_METHOD("set_learning_rate", "lr"), &NeuralNetworkNode::set_learning_rate);
     ClassDB::bind_method(D_METHOD("get_learning_rate"), &NeuralNetworkNode::get_learning_rate);
     ClassDB::bind_method(D_METHOD("set_verbosity", "level"), &NeuralNetworkNode::set_verbosity);
@@ -57,6 +61,11 @@ void NeuralNetworkNode::_bind_methods() {
 
 void NeuralNetworkNode::add_layer(int input_size, int output_size, godot::String activation) {
     core->add_layer(input_size, output_size, activation.utf8().get_data());
+    godot::Dictionary config;
+    config["input_size"] = input_size;
+    config["output_size"] = output_size;
+    config["activation"] = activation;
+    layers_config.append(config);
 }
 
 godot::Array NeuralNetworkNode::forward(godot::Array input) {
@@ -140,6 +149,145 @@ void NeuralNetworkNode::copy_weights(const NeuralNetworkNode* source) {
         return;
     }
     core->copy_weights_from(*source->core);
+}
+
+godot::Dictionary NeuralNetworkNode::get_snapshot() const {
+    using namespace godot;
+    Dictionary snapshot;
+    if (core->get_layers().empty() || core->get_layers().size() > 128 ||
+        core->get_optimizer_name() != "adam" || !std::isfinite(core->get_learning_rate()) ||
+        core->get_learning_rate() <= 0.0 || core->get_learning_rate() > 1.0) return snapshot;
+    int64_t total_parameters = 0;
+    int previous_output = 0;
+    Array exported;
+    for (const auto &layer : core->get_layers()) {
+        const int in = layer.get_input_size(), out = layer.get_output_size();
+        const auto &activation = layer.get_activation_type();
+        total_parameters += static_cast<int64_t>(in) * out + out;
+        if (in < 1 || in > 2048 || out < 1 || out > 2048 || total_parameters > 1000000 ||
+            (previous_output != 0 && in != previous_output) ||
+            (activation != "relu" && activation != "leaky_relu" && activation != "sigmoid" && activation != "linear")) return {};
+        previous_output = out;
+        Dictionary item;
+        item["input_size"] = layer.get_input_size();
+        item["output_size"] = layer.get_output_size();
+        item["activation"] = String(layer.get_activation_type().c_str());
+        Array rows;
+        const auto &w = layer.get_weights();
+        for (int i = 0; i < w.rows(); ++i) {
+            Array row;
+            for (int j = 0; j < w.cols(); ++j) {
+                if (!std::isfinite(w(i, j))) return {};
+                row.append(static_cast<double>(w(i, j)));
+            }
+            rows.append(row);
+        }
+        Array bias_row;
+        const auto &b = layer.get_biases();
+        for (int j = 0; j < b.cols(); ++j) {
+            if (!std::isfinite(b(0, j))) return {};
+            bias_row.append(static_cast<double>(b(0, j)));
+        }
+        Array biases;
+        biases.append(bias_row);
+        item["weights"] = rows;
+        item["biases"] = biases;
+        exported.append(item);
+    }
+    snapshot["version"] = 1;
+    snapshot["optimizer"] = String(core->get_optimizer_name().c_str());
+    snapshot["learning_rate"] = core->get_learning_rate();
+    snapshot["layers"] = exported;
+    return snapshot;
+}
+
+namespace {
+bool snapshot_integer(const godot::Variant &value, int64_t &out) {
+    if (value.get_type() != godot::Variant::INT && value.get_type() != godot::Variant::FLOAT) return false;
+    const double number = static_cast<double>(value);
+    if (!std::isfinite(number) || number < 0.0 || number > 1000000.0 || number != std::trunc(number)) return false;
+    out = static_cast<int64_t>(number);
+    return true;
+}
+bool snapshot_number(const godot::Variant &value, float &out) {
+    if (value.get_type() != godot::Variant::INT && value.get_type() != godot::Variant::FLOAT) return false;
+    const double number = static_cast<double>(value);
+    if (!std::isfinite(number) || std::abs(number) > std::numeric_limits<float>::max()) return false;
+    out = static_cast<float>(number);
+    return std::isfinite(out);
+}
+}
+
+bool NeuralNetworkNode::load_snapshot(const godot::Dictionary &snapshot) {
+    using namespace godot;
+    int64_t version = 0;
+    if (!snapshot.has("version") || !snapshot_integer(snapshot["version"], version) ||
+        version != 1 || !snapshot.has("layers") ||
+        snapshot["layers"].get_type() != Variant::ARRAY || !snapshot.has("optimizer") ||
+        snapshot["optimizer"].get_type() != Variant::STRING ||
+        String(snapshot["optimizer"]) != "adam" || !snapshot.has("learning_rate")) return false;
+    const Variant rate_value = snapshot["learning_rate"];
+    float rate = 0.0f;
+    if (!snapshot_number(rate_value, rate) || rate <= 0.0f || rate > 1.0f) return false;
+    const Array entries = snapshot["layers"];
+    if (entries.is_empty() || entries.size() > 128) return false;
+    auto replacement = std::make_unique<NeuralNetworkCore>();
+    Array rebuilt_config;
+    int previous_output = 0;
+    int64_t total_parameters = 0;
+    for (int layer_index = 0; layer_index < entries.size(); ++layer_index) {
+        if (entries[layer_index].get_type() != Variant::DICTIONARY) return false;
+        const Dictionary item = entries[layer_index];
+        if (!item.has("input_size") || !item.has("output_size") || !item.has("activation") ||
+            !item.has("weights") || !item.has("biases") || item["activation"].get_type() != Variant::STRING ||
+            item["weights"].get_type() != Variant::ARRAY || item["biases"].get_type() != Variant::ARRAY) return false;
+        int64_t in = 0, out = 0;
+        if (!snapshot_integer(item["input_size"], in) || !snapshot_integer(item["output_size"], out)) return false;
+        if (in < 1 || in > 2048 || out < 1 || out > 2048 ||
+            (layer_index > 0 && in != previous_output)) return false;
+        previous_output = static_cast<int>(out);
+        total_parameters += in * out + out;
+        if (total_parameters > 1000000) return false;
+        const String activation = item["activation"];
+        if (activation != "linear" && activation != "relu" && activation != "leaky_relu" && activation != "sigmoid") return false;
+        const Array rows = item["weights"];
+        const Array biases = item["biases"];
+        if (rows.size() != in || biases.size() != 1 || biases[0].get_type() != Variant::ARRAY) return false;
+        const Array bias_row = biases[0];
+        if (bias_row.size() != out) return false;
+        Eigen::MatrixXf weights(static_cast<int>(in), static_cast<int>(out));
+        Eigen::MatrixXf bias(1, static_cast<int>(out));
+        for (int i = 0; i < in; ++i) {
+            if (rows[i].get_type() != Variant::ARRAY) return false;
+            const Array row = rows[i];
+            if (row.size() != out) return false;
+            for (int j = 0; j < out; ++j) {
+                float value = 0.0f;
+                if (!snapshot_number(row[j], value)) return false;
+                weights(i, j) = value;
+            }
+        }
+        for (int j = 0; j < out; ++j) {
+            float value = 0.0f;
+            if (!snapshot_number(bias_row[j], value)) return false;
+            bias(0, j) = value;
+        }
+        replacement->add_layer(static_cast<int>(in), static_cast<int>(out), activation.utf8().get_data());
+        auto &layer = replacement->mutable_layers().back();
+        layer.get_weights() = std::move(weights);
+        layer.get_biases() = std::move(bias);
+        Dictionary config;
+        config["input_size"] = in;
+        config["output_size"] = out;
+        config["activation"] = activation;
+        rebuilt_config.append(config);
+    }
+    replacement->set_learning_rate(rate);
+    replacement->set_optimizer("adam");
+    core = std::move(replacement); // Atomic commit: failed validation never changes the old model.
+    layers_config = rebuilt_config;
+    optimizer_name = "adam";
+    return true;
 }
 
 void NeuralNetworkNode::set_layers(const godot::Array &p_layers) {
